@@ -5,6 +5,7 @@ import {MockOutputStateDto} from '__types/mock/MockOutputStateDto';
 import {ObsRequestDto} from '__types/obs/requests/ObsRequestDto';
 import {ObsRequestResultDto} from '__types/obs/requests/ObsRequestResultDto';
 import {ObsRequestTypeEnum} from '__types/obs/requests/ObsRequestTypeEnum';
+import {OBS_RPC_VERSION} from '__utils/consts';
 
 import {
     MOCK_EXTRA_TARGETS,
@@ -135,6 +136,8 @@ export class MockObsSimulator {
                     obsVersion: 'mock',
                     obsWebSocketVersion: 'mock',
                     platformDescription: 'mock data',
+                    rpcVersion: OBS_RPC_VERSION,
+                    availableRequests: Object.values(ObsRequestTypeEnum),
                 });
 
             default:

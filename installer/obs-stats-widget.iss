@@ -59,6 +59,7 @@ Type: filesandordirs; Name: "{app}\updater"
 Source: "{#PackageDir}\*"; DestDir: "{app}"; Excludes: "README.txt"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "configure-obs.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ConfigureObs\*.ps1"; DestDir: "{app}\ConfigureObs"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "updater\*.ps1"; DestDir: "{app}\updater"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MinisignPath}"; DestDir: "{app}\updater"; Flags: ignoreversion
 Source: "third-party\minisign-LICENSE.txt"; DestDir: "{app}\updater"; Flags: ignoreversion
 

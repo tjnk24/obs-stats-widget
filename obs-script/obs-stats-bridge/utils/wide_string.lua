@@ -1,31 +1,35 @@
 local ffi = require('ffi')
 
-local QUESTION_MARK = 63
+local CP_UTF8 = 65001
 
 local wide_string = {}
 
-function wide_string.from_text(text)
-    local buffer = ffi.new('uint16_t[?]', #text + 1)
+pcall(ffi.cdef, [[
+    int MultiByteToWideChar(uint32_t codePage, uint32_t flags, const char *text, int length, uint16_t *buffer, int bufferLength);
+    int WideCharToMultiByte(uint32_t codePage, uint32_t flags, const uint16_t *text, int length, char *buffer, int bufferLength, const char *defaultCharacter, int *usedDefault);
+]])
 
-    for position = 1, #text do
-        buffer[position - 1] = string.byte(text, position)
-    end
+function wide_string.from_text(text)
+    local length = ffi.C.MultiByteToWideChar(CP_UTF8, 0, text, -1, nil, 0)
+    local buffer = ffi.new('uint16_t[?]', math.max(length, 1))
+
+    ffi.C.MultiByteToWideChar(CP_UTF8, 0, text, -1, buffer, length)
 
     return buffer
 end
 
 function wide_string.to_text(pointer)
-    local characters = {}
-    local position = 0
+    local length = ffi.C.WideCharToMultiByte(CP_UTF8, 0, pointer, -1, nil, 0, nil, nil)
 
-    while pointer[position] ~= 0 do
-        local code = pointer[position]
-
-        characters[#characters + 1] = string.char(code < 128 and code or QUESTION_MARK)
-        position = position + 1
+    if length <= 1 then
+        return ''
     end
 
-    return table.concat(characters)
+    local buffer = ffi.new('char[?]', length)
+
+    ffi.C.WideCharToMultiByte(CP_UTF8, 0, pointer, -1, buffer, length, nil, nil)
+
+    return ffi.string(buffer, length - 1)
 end
 
 return wide_string

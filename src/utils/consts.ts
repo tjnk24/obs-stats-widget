@@ -25,8 +25,11 @@ export const DEV_OBS_CONNECTION_URL = '/dev/obs-connection';
 
 export const PASSWORD_STORAGE_KEY = 'obs-stats-dock.password';
 export const SETTINGS_STORAGE_KEY = 'obs-stats-dock.settings';
+export const DISCARDED_SETTINGS_STORAGE_KEY = 'obs-stats-dock.settings.discarded';
+export const SETTINGS_VERSION = 1;
 
 export const DEFAULT_SETTINGS: SettingsDto = {
+    settingsVersion: SETTINGS_VERSION,
     port: DEFAULT_OBS_WEBSOCKET_PORT,
     isShowGeneralCard: true,
     language: null,

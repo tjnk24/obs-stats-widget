@@ -2,10 +2,11 @@ import type {Nullable} from 'infrastructure/common';
 
 import {SettingsDto} from '__types/app/SettingsDto';
 import {
-    DEFAULT_SETTINGS,
+    DISCARDED_SETTINGS_STORAGE_KEY,
     PASSWORD_STORAGE_KEY,
     SETTINGS_STORAGE_KEY,
 } from '__utils/consts';
+import {migrateSettings} from '__utils/settings/migrateSettings';
 
 class StorageService {
     loadPassword = () => this.getItem(PASSWORD_STORAGE_KEY);
@@ -17,14 +18,26 @@ class StorageService {
     );
 
     loadSettings = (): SettingsDto => {
+        const raw = this.getItem(SETTINGS_STORAGE_KEY);
+        let stored: unknown = null;
+
         try {
-            return {
-                ...DEFAULT_SETTINGS,
-                ...JSON.parse(this.getItem(SETTINGS_STORAGE_KEY) || '{}') as Partial<SettingsDto>,
-            };
+            stored = raw === null ? null : JSON.parse(raw);
         } catch {
-            return DEFAULT_SETTINGS;
+            stored = raw;
         }
+
+        const {settings, isDiscarded, isChanged} = migrateSettings(stored);
+
+        if (isDiscarded && raw !== null) {
+            this.setItem(DISCARDED_SETTINGS_STORAGE_KEY, raw);
+        }
+
+        if (isChanged) {
+            this.saveSettings(settings);
+        }
+
+        return settings;
     };
 
     saveSettings = (settings: SettingsDto) => this.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));

@@ -4,11 +4,12 @@ local consts = require('obs-stats-bridge.consts')
 local Gpu = require('obs-stats-bridge.hardware.gpu')
 local StreamOutputs = require('obs-stats-bridge.outputs.stream_outputs')
 local publisher = require('obs-stats-bridge.publisher')
+local Updater = require('obs-stats-bridge.update.updater')
 
 local sources = {}
 
-local function create_safely(Source)
-    local created, source = pcall(Source.new)
+local function create_safely(Source, ...)
+    local created, source = pcall(Source.new, ...)
 
     return created and source or nil
 end
@@ -17,6 +18,7 @@ local function open_sources()
     sources = {
         gpu = create_safely(Gpu),
         stream_outputs = create_safely(StreamOutputs),
+        updater = create_safely(Updater),
     }
 end
 
@@ -29,6 +31,10 @@ local function close_sources()
 end
 
 local function publish()
+    if sources.updater ~= nil then
+        pcall(sources.updater.handle_command, sources.updater)
+    end
+
     publisher.publish(sources)
 end
 

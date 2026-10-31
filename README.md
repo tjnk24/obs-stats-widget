@@ -174,8 +174,10 @@ Scripts:
 | `npm run build:prod` | Production build into `build` |
 | `npm run package:release` | Production build plus the release folder and `compatibility.json` in `release` |
 | `npm run package:installer` | `package:release` plus the Windows installer `release/obs-stats-widget-setup-<version>.exe` (needs [Inno Setup 6](https://jrsoftware.org/isinfo.php); `ISCC_PATH` points to `ISCC.exe` if it is not in the default folder) |
-| `npm run test:installer` | Pester 5 tests of the script that sets up OBS (`installer/configure-obs.ps1`), Windows only |
+| `npm run test:installer` | Pester 5 tests of the script that sets up OBS and of the updater (`installer/`); downloads minisign first. Windows only |
 | `npm run lint` | TypeScript, ESLint, Stylelint and Knip |
+| `npm run test:unit` | Vitest unit tests of the dock logic (settings migrations, versions, release data, compatibility) |
+| `npm test` | `lint` and `test:unit` together, as CI runs them |
 
 A pre-commit hook (husky and lint-staged) lints the changed files and type-checks the project.
 The dev server clears the `build` folder, so run `npm run build:prod` again before using the dock in OBS.

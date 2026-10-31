@@ -28,6 +28,12 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+
+      - run: node scripts/buildInstaller/fetchMinisign.ts
+
       - name: Install Pester 5
         shell: powershell
         run: |
