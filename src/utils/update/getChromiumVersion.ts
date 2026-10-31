@@ -1,6 +1,6 @@
 import type {Nullable} from 'infrastructure/common';
 
-const CHROMIUM_PATTERN = /Chrome\/(\d+)\./;
+import {CHROMIUM_PATTERN} from '__utils/consts';
 
 export const getChromiumVersion = (userAgent: string): Nullable<number> => {
     const match = CHROMIUM_PATTERN.exec(userAgent);

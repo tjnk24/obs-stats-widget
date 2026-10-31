@@ -1,3 +1,5 @@
+local ffi = require('ffi')
+
 return {
     BRIDGE_VERSION = 2,
     PARAMETER_SECTION = 'ObsStatsDock',
@@ -8,4 +10,29 @@ return {
     PUBLISH_INTERVAL_MS = 3000,
     FALLBACK_OUTPUT_NAMES = {'multi-output'},
     SERVER_URL_INFO = 0,
+    COUNTER_PATHS = {
+        engine = '\\GPU Engine(*)\\Utilization Percentage',
+        dedicated = '\\GPU Adapter Memory(*)\\Dedicated Usage',
+        shared = '\\GPU Adapter Memory(*)\\Shared Usage',
+    },
+    PDH_FORMAT_DOUBLE_UNCAPPED = 0x8200,
+    PDH_MORE_DATA = -2147481646,
+    PDH_VALID_DATA_STATUSES = {[0] = true, [1] = true},
+    DEDICATED_MEMORY_MIN_BYTES = 64 * 1024 * 1024,
+    MAX_PERCENT = 100,
+    FACTORY_INTERFACE_ID = {0x770aae78, 0xf26f, 0x4dba, {0xa8, 0x29, 0x25, 0x3c, 0x83, 0xd1, 0xb3, 0x87}},
+    RELEASE_METHOD = 2,
+    ENUM_ADAPTERS1_METHOD = 12,
+    GET_DESCRIPTION1_METHOD = 10,
+    INSTALL_COMMAND_PATTERN = '^install:(%d+%.%d+%.%d+)$',
+    JSON_ARRAY_METATABLE = {},
+    CREATE_NO_WINDOW = 0x08000000,
+    GENERIC_READ = 0x80000000,
+    FILE_SHARE_READ_WRITE_DELETE = 0x00000007,
+    OPEN_EXISTING = 3,
+    INVALID_FILE_ATTRIBUTES = 0xFFFFFFFF,
+    FILE_ATTRIBUTE_DIRECTORY = 0x10,
+    TEXT_FILE_MAX_READ_BYTES = 65536,
+    INVALID_HANDLE_VALUE = ffi.cast('void *', -1),
+    CP_UTF8 = 65001,
 }

@@ -1,11 +1,11 @@
-local json = {}
+local consts = require('obs-stats-bridge.consts')
 
-local ARRAY_METATABLE = {}
+local json = {}
 
 json.null = setmetatable({}, {})
 
 function json.array(items)
-    return setmetatable(items, ARRAY_METATABLE)
+    return setmetatable(items, consts.JSON_ARRAY_METATABLE)
 end
 
 local function encode_string(value)
@@ -43,7 +43,7 @@ function json.encode(value)
         return tostring(value)
     end
 
-    if getmetatable(value) == ARRAY_METATABLE or #value > 0 then
+    if getmetatable(value) == consts.JSON_ARRAY_METATABLE or #value > 0 then
         local items = {}
 
         for _index, item in ipairs(value) do

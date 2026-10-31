@@ -5,12 +5,11 @@ import {SettingsDto} from '__types/app/SettingsDto';
 import {SettingsMigrationDto} from '__types/app/SettingsMigrationDto';
 import {StoredSettingsDto} from '__types/app/StoredSettingsDto';
 import {DEFAULT_SETTINGS, SETTINGS_VERSION} from '__utils/consts';
-
-import {SETTINGS_MIGRATIONS} from './settingsMigrations';
-
-const FIRST_SETTINGS_VERSION = 1;
-
-const DISCARDED: MigratedSettingsDto = {settings: DEFAULT_SETTINGS, isDiscarded: true, isChanged: true};
+import {
+    DISCARDED_SETTINGS,
+    FIRST_SETTINGS_VERSION,
+    SETTINGS_MIGRATIONS,
+} from '__utils/consts';
 
 export const migrateSettings = (
     stored: unknown,
@@ -22,14 +21,14 @@ export const migrateSettings = (
     }
 
     if (!isPlainObject(stored)) {
-        return DISCARDED;
+        return DISCARDED_SETTINGS;
     }
 
     const storedSettings = stored as StoredSettingsDto;
     const storedVersion = storedSettings.settingsVersion ?? FIRST_SETTINGS_VERSION;
 
     if (typeof storedVersion !== 'number' || !Number.isInteger(storedVersion) || storedVersion < FIRST_SETTINGS_VERSION || storedVersion > currentVersion) {
-        return DISCARDED;
+        return DISCARDED_SETTINGS;
     }
 
     let settings = storedSettings;
@@ -38,7 +37,7 @@ export const migrateSettings = (
         const migration = migrations.find(({fromVersion}) => fromVersion === version);
 
         if (!migration) {
-            return DISCARDED;
+            return DISCARDED_SETTINGS;
         }
 
         settings = migration.migrate(settings);

@@ -1,5 +1,3 @@
-$script:SemanticVersionPattern = '^(\d+)\.(\d+)\.(\d+)$'
-
 function Compare-SemanticVersion {
     param(
         [Parameter(Mandatory)][string]$First,

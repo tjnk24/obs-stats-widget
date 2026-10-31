@@ -5,6 +5,7 @@ import {commonActions} from '__actions';
 import {connectionObsVersionSelector, connectionStatusSelector} from '__selectors/connectionSelectors';
 import {obsWebSocketPortSelector, settingsIsMockEnabledSelector} from '__selectors/settingsSelectors';
 import {statsTargetsSelector} from '__selectors/statsSelectors';
+import {updateIsObsBusySelector} from '__selectors/updateSelectors';
 import {getStore} from '__store';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 import {PasswordChangeDto} from '__types/connection/PasswordChangeDto';
@@ -16,6 +17,7 @@ import {ObsRequestDto} from '__types/obs/requests/ObsRequestDto';
 import {ObsRequestResultDto} from '__types/obs/requests/ObsRequestResultDto';
 import {ObsRequestTypeEnum} from '__types/obs/requests/ObsRequestTypeEnum';
 import {getAuthString} from '__utils/auth/getAuthString';
+import {getBridgeUpdate} from '__utils/bridge/getBridgeUpdate';
 import {getHardware} from '__utils/bridge/getHardware';
 import {
     AUTHENTICATION_FAILED_CLOSE_CODE,
@@ -30,6 +32,7 @@ import {fetchDevObsConnection} from '__utils/dev/fetchDevObsConnection';
 import {MockObsSimulator} from '__utils/mock/MockObsSimulator';
 import {buildRequests} from '__utils/requests/buildRequests';
 import {getObsVersion} from '__utils/requests/getObsVersion';
+import {isObsBusy} from '__utils/requests/isObsBusy';
 import {isRequestOfType} from '__utils/requests/isRequestOfType';
 import {StatsTracker} from '__utils/stats/StatsTracker';
 import {discoverTargets} from '__utils/targets/discoverTargets';
@@ -69,6 +72,8 @@ class ObsConnectionService {
     private passwordChange: Nullable<PasswordChangeDto> = null;
 
     private simulator: Nullable<MockObsSimulator> = null;
+
+    private pendingRequests: ObsRequestDto[] = [];
 
     private readonly tracker = new StatsTracker();
 
@@ -111,6 +116,10 @@ class ObsConnectionService {
 
     resetStats = () => {
         commonActions.stats.setView(this.tracker.reset());
+    };
+
+    sendRequest = (request: ObsRequestDto) => {
+        this.pendingRequests.push(request);
     };
 
     private applyDevConnection = async () => {
@@ -279,7 +288,7 @@ class ObsConnectionService {
         const now = performance.now();
 
         if (this.simulator) {
-            const requests = buildRequests(statsTargetsSelector(getStore()), this.pollIndex++ % DISCOVERY_EVERY_POLLS === 0);
+            const requests = this.buildBatch();
 
             this.onBatchResults(requests, this.simulator.answer(requests));
 
@@ -291,7 +300,7 @@ class ObsConnectionService {
         }
 
         const id = String(++this.requestId);
-        const requests = buildRequests(statsTargetsSelector(getStore()), this.pollIndex++ % DISCOVERY_EVERY_POLLS === 0);
+        const requests = this.buildBatch();
 
         this.inFlight = {id, since: now, requests};
 
@@ -315,6 +324,13 @@ class ObsConnectionService {
 
         if (pairs.some(({request}) => isRequestOfType(ObsRequestTypeEnum.GetProfileParameter)(request))) {
             commonActions.stats.setHardware(getHardware(pairs));
+            commonActions.update.setBridge(getBridgeUpdate(pairs));
+        }
+
+        const isBusy = isObsBusy(pairs);
+
+        if (isBusy !== null && isBusy !== updateIsObsBusySelector(getStore())) {
+            commonActions.update.setIsObsBusy(isBusy);
         }
 
         const obsVersion = getObsVersion(pairs);
@@ -340,6 +356,17 @@ class ObsConnectionService {
         }
 
         passwordChange.resolve(result);
+    };
+
+    private buildBatch = (): ObsRequestDto[] => {
+        const requests = [
+            ...buildRequests(statsTargetsSelector(getStore()), this.pollIndex++ % DISCOVERY_EVERY_POLLS === 0),
+            ...this.pendingRequests,
+        ];
+
+        this.pendingRequests = [];
+
+        return requests;
     };
 
     private clearReconnectTimer = () => {

@@ -1,5 +1,3 @@
-$script:KeptBackups = 5
-
 function Save-ObsChanges {
     param(
         [Parameter(Mandatory)][object[]]$Changes,

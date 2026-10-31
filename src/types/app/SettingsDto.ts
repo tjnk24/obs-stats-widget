@@ -8,4 +8,6 @@ export type SettingsDto = {
     isShowGeneralCard: boolean;
     language: Nullable<LanguageEnum>;
     isMockEnabled: boolean;
+    isAutoUpdateCheckEnabled: boolean;
+    lastUpdateCheckAt: Nullable<number>;
 };

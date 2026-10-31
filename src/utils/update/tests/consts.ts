@@ -1,6 +1,11 @@
+import {BridgeUpdateStateDto} from '__types/update/bridge/BridgeUpdateStateDto';
+import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
+import {UpdateStatusDto} from '__types/update/bridge/UpdateStatusDto';
 import {CompatibilityDto} from '__types/update/compatibility/CompatibilityDto';
 import {UpdateEnvironmentDto} from '__types/update/compatibility/UpdateEnvironmentDto';
 import {GithubReleaseDto} from '__types/update/GithubReleaseDto';
+import {ReleaseDto} from '__types/update/ReleaseDto';
+import {UpdateInstallContextDto} from '__types/update/UpdateInstallContextDto';
 
 export const COMPATIBILITY: CompatibilityDto = {
     version: '0.2.0',
@@ -34,3 +39,36 @@ export const GITHUB_RELEASE: GithubReleaseDto = {
 export const OBS_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.120 Safari/537.36 OBS/33.0.1';
 
 export const FIREFOX_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; rv:131.0) Gecko/20100101 Firefox/131.0';
+
+const NOW_MS = 1793400000000;
+
+export const RUNNING_UPDATE_STATUS: UpdateStatusDto = {
+    version: '0.2.0',
+    stage: UpdateStageEnum.Downloading,
+    percent: 42,
+    error: null,
+    updated: (NOW_MS / 1000) - 5,
+};
+
+export const BRIDGE_UPDATE_STATE: BridgeUpdateStateDto = {
+    isAvailable: true,
+    bridgeVersion: 2,
+    status: null,
+};
+
+const RELEASE: ReleaseDto = {
+    version: '0.2.0',
+    url: GITHUB_RELEASE.html_url,
+    notes: RELEASE_NOTES,
+    publishedAt: GITHUB_RELEASE.published_at,
+    compatibility: COMPATIBILITY,
+};
+
+export const INSTALL_CONTEXT: UpdateInstallContextDto = {
+    release: RELEASE,
+    currentVersion: '0.1.0',
+    bridge: BRIDGE_UPDATE_STATE,
+    compatibility: {problems: [], warnings: []},
+    isObsBusy: false,
+    now: NOW_MS,
+};

@@ -1,11 +1,7 @@
 local ffi = require('ffi')
 
+local consts = require('obs-stats-bridge.consts')
 local wide_string = require('obs-stats-bridge.utils.wide_string')
-
-local FACTORY_INTERFACE_ID = {0x770aae78, 0xf26f, 0x4dba, {0xa8, 0x29, 0x25, 0x3c, 0x83, 0xd1, 0xb3, 0x87}}
-local RELEASE_METHOD = 2
-local ENUM_ADAPTERS1_METHOD = 12
-local GET_DESCRIPTION1_METHOD = 10
 
 local gpu_names = {}
 
@@ -41,7 +37,7 @@ local function com_method(object, position, signature)
 end
 
 local function release(object)
-    com_method(object, RELEASE_METHOD, 'uint32_t (*)(void *)')(object)
+    com_method(object, consts.RELEASE_METHOD, 'uint32_t (*)(void *)')(object)
 end
 
 local function adapter_key(high_part, low_part)
@@ -59,12 +55,12 @@ function gpu_names.read()
 
     local factory = ffi.new('void *[1]')
 
-    if dxgi.CreateDXGIFactory1(ffi.new('StatsBridgeGuid', FACTORY_INTERFACE_ID), factory) ~= 0 then
+    if dxgi.CreateDXGIFactory1(ffi.new('StatsBridgeGuid', consts.FACTORY_INTERFACE_ID), factory) ~= 0 then
         return {}
     end
 
     local names = {}
-    local enum_adapters = com_method(factory[0], ENUM_ADAPTERS1_METHOD, 'int32_t (*)(void *, uint32_t, void **)')
+    local enum_adapters = com_method(factory[0], consts.ENUM_ADAPTERS1_METHOD, 'int32_t (*)(void *, uint32_t, void **)')
     local get_description = 'int32_t (*)(void *, StatsBridgeAdapterDescription *)'
     local adapter = ffi.new('void *[1]')
     local position = 0
@@ -72,7 +68,7 @@ function gpu_names.read()
     while enum_adapters(factory[0], position, adapter) == 0 do
         local description = ffi.new('StatsBridgeAdapterDescription')
 
-        if com_method(adapter[0], GET_DESCRIPTION1_METHOD, get_description)(adapter[0], description) == 0 then
+        if com_method(adapter[0], consts.GET_DESCRIPTION1_METHOD, get_description)(adapter[0], description) == 0 then
             names[adapter_key(description.luidHighPart, description.luidLowPart)] = wide_string.to_text(description.description)
         end
 

@@ -11,3 +11,10 @@ export const MINISIGN_ARCHIVE_SHA256 = '37b600344e20c19314b2e82813db2bfdcc408b77
 export const MINISIGN_CACHE_DIRECTORY = path.join(ROOT_DIRECTORY, 'node_modules', '.cache', 'minisign', MINISIGN_VERSION);
 
 export const MINISIGN_EXECUTABLE = path.join(MINISIGN_CACHE_DIRECTORY, 'minisign-win64', 'x86_64', 'minisign.exe');
+
+export const COMPILER_LOCATIONS: Array<string | undefined> = [
+    process.env.ISCC_PATH,
+    process.env.LOCALAPPDATA && path.join(process.env.LOCALAPPDATA, 'Programs', 'Inno Setup 6', 'ISCC.exe'),
+    process.env['ProgramFiles(x86)'] && path.join(process.env['ProgramFiles(x86)'], 'Inno Setup 6', 'ISCC.exe'),
+    process.env.ProgramFiles && path.join(process.env.ProgramFiles, 'Inno Setup 6', 'ISCC.exe'),
+];

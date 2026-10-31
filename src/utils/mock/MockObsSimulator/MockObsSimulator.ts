@@ -16,6 +16,8 @@ import {
     MOCK_TWITCH_DELAY_SEC,
     MOCK_TWITCH_OUTPUT_NAME,
     MOCK_TWITCH_SERVER,
+    OBS_OUTPUT_NOT_FOUND_CODE,
+    OBS_UNKNOWN_REQUEST_CODE,
 } from './consts';
 import {buildMockOutputListItem} from './outputs/buildMockOutputListItem';
 import {buildMockOutputStatus} from './outputs/buildMockOutputStatus';
@@ -24,9 +26,6 @@ import {growMockOutput} from './outputs/growMockOutput';
 import {randomBetween} from './randomBetween';
 import {failureResult} from './results/failureResult';
 import {successResult} from './results/successResult';
-
-const OBS_OUTPUT_NOT_FOUND_CODE = 600;
-const OBS_UNKNOWN_REQUEST_CODE = 204;
 
 export class MockObsSimulator {
     private readonly startedAt = performance.now();
@@ -130,6 +129,12 @@ export class MockObsSimulator {
 
             case ObsRequestTypeEnum.GetProfileParameter:
                 return successResult(requestType, {parameterValue: JSON.stringify(this.buildBridgeData())});
+
+            case ObsRequestTypeEnum.GetRecordStatus:
+                return successResult(requestType, {outputActive: false});
+
+            case ObsRequestTypeEnum.SetProfileParameter:
+                return successResult(requestType, {});
 
             case ObsRequestTypeEnum.GetVersion:
                 return successResult(requestType, {

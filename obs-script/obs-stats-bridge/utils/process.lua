@@ -1,8 +1,7 @@
 local ffi = require('ffi')
 
+local consts = require('obs-stats-bridge.consts')
 local wide_string = require('obs-stats-bridge.utils.wide_string')
-
-local CREATE_NO_WINDOW = 0x08000000
 
 local process = {}
 
@@ -37,7 +36,7 @@ function process.start_hidden(command_line, directory)
 
     startup_info.cb = ffi.sizeof(startup_info)
 
-    local started = ffi.C.CreateProcessW(nil, wide_string.from_text(command_line), nil, nil, 0, CREATE_NO_WINDOW, nil, wide_directory, startup_info, process_information)
+    local started = ffi.C.CreateProcessW(nil, wide_string.from_text(command_line), nil, nil, 0, consts.CREATE_NO_WINDOW, nil, wide_directory, startup_info, process_information)
 
     if started == 0 then
         return false

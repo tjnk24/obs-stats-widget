@@ -32,3 +32,6 @@ export const MOCK_SYSTEM_MEMORY = {
     used: 14.2 * BYTES_IN_GIGABYTE,
     total: 31.9 * BYTES_IN_GIGABYTE,
 };
+
+export const OBS_OUTPUT_NOT_FOUND_CODE: number = 600;
+export const OBS_UNKNOWN_REQUEST_CODE: number = 204;

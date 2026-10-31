@@ -1,6 +1,3 @@
-$script:DownloadTimeoutMilliseconds = 30000
-$script:DownloadBufferBytes = 65536
-
 function Get-UpdateFile {
     param(
         [Parameter(Mandatory)][string]$Url,

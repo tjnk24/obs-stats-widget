@@ -7,6 +7,10 @@ export const settingsIsShowGeneralCardSelector = (state: BaseStore) => state.set
 
 export const settingsIsMockEnabledSelector = (state: BaseStore) => state.settings.isMockEnabled;
 
+export const settingsIsAutoUpdateCheckEnabledSelector = (state: BaseStore) => state.settings.isAutoUpdateCheckEnabled;
+
+export const settingsLastUpdateCheckAtSelector = (state: BaseStore) => state.settings.lastUpdateCheckAt;
+
 export const settingsLanguageSelector = (state: BaseStore) => state.settings.language;
 
 export const obsWebSocketPortSelector = (state: BaseStore) => getObsWebSocketPort() ?? state.settings.port;

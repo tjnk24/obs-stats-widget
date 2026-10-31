@@ -1,8 +1,3 @@
-$script:JsonWhitespace = [regex]::new('\G[ \t\r\n]*', 'Compiled')
-$script:JsonString = [regex]::new('\G"(?:[^"\\\x00-\x1F]|\\["\\/bfnrt]|\\u[0-9a-fA-F]{4})*"', 'Compiled')
-$script:JsonNumber = [regex]::new('\G-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?', 'Compiled')
-$script:JsonLiteral = [regex]::new('\G(?:true|false|null)', 'Compiled')
-
 function Read-JsonValue {
     param(
         [Parameter(Mandatory)][string]$Text,

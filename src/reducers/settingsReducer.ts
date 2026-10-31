@@ -24,6 +24,12 @@ const slice = createSlice({
         setIsMockEnabled: (state, {payload}: PayloadAction<boolean>) => {
             state.isMockEnabled = payload;
         },
+        setIsAutoUpdateCheckEnabled: (state, {payload}: PayloadAction<boolean>) => {
+            state.isAutoUpdateCheckEnabled = payload;
+        },
+        setLastUpdateCheckAt: (state, {payload}: PayloadAction<number>) => {
+            state.lastUpdateCheckAt = payload;
+        },
     },
 });
 

@@ -1,5 +1,3 @@
-$script:StrictUtf8 = [System.Text.UTF8Encoding]::new($false, $true)
-
 function Read-TextFile {
     param(
         [Parameter(Mandatory)][string]$Path

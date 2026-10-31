@@ -1,5 +1,3 @@
-$script:DockTitle = 'obs-stats-widget'
-
 function Get-ObsChanges {
     param(
         [Parameter(Mandatory)][ValidateSet('Install', 'Uninstall')][string]$Mode,

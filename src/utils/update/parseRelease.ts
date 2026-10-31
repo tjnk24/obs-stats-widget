@@ -2,11 +2,9 @@ import type {Nullable} from 'infrastructure/common';
 
 import {GithubReleaseDto} from '__types/update/GithubReleaseDto';
 import {ReleaseDto} from '__types/update/ReleaseDto';
+import {COMPATIBILITY_PATTERN, TAG_PATTERN} from '__utils/consts';
 
 import {parseCompatibility} from './parseCompatibility';
-
-const TAG_PATTERN = /^v(\d+\.\d+\.\d+)$/;
-const COMPATIBILITY_PATTERN = /<!--\s*compatibility:\s*([\s\S]*?)\s*-->/;
 
 export const parseRelease = (release: GithubReleaseDto): Nullable<ReleaseDto> => {
     const tag = TAG_PATTERN.exec(release.tag_name);

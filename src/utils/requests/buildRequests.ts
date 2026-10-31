@@ -11,6 +11,7 @@ const {
     GetOutputList,
     GetProfileParameter,
     GetVersion,
+    GetRecordStatus,
 } = ObsRequestTypeEnum;
 
 export const buildRequests = (targets: StreamTargetDto[], withDiscovery: boolean): ObsRequestDto[] => {
@@ -28,6 +29,7 @@ export const buildRequests = (targets: StreamTargetDto[], withDiscovery: boolean
             {requestType: GetOutputList},
             {requestType: GetProfileParameter, requestData: BRIDGE_PARAMETER},
             {requestType: GetVersion},
+            {requestType: GetRecordStatus},
         );
     }
 

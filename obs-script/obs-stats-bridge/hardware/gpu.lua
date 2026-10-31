@@ -1,19 +1,9 @@
 local ffi = require('ffi')
 
+local consts = require('obs-stats-bridge.consts')
 local gpu_names = require('obs-stats-bridge.hardware.gpu_names')
 local json = require('obs-stats-bridge.utils.json')
 local wide_string = require('obs-stats-bridge.utils.wide_string')
-
-local COUNTER_PATHS = {
-    engine = '\\GPU Engine(*)\\Utilization Percentage',
-    dedicated = '\\GPU Adapter Memory(*)\\Dedicated Usage',
-    shared = '\\GPU Adapter Memory(*)\\Shared Usage',
-}
-local PDH_FORMAT_DOUBLE_UNCAPPED = 0x8200
-local PDH_MORE_DATA = -2147481646
-local PDH_VALID_DATA_STATUSES = {[0] = true, [1] = true}
-local DEDICATED_MEMORY_MIN_BYTES = 64 * 1024 * 1024
-local MAX_PERCENT = 100
 
 local Gpu = {}
 
@@ -54,7 +44,7 @@ local function open_query(self)
 
     local counters = {}
 
-    for key, path in pairs(COUNTER_PATHS) do
+    for key, path in pairs(consts.COUNTER_PATHS) do
         local counter = ffi.new('void *[1]')
 
         if self.pdh.PdhAddEnglishCounterW(query[0], wide_string.from_text(path), 0, counter) ~= 0 then
@@ -76,14 +66,14 @@ local function read_counter(self, counter)
     local buffer_size = ffi.new('uint32_t[1]', 0)
     local item_count = ffi.new('uint32_t[1]', 0)
 
-    if self.pdh.PdhGetFormattedCounterArrayW(counter[0], PDH_FORMAT_DOUBLE_UNCAPPED, buffer_size, item_count, nil) ~= PDH_MORE_DATA then
+    if self.pdh.PdhGetFormattedCounterArrayW(counter[0], consts.PDH_FORMAT_DOUBLE_UNCAPPED, buffer_size, item_count, nil) ~= consts.PDH_MORE_DATA then
         return {}
     end
 
     local buffer = ffi.new('uint8_t[?]', buffer_size[0])
     local items = ffi.cast('StatsBridgeCounterItem *', buffer)
 
-    if self.pdh.PdhGetFormattedCounterArrayW(counter[0], PDH_FORMAT_DOUBLE_UNCAPPED, buffer_size, item_count, items) ~= 0 then
+    if self.pdh.PdhGetFormattedCounterArrayW(counter[0], consts.PDH_FORMAT_DOUBLE_UNCAPPED, buffer_size, item_count, items) ~= 0 then
         return {}
     end
 
@@ -92,7 +82,7 @@ local function read_counter(self, counter)
     for position = 0, item_count[0] - 1 do
         local item = items[position]
 
-        if PDH_VALID_DATA_STATUSES[item.value.status] then
+        if consts.PDH_VALID_DATA_STATUSES[item.value.status] then
             values[#values + 1] = {name = wide_string.to_text(item.name), value = item.value.doubleValue}
         end
     end
@@ -159,7 +149,7 @@ local function find_busiest_adapter(self, adapters)
 end
 
 local function round_percent(value)
-    return math.floor(math.min(value, MAX_PERCENT) * 10 + 0.5) / 10
+    return math.floor(math.min(value, consts.MAX_PERCENT) * 10 + 0.5) / 10
 end
 
 function Gpu.new()
@@ -213,7 +203,7 @@ function Gpu:sample()
         return nil
     end
 
-    local is_shared_memory = busiest.dedicated < DEDICATED_MEMORY_MIN_BYTES
+    local is_shared_memory = busiest.dedicated < consts.DEDICATED_MEMORY_MIN_BYTES
 
     return {
         name = busiest.name or json.null,

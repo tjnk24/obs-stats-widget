@@ -1,9 +1,13 @@
+import {MigratedSettingsDto} from '__types/app/MigratedSettingsDto';
 import {SettingsDto} from '__types/app/SettingsDto';
+import {SettingsMigrationDto} from '__types/app/SettingsMigrationDto';
 import {LanguageEnum} from '__types/i18n/LanguageEnum';
 import {ObsLanguagePrefixDto} from '__types/i18n/ObsLanguagePrefixDto';
+import {ProfileParameterKeyDto} from '__types/obs/requests/ProfileParameterKeyDto';
 import {HealthLevelEnum} from '__types/stats/views/HealthLevelEnum';
 import {OutputViewDto} from '__types/stats/views/OutputViewDto';
 import {PlatformRuleDto} from '__types/targets/PlatformRuleDto';
+import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
 
 const DEFAULT_OBS_WEBSOCKET_PORT = 4455;
 export const OBS_WEBSOCKET_PROTOCOL = 'obswebsocket.json';
@@ -33,6 +37,8 @@ export const DEFAULT_SETTINGS: SettingsDto = {
     port: DEFAULT_OBS_WEBSOCKET_PORT,
     isShowGeneralCard: true,
     language: null,
+    isAutoUpdateCheckEnabled: true,
+    lastUpdateCheckAt: null,
     isMockEnabled: false,
 };
 
@@ -50,11 +56,20 @@ export const PLUGIN_OUTPUT_NAMES: Record<string, string> = {
 };
 
 export const BRIDGE_SCRIPT_NAME = 'obs-stats-bridge.lua';
-export const BRIDGE_PARAMETER = {
+export const BRIDGE_PARAMETER: ProfileParameterKeyDto = {
     parameterCategory: 'ObsStatsDock',
     parameterName: 'PluginOutputs',
 };
 export const BRIDGE_STALE_SEC = 15;
+
+export const UPDATE_COMMAND_PARAMETER: ProfileParameterKeyDto = {
+    parameterCategory: 'ObsStatsDock',
+    parameterName: 'UpdateCommand',
+};
+export const UPDATE_STATUS_STALE_SEC = 120;
+export const GITHUB_LATEST_RELEASE_URL = 'https://api.github.com/repos/tjnk24/obs-stats-widget/releases/latest';
+export const UPDATE_CHECK_PERIOD_MS = 24 * 60 * 60 * 1000;
+export const UPDATE_CHECK_TIMER_MS = 60 * 60 * 1000;
 
 export const UNKNOWN_PLATFORM_COLOR = '#9aa0ae';
 
@@ -128,3 +143,29 @@ export const OFF_OUTPUT_VIEW: OutputViewDto = {
     congestion: 0,
     graph: [],
 };
+
+export const FIRST_SETTINGS_VERSION: number = 1;
+
+export const DISCARDED_SETTINGS: MigratedSettingsDto = {settings: DEFAULT_SETTINGS, isDiscarded: true, isChanged: true};
+
+export const SETTINGS_MIGRATIONS: SettingsMigrationDto[] = [];
+
+export const VERSION_PATTERN: RegExp = /^(\d+)\.(\d+)\.(\d+)/;
+export const TAG_PATTERN: RegExp = /^v(\d+\.\d+\.\d+)$/;
+export const COMPATIBILITY_PATTERN: RegExp = /<!--\s*compatibility:\s*([\s\S]*?)\s*-->/;
+export const CHROMIUM_PATTERN: RegExp = /Chrome\/(\d+)\./;
+
+export const RUNNING_UPDATE_STAGES: UpdateStageEnum[] = [
+    UpdateStageEnum.Preparing,
+    UpdateStageEnum.Downloading,
+    UpdateStageEnum.Verifying,
+    UpdateStageEnum.Installing,
+];
+
+export const FIRST_BRIDGE_VERSION: number = 1;
+
+export const UPDATE_STAGES: string[] = Object.values(UpdateStageEnum);
+
+export const SERVICE_OUTPUT_FLAG: string = 'OBS_OUTPUT_SERVICE';
+
+export const HTTP_NOT_FOUND: number = 404;

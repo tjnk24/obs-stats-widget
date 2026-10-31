@@ -2,9 +2,9 @@ import dotenv from 'dotenv';
 import type {Configuration} from 'webpack';
 import type {Configuration as DevServerConfiguration} from 'webpack-dev-server';
 
-import {serveObsConnection} from './serveObsConnection.ts';
+import {DEFAULT_PORT} from '../consts.ts';
 
-const DEFAULT_PORT = 3062;
+import {serveObsConnection} from './serveObsConnection.ts';
 
 export const initDevServer = () => (webpackConfig: Configuration): Configuration => {
     dotenv.config({quiet: true});

@@ -5,8 +5,6 @@ local environment = require('obs-stats-bridge.utils.environment')
 local process = require('obs-stats-bridge.utils.process')
 local text_file = require('obs-stats-bridge.utils.text_file')
 
-local INSTALL_COMMAND_PATTERN = '^install:(%d+%.%d+%.%d+)$'
-
 local Updater = {}
 
 Updater.__index = Updater
@@ -59,7 +57,7 @@ function Updater:handle_command()
         return
     end
 
-    local version = string.match(command, INSTALL_COMMAND_PATTERN)
+    local version = string.match(command, consts.INSTALL_COMMAND_PATTERN)
 
     if version ~= nil then
         start_update(self, version)

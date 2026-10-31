@@ -7,4 +7,5 @@ export const commonActions = {
     connection: bindActionCreators(actionCreators.connection, store.dispatch),
     stats: bindActionCreators(actionCreators.stats, store.dispatch),
     settings: bindActionCreators(actionCreators.settings, store.dispatch),
+    update: bindActionCreators(actionCreators.update, store.dispatch),
 };
