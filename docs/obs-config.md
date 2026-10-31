@@ -29,7 +29,8 @@ the installer asks to start OBS once (or to choose the OBS folder for a portable
 - `uuid` is optional; OBS stores it as 32 hex characters without dashes or braces.
 - The dock's Qt object name is `<title>_extraBrowser`, so titles must be unique.
 - A dock added while OBS is closed is not listed in the saved `DockState`. OBS sets no visibility for it on load,
-  so it most likely starts hidden and is turned on in the Docks menu (to be confirmed on a live OBS).
+  but it is still shown on the next start: checked on OBS 33.0.1, where the dock added by the installer appeared
+  right away. DockState is never edited.
 - Both files are UTF-8 with BOM and LF line endings.
 
 ### Which file to edit
