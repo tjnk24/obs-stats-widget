@@ -6,6 +6,10 @@
   #error PackageDir is not defined, build with npm run package:installer
 #endif
 
+#ifndef MinisignPath
+  #error MinisignPath is not defined, build with npm run package:installer
+#endif
+
 #ifndef OutputDir
   #define OutputDir "..\release"
 #endif
@@ -49,14 +53,21 @@ Name: "ptbr"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Type: filesandordirs; Name: "{app}\dock"
 Type: filesandordirs; Name: "{app}\obs-stats-bridge"
 Type: filesandordirs; Name: "{app}\ConfigureObs"
+Type: filesandordirs; Name: "{app}\updater"
 
 [Files]
 Source: "{#PackageDir}\*"; DestDir: "{app}"; Excludes: "README.txt"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "configure-obs.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ConfigureObs\*.ps1"; DestDir: "{app}\ConfigureObs"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#MinisignPath}"; DestDir: "{app}\updater"; Flags: ignoreversion
+Source: "third-party\minisign-LICENSE.txt"; DestDir: "{app}\updater"; Flags: ignoreversion
 
 [UninstallDelete]
 Type: files; Name: "{app}\install-manifest.json"
+Type: filesandordirs; Name: "{app}\dock"
+Type: filesandordirs; Name: "{app}\obs-stats-bridge"
+Type: filesandordirs; Name: "{app}\ConfigureObs"
+Type: filesandordirs; Name: "{app}\updater"
 
 [CustomMessages]
 en.ConfiguringObs=Setting up OBS...

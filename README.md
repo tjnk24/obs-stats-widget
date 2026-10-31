@@ -199,6 +199,9 @@ and run on Windows, then the files are signed and published. Each release has:
 - [minisign](https://jedisct1.github.io/minisign/) signatures (`.minisig`) of all three files
   and `SHA256SUMS.txt` with the checksums of the installer and the archive.
 
+The release notes end with a hidden `<!-- compatibility: {...} -->` line with the same data as `compatibility.json`:
+the dock reads it through the GitHub API to tell whether a new version suits your OBS.
+
 To check a download, use the public key [minisign.pub](minisign.pub):
 
 ```bash
@@ -211,4 +214,5 @@ without publishing.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE). The installer also includes [minisign](https://github.com/jedisct1/minisign) by Frank Denis
+(ISC license, `installer/third-party/minisign-LICENSE.txt`), used to check the signature of updates.

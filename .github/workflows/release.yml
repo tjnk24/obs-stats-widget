@@ -104,13 +104,20 @@ jobs:
           rm -f "$KEY_FILE"
           sha256sum "obs-stats-widget-setup-$VERSION.exe" "obs-stats-widget-$VERSION.zip" > SHA256SUMS.txt
 
+      - name: Write the release notes with the compatibility data
+        run: |
+          {
+            cat "docs/release-notes/$VERSION.md"
+            printf '\n<!-- compatibility: %s -->\n' "$(jq -c . release/compatibility.json)"
+          } > "$RUNNER_TEMP/release-notes.md"
+
       - name: Publish the GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$GITHUB_REF_NAME" \
             --title "obs-stats-widget $VERSION" \
-            --notes-file "docs/release-notes/$VERSION.md" \
+            --notes-file "$RUNNER_TEMP/release-notes.md" \
             "release/obs-stats-widget-setup-$VERSION.exe" \
             "release/obs-stats-widget-setup-$VERSION.exe.minisig" \
             "release/obs-stats-widget-$VERSION.zip" \

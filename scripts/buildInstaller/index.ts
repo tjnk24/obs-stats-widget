@@ -9,16 +9,20 @@ import {
     VERSION,
 } from '../packageRelease/consts.ts';
 
+import {ensureMinisign} from './ensureMinisign.ts';
 import {findCompiler} from './findCompiler.ts';
 
 if (!fs.existsSync(PACKAGE_DIRECTORY)) {
     throw new Error(`${path.relative(ROOT_DIRECTORY, PACKAGE_DIRECTORY)} is missing, run npm run package:release first`);
 }
 
+const minisign = await ensureMinisign();
+
 const result = spawnSync(findCompiler(), [
     '/Qp',
     `/DAppVersion=${VERSION}`,
     `/DPackageDir=${PACKAGE_DIRECTORY}`,
+    `/DMinisignPath=${minisign}`,
     `/DOutputDir=${RELEASE_DIRECTORY}`,
     path.join(ROOT_DIRECTORY, 'installer', 'obs-stats-widget.iss'),
 ], {stdio: 'inherit'});
