@@ -21,6 +21,7 @@
     "prepare": "husky",
     "package:release": "npm run build:prod && node scripts/packageRelease/index.ts",
     "package:installer": "npm run package:release && node scripts/buildInstaller/index.ts",
+    "serve:test-release": "node scripts/serveTestRelease/index.ts",
     "test:installer": "node scripts/buildInstaller/fetchMinisign.ts && powershell -NoProfile -ExecutionPolicy Bypass -File installer/tests/run-tests.ps1"
   },
   "engines": {

@@ -5,6 +5,8 @@ export const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 
 export const IS_DEV_SERVER = Boolean(process.env.WEBPACK_SERVE);
 
+export const TEST_UPDATE_SERVER: string = process.env.TEST_UPDATE_SERVER || '';
+
 export const CONTENT_HASH = IS_DEVELOPMENT ? '' : '.[contenthash:8]';
 
 export const RESOLVE_EXTENSIONS: string[] = ['.js', '.ts', '.tsx', '.json'];

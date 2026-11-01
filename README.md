@@ -187,10 +187,27 @@ Scripts:
 | `npm run build:prod` | Production build into `build` |
 | `npm run package:release` | Production build plus the release folder and `compatibility.json` in `release` |
 | `npm run package:installer` | `package:release` plus the Windows installer `release/obs-stats-widget-setup-<version>.exe` (needs [Inno Setup 6](https://jrsoftware.org/isinfo.php); `ISCC_PATH` points to `ISCC.exe` if it is not in the default folder) |
+| `npm run serve:test-release -- <folder>` | Serves a signed test release on `http://127.0.0.1:3063` for an end-to-end update test; `--broken-signature` serves a wrong setup signature |
 | `npm run test:installer` | Pester 5 tests of the script that sets up OBS and of the updater (`installer/`); downloads minisign first. Windows only |
 | `npm run lint` | TypeScript, ESLint, Stylelint and Knip |
 | `npm run test:unit` | Vitest unit tests of the dock logic (settings migrations, versions, release data, compatibility) |
 | `npm test` | `lint` and `test:unit` together, as CI runs them |
+
+### Testing an update end to end
+
+The real updater only trusts GitHub and the release key, so a test runs on a test build:
+
+1. Create a throwaway key: `minisign -G -W -p test.pub -s test.key` (keep it outside the repository).
+2. Build the installer you will install with `TEST_UPDATE_SERVER=http://127.0.0.1:3063` and
+   `TEST_UPDATE_PUBLIC_KEY=<the key string from test.pub>` set: the dock then asks that server for the latest release,
+   and the installer ships a copy of the updater whose release address and key are replaced. Without these variables
+   the build is the normal one.
+3. Build a newer version the same way (for example in a copy of the project with a higher `version`), put its
+   `obs-stats-widget-setup-<version>.exe` and `compatibility.json` into a folder and sign both with
+   `minisign -S -s test.key -m <file>`.
+4. Run `npm run serve:test-release -- <that folder>`, install the test build and press Update in the dock.
+
+Reinstall a normal build afterwards.
 
 A pre-commit hook (husky and lint-staged) lints the changed files and type-checks the project.
 The dev server clears the `build` folder, so run `npm run build:prod` again before using the dock in OBS.

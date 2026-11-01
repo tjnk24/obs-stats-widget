@@ -12,7 +12,7 @@ import {GithubReleaseDto} from '__types/update/GithubReleaseDto';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
 import {UpdateInstallBlockerEnum} from '__types/update/UpdateInstallBlockerEnum';
 import {
-    GITHUB_LATEST_RELEASE_URL,
+    LATEST_RELEASE_URL,
     UPDATE_CHECK_PERIOD_MS,
     UPDATE_CHECK_TIMER_MS,
     UPDATE_COMMAND_PARAMETER,
@@ -153,7 +153,7 @@ class UpdateService {
 
     private fetchLatest = async (): Promise<UpdateCheckStatusEnum> => {
         try {
-            const response = await fetch(GITHUB_LATEST_RELEASE_URL, {headers: {Accept: 'application/vnd.github+json'}});
+            const response = await fetch(LATEST_RELEASE_URL, {headers: {Accept: 'application/vnd.github+json'}});
 
             if (response.status === HTTP_NOT_FOUND) {
                 commonActions.update.setLatest(null);

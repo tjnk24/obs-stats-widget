@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import {ROOT_DIRECTORY} from '../packageRelease/consts.ts';
+import {RELEASE_DIRECTORY, ROOT_DIRECTORY} from '../packageRelease/consts.ts';
 
 const MINISIGN_VERSION = '0.12';
 
@@ -18,3 +18,13 @@ export const COMPILER_LOCATIONS: Array<string | undefined> = [
     process.env['ProgramFiles(x86)'] && path.join(process.env['ProgramFiles(x86)'], 'Inno Setup 6', 'ISCC.exe'),
     process.env.ProgramFiles && path.join(process.env.ProgramFiles, 'Inno Setup 6', 'ISCC.exe'),
 ];
+
+export const UPDATER_SOURCE_DIRECTORY: string = path.join(ROOT_DIRECTORY, 'installer', 'updater');
+
+export const TEST_UPDATER_DIRECTORY: string = path.join(RELEASE_DIRECTORY, 'test-updater');
+
+export const UPDATER_ENTRY_NAME: string = 'Update-Widget.ps1';
+
+export const RELEASE_BASE_URL_PATTERN: RegExp = /(\[string\]\$ReleaseBaseUrl = ')[^']*(')/;
+
+export const PUBLIC_KEY_PATTERN: RegExp = /(\[string\]\$PublicKey = ')[^']*(')/;

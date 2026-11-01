@@ -73,7 +73,8 @@ export const UPDATE_COMMAND_PARAMETER: ProfileParameterKeyDto = {
     parameterName: 'UpdateCommand',
 };
 export const UPDATE_STATUS_STALE_SEC = 120;
-export const GITHUB_LATEST_RELEASE_URL = 'https://api.github.com/repos/tjnk24/obs-stats-widget/releases/latest';
+const GITHUB_LATEST_RELEASE_URL = 'https://api.github.com/repos/tjnk24/obs-stats-widget/releases/latest';
+export const LATEST_RELEASE_URL: string = process.env.TEST_UPDATE_SERVER ? `${process.env.TEST_UPDATE_SERVER}/latest` : GITHUB_LATEST_RELEASE_URL;
 export const UPDATE_CHECK_PERIOD_MS = 24 * 60 * 60 * 1000;
 export const UPDATE_CHECK_TIMER_MS = 60 * 60 * 1000;
 export const UPDATE_REMIND_DELAY_MS = 24 * 60 * 60 * 1000;
