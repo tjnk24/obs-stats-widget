@@ -7,6 +7,10 @@ export const NOW: number = 1_800_000_000_000;
 
 export const CURRENT_VERSION: string = '0.1.0';
 
+export const OLDER_VERSION: string = '0.0.9';
+
+export const CURRENT_RELEASE_URL: string = 'https://github.com/tjnk24/obs-stats-widget/releases/tag/v0.1.0';
+
 export const RELEASE: ReleaseDto = {
     version: '0.2.0',
     url: 'https://github.com/tjnk24/obs-stats-widget/releases/tag/v0.2.0',
@@ -20,5 +24,5 @@ export const REQUEST: UpdateRequestDto = {version: '0.2.0', requestedAt: NOW - 5
 export const STATE = {
     connection: {status: ConnectionStatusEnum.Identified},
     update: {latest: RELEASE, bridge: null, request: null, deferredVersion: null},
-    settings: {skippedUpdateVersion: null, updateRemindAt: null},
+    settings: {skippedUpdateVersion: null, updateRemindAt: null, lastSeenVersion: CURRENT_VERSION},
 } as unknown as BaseStore;

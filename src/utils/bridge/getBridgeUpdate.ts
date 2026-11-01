@@ -11,8 +11,9 @@ import {isRequestOfType} from '__utils/requests/isRequestOfType';
 import {parseBridgeData} from './parseBridgeData';
 import {parseUpdateStatus} from './parseUpdateStatus';
 
-export const getBridgeUpdate = (pairs: RequestResultPairDto[]): Nullable<BridgeUpdateStateDto> => {
-    const bridgeData = parseBridgeData(findResultData<ObsProfileParameterDto>(pairs, isRequestOfType(ObsRequestTypeEnum.GetProfileParameter)));
+export const getBridgeUpdate = (pairs: RequestResultPairDto[], sceneCollection: Nullable<string>): Nullable<BridgeUpdateStateDto> => {
+    const parameter = findResultData<ObsProfileParameterDto>(pairs, isRequestOfType(ObsRequestTypeEnum.GetProfileParameter));
+    const bridgeData = parseBridgeData(parameter, sceneCollection);
 
     if (!bridgeData) {
         return null;

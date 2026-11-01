@@ -15,8 +15,10 @@ import {UpdateBannerModeEnum} from '../../types';
 import {useUpdateBannerView} from '../useUpdateBannerView';
 
 import {
+    CURRENT_RELEASE_URL,
     CURRENT_VERSION,
     NOW,
+    OLDER_VERSION,
     RELEASE,
     REQUEST,
     STATE,
@@ -38,7 +40,7 @@ describe('useUpdateBannerView', () => {
     it('shows a newer release', () => {
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(STATE));
 
-        expect(useUpdateBannerView()).toEqual({mode: UpdateBannerModeEnum.NewVersion, deferredVersion: null});
+        expect(useUpdateBannerView()).toEqual({mode: UpdateBannerModeEnum.NewVersion, deferredVersion: null, currentReleaseUrl: CURRENT_RELEASE_URL});
     });
 
     it('hides everything while OBS is not connected', () => {
@@ -87,6 +89,14 @@ describe('useUpdateBannerView', () => {
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
         expect(useUpdateBannerView().mode).toBe(UpdateBannerModeEnum.NewVersion);
+    });
+
+    it('tells once that the dock was updated', () => {
+        const state = {...STATE, settings: {...STATE.settings, lastSeenVersion: OLDER_VERSION}};
+
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
+
+        expect(useUpdateBannerView().mode).toBe(UpdateBannerModeEnum.Updated);
     });
 
     it('hides a release that is not newer', () => {

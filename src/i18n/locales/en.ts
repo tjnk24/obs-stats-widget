@@ -11,10 +11,15 @@ export const en = {
         connected: 'OBS connected',
         toStats: 'Back to stats',
         toSettings: 'Settings',
+        bridgeChecking: 'Looking for the bridge script…',
+        loadingData: 'Getting data…',
+        switchingCollection: 'OBS is switching the scene collection…',
     },
     connection: {
         connecting: 'Connecting to OBS...',
         closed: 'No connection to OBS (obs-websocket, port {{port}}). Retrying in {{seconds}} s...',
+        webSocketOffTitle: 'obs-websocket does not answer on port {{port}}',
+        webSocketOff: 'The WebSocket server is probably turned off. Turn it on in $t(obs.tools) → $t(obs.webSocketSettings) → “$t(obs.enableWebSocketServer)”. Check “$t(obs.serverPort)” there too: it should be {{port}}, otherwise change the port in the dock settings. Retrying in {{seconds}} s...',
     },
     login: {
         title: 'Connect to OBS',
@@ -24,6 +29,7 @@ export const en = {
         hint: 'Port and password: $t(obs.tools) → $t(obs.webSocketSettings) → $t(obs.showConnectInfo).',
         closed: 'OBS does not answer on this port. Make sure OBS is running and the port is correct.',
         wrongPassword: 'Wrong password. Enter the obs-websocket password again.',
+        webSocketOff: 'obs-websocket does not answer. Turn the server on in $t(obs.tools) → $t(obs.webSocketSettings) → “$t(obs.enableWebSocketServer)” and check that “$t(obs.serverPort)” matches the port below.',
     },
     portField: {
         label: 'obs-websocket port',
@@ -89,7 +95,6 @@ export const en = {
         graphTooltip: 'Bitrate over the last {{minutes}} min',
         graphCollecting: 'Collecting bitrate data…',
         graphWaiting: 'The graph appears when the stream starts',
-        noBridge: 'The platform will be shown by the {{script}} script ($t(obs.tools) → $t(obs.scripts))',
         sameOutputName: '{{count}} outputs named “{{name}}”, stats for one of them only',
         mainFallbackTitle: 'Stream',
         unknownPlatform: 'Unknown platform',
@@ -121,6 +126,7 @@ export const en = {
     },
     update: {
         available: 'Version {{version}} is out',
+        updated: 'The widget is updated to {{version}}',
         install: 'Update',
         whatsNew: 'What\'s new',
         download: 'Download manually',
@@ -164,6 +170,10 @@ export const en = {
             bridgeRestart: 'After the update, restart OBS to load the new bridge script.',
         },
     },
+    bridgeNotice: {
+        title: 'The bridge script is not loaded in the “{{collection}}” scene collection',
+        description: 'Without it the dock shows no platforms of plugin outputs, no GPU and no system memory, and cannot update itself. Load it in $t(obs.tools) → $t(obs.scripts) → “+” ($t(obs.addScripts)) and pick {{script}}.',
+    },
     obs: {
         tools: 'Tools',
         settings: 'Settings',
@@ -178,6 +188,8 @@ export const en = {
         skippedFrames: 'Skipped frames due to encoding lag',
         missedFrames: 'Frames missed due to rendering lag',
         memoryUsage: 'Memory Usage',
+        enableWebSocketServer: 'Enable WebSocket server',
+        addScripts: 'Add Scripts',
     },
     units: {
         milliseconds: '{{value}} ms',

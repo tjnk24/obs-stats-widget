@@ -13,10 +13,15 @@ export const de: TranslationDto = {
         connected: 'OBS verbunden',
         toStats: 'Zur Statistik',
         toSettings: 'Einstellungen',
+        bridgeChecking: 'Suche das Brückenskript…',
+        loadingData: 'Daten werden geladen…',
+        switchingCollection: 'OBS wechselt die Szenensammlung…',
     },
     connection: {
         connecting: 'Verbindung zu OBS...',
         closed: 'Keine Verbindung zu OBS (obs-websocket, Port {{port}}). Neuer Versuch in {{seconds}} s...',
+        webSocketOffTitle: 'obs-websocket antwortet nicht auf Port {{port}}',
+        webSocketOff: 'Wahrscheinlich ist der WebSocket-Server ausgeschaltet. Schalte ihn unter $t(obs.tools) → $t(obs.webSocketSettings) → „$t(obs.enableWebSocketServer)“ ein. Prüfe dort auch „$t(obs.serverPort)“: Er sollte {{port}} sein, sonst ändere den Port in den Dock-Einstellungen. Neuer Versuch in {{seconds}} s...',
     },
     login: {
         title: 'Mit OBS verbinden',
@@ -26,6 +31,7 @@ export const de: TranslationDto = {
         hint: 'Port und Passwort: $t(obs.tools) → $t(obs.webSocketSettings) → $t(obs.showConnectInfo).',
         closed: 'OBS antwortet auf diesem Port nicht. Prüfe, ob OBS läuft und der Port stimmt.',
         wrongPassword: 'Falsches Passwort. Gib das obs-websocket-Passwort erneut ein.',
+        webSocketOff: 'obs-websocket antwortet nicht. Schalte den Server unter $t(obs.tools) → $t(obs.webSocketSettings) → „$t(obs.enableWebSocketServer)“ ein und prüfe, ob „$t(obs.serverPort)“ mit dem Port unten übereinstimmt.',
     },
     portField: {
         label: 'obs-websocket-Port',
@@ -91,7 +97,6 @@ export const de: TranslationDto = {
         graphTooltip: 'Bitrate der letzten {{minutes}} min',
         graphCollecting: 'Bitrate-Daten werden gesammelt…',
         graphWaiting: 'Das Diagramm erscheint, sobald der Stream startet',
-        noBridge: 'Die Plattform zeigt das Skript {{script}} an ($t(obs.tools) → $t(obs.scripts))',
         sameOutputName: 'Ausgaben mit dem Namen „{{name}}“: {{count}}, Statistik nur für eine',
         mainFallbackTitle: 'Stream',
         unknownPlatform: 'Unbekannte Plattform',
@@ -123,6 +128,7 @@ export const de: TranslationDto = {
     },
     update: {
         available: 'Version {{version}} ist erschienen',
+        updated: 'Das Widget wurde auf Version {{version}} aktualisiert',
         install: 'Aktualisieren',
         whatsNew: 'Was ist neu',
         download: 'Manuell herunterladen',
@@ -166,6 +172,10 @@ export const de: TranslationDto = {
             bridgeRestart: 'Starte OBS nach dem Update neu, damit das neue Brückenskript geladen wird.',
         },
     },
+    bridgeNotice: {
+        title: 'Das Brückenskript ist in der Szenensammlung „{{collection}}“ nicht geladen',
+        description: 'Ohne es zeigt das Dock keine Plattformen von Plugin-Ausgaben, keine GPU und keinen Systemspeicher an und kann sich nicht selbst aktualisieren. Lade es unter $t(obs.tools) → $t(obs.scripts) → „+“ ($t(obs.addScripts)) und wähle {{script}}.',
+    },
     obs: {
         tools: 'Werkzeuge',
         settings: 'Einstellungen',
@@ -180,6 +190,8 @@ export const de: TranslationDto = {
         skippedFrames: 'Übersprungene Frames durch Kodierungsverzögerung',
         missedFrames: 'Ausgelassene Frames durch Renderverzögerung',
         memoryUsage: 'RAM-Nutzung',
+        enableWebSocketServer: 'WebSocket-Server aktivieren',
+        addScripts: 'Skripte hinzufügen',
     },
     units: {
         milliseconds: '{{value}} ms',

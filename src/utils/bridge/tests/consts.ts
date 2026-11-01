@@ -1,3 +1,4 @@
+import {ObsProfileParameterDto} from '__types/obs/responses/ObsProfileParameterDto';
 import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
 import {UpdateStatusDto} from '__types/update/bridge/UpdateStatusDto';
 import {UpdateRequestDto} from '__types/update/UpdateRequestDto';
@@ -20,4 +21,16 @@ export const FRESH_DONE_STATUS: UpdateStatusDto = {
     percent: 100,
     error: null,
     updated: (REQUESTED_AT + 30_000) / 1000,
+};
+
+export const BRIDGE_PUBLISHED_AT: number = 1_800_000_000;
+
+export const BRIDGE_SCENE_COLLECTION: string = 'Main scenes';
+
+export const BRIDGE_PARAMETER: ObsProfileParameterDto = {
+    parameterValue: JSON.stringify({bridgeVersion: 2, updated: BRIDGE_PUBLISHED_AT, sceneCollection: BRIDGE_SCENE_COLLECTION, outputs: []}),
+};
+
+export const OLD_BRIDGE_PARAMETER: ObsProfileParameterDto = {
+    parameterValue: JSON.stringify({bridgeVersion: 1, updated: BRIDGE_PUBLISHED_AT, outputs: []}),
 };

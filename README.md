@@ -62,7 +62,7 @@ Enable WebSocket server. For a portable OBS, use the [zip](#from-the-zip-archive
 
 **Update** from the dock: when a new version is out, a banner offers Update, Skip this version and Remind me
 tomorrow. Update downloads the installer of the new version, checks its minisign signature and runs it silently;
-then the dock reloads. While a stream or recording is running, the dock offers to update right after it stops.
+then the dock reloads and says once which version it was updated to. While a stream or recording is running, the dock offers to update right after it stops.
 If the new version needs a newer OBS, or the bridge script is not loaded in the current scene collection, the
 banner links to the release instead. Running the installer of the new version by hand works too: it replaces the
 files and adds the bridge script to scene collections created since the last install; the rest of your OBS
@@ -119,7 +119,10 @@ obs-websocket reports the stats of plugin outputs but not where they stream to, 
   open it in its own window, where a download does not work. It opens only this project's GitHub pages.
 
 The script publishes this every three seconds as the profile parameter `[ObsStatsDock] PluginOutputs`,
-which the dock reads through obs-websocket.
+which the dock reads through obs-websocket. The data carries the name of the scene collection the script runs in,
+so after a collection switch the dock ignores what the previous collection's script left behind. While OBS switches
+the collection, the dock dims the page, and the header shows what it is waiting for: the switch, the first data
+or the bridge script.
 
 `obs-stats-bridge.lua` is only the entry point: its parts live in the `obs-stats-bridge` folder next to it,
 and OBS loads them from there. If you copy the script somewhere else, copy the folder with it.
@@ -162,9 +165,15 @@ The gear in the top right corner opens the settings:
   and run the installer again or follow the [zip steps](#from-the-zip-archive).
 - **The dock is empty or outdated** (built from source). Run `npm run build:prod` again and press Ctrl+R in the dock.
 - **"No connection to OBS".** Check that the WebSocket server is enabled in OBS and that the port matches.
-  The dock retries every few seconds and connects as soon as OBS answers.
+  Inside OBS the dock says so itself and shows where to turn the server on. It retries every few seconds and
+  connects as soon as OBS answers.
 - **"Wrong password".** Copy the password from Tools → WebSocket Server Settings → Show Connect Info.
-- **Plugin cards say "Unknown platform".** The bridge script is missing in this scene collection: add it in Tools → Scripts, or run the installer again to add it to every collection.
+- **"The bridge script is not loaded in this scene collection".** Add it in Tools → Scripts → "+": the notice shows
+  the path to `obs-stats-bridge.lua` with a copy button when the dock was installed with the installer or from the zip.
+  Running the installer again adds it to every collection. The notice cannot be closed: without the script the
+  dock cannot show plugin platforms, the GPU or memory and cannot update itself. It goes away by itself once the
+  script is loaded.
+- **Plugin cards say "Unknown platform".** The bridge script is missing in this scene collection, see above.
 - **No GPU or system memory rows.** These need the bridge script and Windows.
 
 If something else goes wrong, open an issue and attach the text from Settings → Diagnostics → Copy diagnostics,

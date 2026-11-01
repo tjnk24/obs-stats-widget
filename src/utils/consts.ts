@@ -45,6 +45,7 @@ export const DEFAULT_SETTINGS: SettingsDto = {
     lastUpdateCheckAt: null,
     skippedUpdateVersion: null,
     updateRemindAt: null,
+    lastSeenVersion: null,
     isMockEnabled: false,
 };
 
@@ -66,7 +67,9 @@ export const BRIDGE_PARAMETER: ProfileParameterKeyDto = {
     parameterCategory: 'ObsStatsDock',
     parameterName: 'PluginOutputs',
 };
-export const BRIDGE_STALE_SEC = 15;
+export const BRIDGE_STALE_SEC = 8;
+export const CONFIG_EVENT_SUBSCRIPTION: number = 1 << 1;
+export const COLLECTION_SWITCH_TIMEOUT_MS: number = 15_000;
 
 export const UPDATE_COMMAND_PARAMETER: ProfileParameterKeyDto = {
     parameterCategory: 'ObsStatsDock',
@@ -79,6 +82,7 @@ export const OPEN_URL_COMMAND_PARAMETER: ProfileParameterKeyDto = {
 export const OPEN_URL_MIN_BRIDGE_VERSION: number = 2;
 export const UPDATE_STATUS_STALE_SEC = 120;
 export const UPDATE_STATUS_CLOCK_SLACK_MS: number = 2000;
+export const RELEASES_PAGE_URL: string = 'https://github.com/tjnk24/obs-stats-widget/releases';
 const GITHUB_LATEST_RELEASE_URL = 'https://api.github.com/repos/tjnk24/obs-stats-widget/releases/latest';
 export const LATEST_RELEASE_URL: string = process.env.TEST_UPDATE_SERVER ? `${process.env.TEST_UPDATE_SERVER}/latest` : GITHUB_LATEST_RELEASE_URL;
 export const UPDATE_CHECK_PERIOD_MS = 24 * 60 * 60 * 1000;
@@ -168,6 +172,7 @@ export const VERSION_PATTERN: RegExp = /^(\d+)\.(\d+)\.(\d+)/;
 export const TAG_PATTERN: RegExp = /^v(\d+\.\d+\.\d+)$/;
 export const COMPATIBILITY_PATTERN: RegExp = /<!--\s*compatibility:\s*([\s\S]*?)\s*-->/;
 export const CHROMIUM_PATTERN: RegExp = /Chrome\/(\d+)\./;
+export const OBS_USER_AGENT_PATTERN: RegExp = /\bOBS\/\d/;
 
 export const RUNNING_UPDATE_STAGES: UpdateStageEnum[] = [
     Preparing,

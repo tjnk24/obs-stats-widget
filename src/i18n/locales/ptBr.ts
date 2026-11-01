@@ -13,10 +13,15 @@ export const ptBr: TranslationDto = {
         connected: 'OBS conectado',
         toStats: 'Voltar às estatísticas',
         toSettings: 'Configurações',
+        bridgeChecking: 'Procurando o script-ponte…',
+        loadingData: 'Recebendo dados…',
+        switchingCollection: 'O OBS está trocando a coleção de cenas…',
     },
     connection: {
         connecting: 'Conectando ao OBS...',
         closed: 'Sem conexão com o OBS (obs-websocket, porta {{port}}). Nova tentativa em {{seconds}} s...',
+        webSocketOffTitle: 'O obs-websocket não responde na porta {{port}}',
+        webSocketOff: 'Provavelmente o servidor WebSocket está desligado. Ative-o em $t(obs.tools) → $t(obs.webSocketSettings) → “$t(obs.enableWebSocketServer)”. Confira ali também “$t(obs.serverPort)”: deve ser {{port}}; se não for, mude a porta nas configurações do painel. Nova tentativa em {{seconds}} s...',
     },
     login: {
         title: 'Conectar ao OBS',
@@ -26,6 +31,7 @@ export const ptBr: TranslationDto = {
         hint: 'Porta e senha: $t(obs.tools) → $t(obs.webSocketSettings) → $t(obs.showConnectInfo).',
         closed: 'O OBS não responde nesta porta. Verifique se o OBS está aberto e se a porta está correta.',
         wrongPassword: 'Senha incorreta. Digite a senha do obs-websocket novamente.',
+        webSocketOff: 'O obs-websocket não responde. Ative o servidor em $t(obs.tools) → $t(obs.webSocketSettings) → “$t(obs.enableWebSocketServer)” e confira se “$t(obs.serverPort)” é igual à porta abaixo.',
     },
     portField: {
         label: 'Porta do obs-websocket',
@@ -91,7 +97,6 @@ export const ptBr: TranslationDto = {
         graphTooltip: 'Bitrate dos últimos {{minutes}} min',
         graphCollecting: 'Coletando dados de bitrate…',
         graphWaiting: 'O gráfico aparece quando a live começar',
-        noBridge: 'O script {{script}} vai mostrar a plataforma ($t(obs.tools) → $t(obs.scripts))',
         sameOutputName: 'Saídas com o nome “{{name}}”: {{count}}, estatísticas de apenas uma',
         mainFallbackTitle: 'Live',
         unknownPlatform: 'Plataforma desconhecida',
@@ -123,6 +128,7 @@ export const ptBr: TranslationDto = {
     },
     update: {
         available: 'Saiu a versão {{version}}',
+        updated: 'O widget foi atualizado para a versão {{version}}',
         install: 'Atualizar',
         whatsNew: 'Novidades',
         download: 'Baixar manualmente',
@@ -166,6 +172,10 @@ export const ptBr: TranslationDto = {
             bridgeRestart: 'Depois de atualizar, reinicie o OBS para carregar o novo script-ponte.',
         },
     },
+    bridgeNotice: {
+        title: 'O script-ponte não está carregado na coleção de cenas “{{collection}}”',
+        description: 'Sem ele, o painel não mostra as plataformas das saídas de plugins, a GPU nem a memória do sistema, e não consegue se atualizar sozinho. Carregue-o em $t(obs.tools) → $t(obs.scripts) → “+” ($t(obs.addScripts)) e escolha {{script}}.',
+    },
     obs: {
         tools: 'Ferramentas',
         settings: 'Configurações',
@@ -180,6 +190,8 @@ export const ptBr: TranslationDto = {
         skippedFrames: 'Quadros ignorados devido à demora na codificação',
         missedFrames: 'Quadros perdidos devido à demora na renderização',
         memoryUsage: 'Uso de memória',
+        enableWebSocketServer: 'Ativar servidor WebSocket',
+        addScripts: 'Adicionar scripts',
     },
     units: {
         milliseconds: '{{value}} ms',

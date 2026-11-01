@@ -10,6 +10,7 @@ export type UpdateReducer = {
     checkStatus: UpdateCheckStatusEnum;
     latest: Nullable<ReleaseDto>;
     bridge: Nullable<BridgeUpdateStateDto>;
+    bridgeMissingChecks: number;
     isObsBusy: boolean;
     request: Nullable<UpdateRequestDto>;
     deferredVersion: Nullable<string>;
@@ -19,6 +20,7 @@ const initialState: UpdateReducer = {
     checkStatus: UpdateCheckStatusEnum.Idle,
     latest: null,
     bridge: null,
+    bridgeMissingChecks: 0,
     isObsBusy: false,
     request: null,
     deferredVersion: null,
@@ -36,6 +38,11 @@ const slice = createSlice({
         },
         setBridge: (state, {payload}: PayloadAction<Nullable<BridgeUpdateStateDto>>) => {
             state.bridge = payload;
+            state.bridgeMissingChecks = payload ? 0 : state.bridgeMissingChecks + 1;
+        },
+        resetBridge: state => {
+            state.bridge = null;
+            state.bridgeMissingChecks = 0;
         },
         setIsObsBusy: (state, {payload}: PayloadAction<boolean>) => {
             state.isObsBusy = payload;

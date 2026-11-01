@@ -11,6 +11,16 @@
     background-color: var(--ant-color-bg-layout);
 }
 
+.status {
+    min-width: 0;
+}
+
 .content {
     flex: 1;
+    transition: opacity var(--ant-motion-duration-mid);
+}
+
+.switching {
+    opacity: 0.45;
+    pointer-events: none;
 }

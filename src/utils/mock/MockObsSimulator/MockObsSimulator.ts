@@ -12,6 +12,7 @@ import {
     MOCK_FPS,
     MOCK_GPU,
     MOCK_MAIN_OUTPUT_NAME,
+    MOCK_SCENE_COLLECTION,
     MOCK_SYSTEM_MEMORY,
     MOCK_TWITCH_DELAY_SEC,
     MOCK_TWITCH_OUTPUT_NAME,
@@ -37,6 +38,7 @@ const {
     GetRecordStatus,
     SetProfileParameter,
     GetVersion,
+    GetSceneCollectionList,
 } = ObsRequestTypeEnum;
 
 export class MockObsSimulator {
@@ -156,6 +158,9 @@ export class MockObsSimulator {
             case GetRecordStatus:
                 return successResult(requestType, {outputActive: false});
 
+            case GetSceneCollectionList:
+                return successResult(requestType, {currentSceneCollectionName: MOCK_SCENE_COLLECTION, sceneCollections: [MOCK_SCENE_COLLECTION]});
+
             case SetProfileParameter:
                 return successResult(requestType, {});
 
@@ -193,6 +198,7 @@ export class MockObsSimulator {
         bridgeVersion: 2,
         updated: Math.floor(Date.now() / 1000),
         update: {available: true, status: null},
+        sceneCollection: MOCK_SCENE_COLLECTION,
         outputs: [
             ...(this.twitchOutput ? [{name: MOCK_TWITCH_OUTPUT_NAME, server: MOCK_TWITCH_SERVER}] : []),
             ...MOCK_EXTRA_TARGETS.map(({outputName, server}) => ({name: outputName, server})),

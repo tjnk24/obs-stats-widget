@@ -13,10 +13,15 @@ export const ru: TranslationDto = {
         connected: 'OBS подключён',
         toStats: 'К статистике',
         toSettings: 'Настройки',
+        bridgeChecking: 'Ищу скрипт-мост…',
+        loadingData: 'Получаю данные…',
+        switchingCollection: 'OBS переключает коллекцию сцен…',
     },
     connection: {
         connecting: 'Подключение к OBS...',
         closed: 'Нет связи с OBS (obs-websocket, порт {{port}}). Повтор через {{seconds}} с...',
+        webSocketOffTitle: 'obs-websocket не отвечает на порту {{port}}',
+        webSocketOff: 'Скорее всего, выключен сервер WebSocket. Включите его: $t(obs.tools) → $t(obs.webSocketSettings) → «$t(obs.enableWebSocketServer)». Там же проверьте «$t(obs.serverPort)»: он должен быть {{port}}, иначе поменяйте порт в настройках панели. Повтор через {{seconds}} с...',
     },
     login: {
         title: 'Подключение к OBS',
@@ -26,6 +31,7 @@ export const ru: TranslationDto = {
         hint: 'Порт и пароль: $t(obs.tools) → $t(obs.webSocketSettings) → $t(obs.showConnectInfo).',
         closed: 'OBS не отвечает на этом порту. Проверьте, что OBS запущен, а порт указан верно.',
         wrongPassword: 'Неверный пароль. Введите пароль obs-websocket ещё раз.',
+        webSocketOff: 'obs-websocket не отвечает. Включите сервер: $t(obs.tools) → $t(obs.webSocketSettings) → «$t(obs.enableWebSocketServer)» и проверьте, что «$t(obs.serverPort)» совпадает с портом ниже.',
     },
     portField: {
         label: 'Порт obs-websocket',
@@ -91,7 +97,6 @@ export const ru: TranslationDto = {
         graphTooltip: 'Битрейт за последние {{minutes}} мин',
         graphCollecting: 'Собираем данные о битрейте…',
         graphWaiting: 'График появится, когда начнётся эфир',
-        noBridge: 'Площадку покажет скрипт {{script}} ($t(obs.tools) → $t(obs.scripts))',
         sameOutputName: 'Выходов с именем «{{name}}»: {{count}}, статистика только по одному',
         mainFallbackTitle: 'Трансляция',
         unknownPlatform: 'Неизвестная площадка',
@@ -123,6 +128,7 @@ export const ru: TranslationDto = {
     },
     update: {
         available: 'Вышла версия {{version}}',
+        updated: 'Виджет обновлён до версии {{version}}',
         install: 'Обновить',
         whatsNew: 'Что нового',
         download: 'Скачать вручную',
@@ -166,6 +172,10 @@ export const ru: TranslationDto = {
             bridgeRestart: 'После обновления перезапустите OBS, чтобы загрузился новый скрипт-мост.',
         },
     },
+    bridgeNotice: {
+        title: 'Скрипт-мост не подключён в коллекции сцен «{{collection}}»',
+        description: 'Без него панель не покажет площадки выходов плагинов, видеокарту и память системы и не сможет обновляться сама. Подключите его: $t(obs.tools) → $t(obs.scripts) → «+» ($t(obs.addScripts)), файл {{script}}.',
+    },
     obs: {
         tools: 'Сервис',
         settings: 'Настройки',
@@ -180,6 +190,8 @@ export const ru: TranslationDto = {
         skippedFrames: 'Пропуск кадров (кодирование)',
         missedFrames: 'Пропуск кадров (рендеринг)',
         memoryUsage: 'Использование памяти',
+        enableWebSocketServer: 'Включить сервер WebSocket',
+        addScripts: 'Добавить скрипты',
     },
     units: {
         milliseconds: '{{value}} мс',

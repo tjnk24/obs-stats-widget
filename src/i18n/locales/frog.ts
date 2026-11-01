@@ -53,7 +53,6 @@ export const frog: DeepPartial<TranslationDto> = {
         graphTooltip: 'Кваканье за последние {{minutes}} мин',
         graphCollecting: 'Ловим мух битрейта…',
         graphWaiting: 'График появится, когда болото заквакает',
-        noBridge: 'Какой это пруд, расскажет скрипт {{script}} ($t(obs.tools) → $t(obs.scripts))',
         sameOutputName: 'Кувшинок с именем «{{name}}»: {{count}}, квакаем только про одну',
         mainFallbackTitle: 'Кваканье',
         unknownPlatform: 'Неведомое болото',

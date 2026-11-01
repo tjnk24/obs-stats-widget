@@ -6,6 +6,7 @@ export const MOCK_MAIN_OUTPUT_NAME = 'adv_stream';
 export const MOCK_TWITCH_OUTPUT_NAME = 'multi-output';
 export const MOCK_TWITCH_SERVER = 'rtmp://ingest.global-contribute.live-video.net';
 export const MOCK_TWITCH_DELAY_SEC = 5;
+export const MOCK_SCENE_COLLECTION: string = 'Mock scenes';
 
 export const MOCK_EXTRA_TARGETS: MockTargetDto[] = [
     {

@@ -12,4 +12,5 @@ export type SettingsDto = {
     lastUpdateCheckAt: Nullable<number>;
     skippedUpdateVersion: Nullable<string>;
     updateRemindAt: Nullable<number>;
+    lastSeenVersion: Nullable<string>;
 };

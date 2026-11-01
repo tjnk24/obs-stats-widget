@@ -11,16 +11,21 @@ import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 import {PasswordChangeDto} from '__types/connection/PasswordChangeDto';
 import {PasswordChangeResultEnum} from '__types/connection/PasswordChangeResultEnum';
 import {InFlightBatchDto} from '__types/obs/messages/InFlightBatchDto';
+import {ObsEventTypeEnum} from '__types/obs/messages/ObsEventTypeEnum';
 import {ObsMessageDto} from '__types/obs/messages/ObsMessageDto';
 import {ObsOpCodeEnum} from '__types/obs/messages/ObsOpCodeEnum';
+import {ObsSceneCollectionEventDto} from '__types/obs/messages/ObsSceneCollectionEventDto';
 import {ObsRequestDto} from '__types/obs/requests/ObsRequestDto';
 import {ObsRequestResultDto} from '__types/obs/requests/ObsRequestResultDto';
 import {ObsRequestTypeEnum} from '__types/obs/requests/ObsRequestTypeEnum';
+import {RequestResultPairDto} from '__types/obs/requests/RequestResultPairDto';
 import {getAuthString} from '__utils/auth/getAuthString';
 import {getBridgeUpdate} from '__utils/bridge/getBridgeUpdate';
 import {getHardware} from '__utils/bridge/getHardware';
 import {
     AUTHENTICATION_FAILED_CLOSE_CODE,
+    COLLECTION_SWITCH_TIMEOUT_MS,
+    CONFIG_EVENT_SUBSCRIPTION,
     DISCOVERY_EVERY_POLLS,
     OBS_RPC_VERSION,
     OBS_WEBSOCKET_PROTOCOL,
@@ -32,6 +37,7 @@ import {fetchDevObsConnection} from '__utils/dev/fetchDevObsConnection';
 import {MockObsSimulator} from '__utils/mock/MockObsSimulator';
 import {buildRequests} from '__utils/requests/buildRequests';
 import {getObsVersion} from '__utils/requests/getObsVersion';
+import {getSceneCollection} from '__utils/requests/getSceneCollection';
 import {isObsBusy} from '__utils/requests/isObsBusy';
 import {isRequestOfType} from '__utils/requests/isRequestOfType';
 import {StatsTracker} from '__utils/stats/StatsTracker';
@@ -43,9 +49,12 @@ const {
     Hello,
     Identify,
     Identified,
+    Event,
     RequestBatch,
     RequestBatchResponse,
 } = ObsOpCodeEnum;
+
+const {CurrentSceneCollectionChanging, CurrentSceneCollectionChanged} = ObsEventTypeEnum;
 
 const {Connecting, Closed, NeedPassword, WrongPassword} = ConnectionStatusEnum;
 
@@ -71,6 +80,10 @@ class ObsConnectionService {
     private simulator: Nullable<MockObsSimulator> = null;
 
     private pendingRequests: ObsRequestDto[] = [];
+
+    private collectionSwitchStartedAt: Nullable<number> = null;
+
+    private isCollectionSwitchFinished = false;
 
     private readonly tracker = new StatsTracker();
 
@@ -185,6 +198,12 @@ class ObsConnectionService {
         this.tracker.reset();
 
         commonActions.stats.reset();
+        commonActions.update.resetBridge();
+        commonActions.connection.setSceneCollection(null);
+        commonActions.connection.setIsSwitchingCollection(false);
+
+        this.collectionSwitchStartedAt = null;
+        this.isCollectionSwitchFinished = false;
     };
 
     private onClose = (socket: WebSocket, code: number) => {
@@ -223,7 +242,7 @@ class ObsConnectionService {
             case Hello: {
                 const identify: Record<string, unknown> = {
                     rpcVersion: OBS_RPC_VERSION,
-                    eventSubscriptions: 0,
+                    eventSubscriptions: CONFIG_EVENT_SUBSCRIPTION,
                 };
 
                 const password = this.passwordChange?.password ?? this.password;
@@ -251,6 +270,10 @@ class ObsConnectionService {
                 commonActions.connection.setStatus(ConnectionStatusEnum.Identified);
 
                 this.startPolling();
+                break;
+
+            case Event:
+                this.onEvent(data.eventType, data.eventData);
                 break;
 
             case RequestBatchResponse: {
@@ -322,9 +345,14 @@ class ObsConnectionService {
             commonActions.stats.setTargets(discovered);
         }
 
-        if (pairs.some(({request}) => isRequestOfType(ObsRequestTypeEnum.GetProfileParameter)(request))) {
-            commonActions.stats.setHardware(getHardware(pairs));
-            commonActions.update.setBridge(getBridgeUpdate(pairs));
+        this.updateSceneCollection(getSceneCollection(pairs));
+        this.finishCollectionSwitch(pairs);
+
+        if (pairs.some(({request, result}) => isRequestOfType(ObsRequestTypeEnum.GetProfileParameter)(request) && result?.requestStatus.result)) {
+            const {sceneCollection} = connectionSelector(getStore());
+
+            commonActions.stats.setHardware(getHardware(pairs, sceneCollection));
+            commonActions.update.setBridge(getBridgeUpdate(pairs, sceneCollection));
         }
 
         const isBusy = isObsBusy(pairs);
@@ -340,6 +368,58 @@ class ObsConnectionService {
         }
 
         commonActions.stats.setView(this.tracker.ingest(statsSelector(getStore()).targets, pairs, performance.now()));
+    };
+
+    private updateSceneCollection = (sceneCollection: Nullable<string>) => {
+        if (sceneCollection === null) {
+            return;
+        }
+
+        const previousCollection = connectionSelector(getStore()).sceneCollection;
+
+        if (sceneCollection === previousCollection) {
+            return;
+        }
+
+        previousCollection !== null && commonActions.update.resetBridge();
+
+        commonActions.connection.setSceneCollection(sceneCollection);
+    };
+
+    private onEvent = (eventType: string, eventData: Nullable<ObsSceneCollectionEventDto>) => {
+        if (eventType === CurrentSceneCollectionChanging) {
+            this.collectionSwitchStartedAt = Date.now();
+            this.isCollectionSwitchFinished = false;
+
+            commonActions.connection.setIsSwitchingCollection(true);
+            commonActions.update.resetBridge();
+
+            return;
+        }
+
+        if (eventType === CurrentSceneCollectionChanged) {
+            this.isCollectionSwitchFinished = true;
+
+            this.updateSceneCollection(eventData?.sceneCollectionName ?? null);
+        }
+    };
+
+    private finishCollectionSwitch = (pairs: RequestResultPairDto[]) => {
+        const {collectionSwitchStartedAt} = this;
+
+        if (collectionSwitchStartedAt === null) {
+            return;
+        }
+
+        const isAnswered = pairs.some(({request, result}) => isRequestOfType(ObsRequestTypeEnum.GetStats)(request) && result?.requestStatus.result);
+        const isTimedOut = Date.now() - collectionSwitchStartedAt > COLLECTION_SWITCH_TIMEOUT_MS;
+
+        if ((this.isCollectionSwitchFinished && isAnswered) || isTimedOut) {
+            this.collectionSwitchStartedAt = null;
+            this.isCollectionSwitchFinished = false;
+
+            commonActions.connection.setIsSwitchingCollection(false);
+        }
     };
 
     private finishPasswordChange = (result: PasswordChangeResultEnum) => {

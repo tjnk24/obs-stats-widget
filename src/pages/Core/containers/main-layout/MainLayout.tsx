@@ -3,6 +3,8 @@ import {
     Alert,
     Badge,
     Flex,
+    Spin,
+    Typography,
 } from 'antd';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
@@ -10,22 +12,27 @@ import {Outlet, useMatch} from 'react-router';
 
 import EnhancedButton from '__components/EnhancedButton';
 import {ROUTES} from '__routes';
-import {connectionStatusSelector} from '__selectors/connectionSelectors';
+import {connectionIsSwitchingCollectionSelector, connectionStatusSelector} from '__selectors/connectionSelectors';
 import {settingsIsMockEnabledSelector} from '__selectors/settingsSelectors';
 import {obsConnectionService} from '__services/obsConnectionService';
 import {routerManager} from '__services/routerManager';
 
+import BridgeNotice from '../bridge-notice';
 import UpdateBanner from '../update-banner';
 
 import {CONNECTION_BADGES} from './consts';
+import {useHeaderStageView} from './hooks/useHeaderStageView';
 
 import style from './style.module.scss';
 
 const MainLayout = () => {
     const status = useSelector(connectionStatusSelector);
     const isMockEnabled = useSelector(settingsIsMockEnabledSelector);
+    const isSwitchingCollection = useSelector(connectionIsSwitchingCollectionSelector);
 
     const {t} = useTranslation();
+
+    const {stageKey} = useHeaderStageView();
 
     const isSettingsPage = Boolean(useMatch(ROUTES.SETTINGS.INDEX));
 
@@ -43,10 +50,33 @@ const MainLayout = () => {
                 justify="space-between"
                 gap="small"
             >
-                <Badge
-                    status={badgeStatus}
-                    text={t(textKey)}
-                />
+                <Flex
+                    className={style.status}
+                    align="center"
+                    gap={14}
+                >
+                    <Badge
+                        status={badgeStatus}
+                        text={t(textKey)}
+                    />
+
+                    {stageKey && (
+                        <Flex
+                            className={style.status}
+                            align="center"
+                            gap="small"
+                        >
+                            <Spin size="small"/>
+
+                            <Typography.Text
+                                type="secondary"
+                                ellipsis
+                            >
+                                {t(stageKey)}
+                            </Typography.Text>
+                        </Flex>
+                    )}
+                </Flex>
 
                 <EnhancedButton
                     buttonProps={isSettingsPage
@@ -90,8 +120,10 @@ const MainLayout = () => {
 
             <UpdateBanner/>
 
+            <BridgeNotice/>
+
             <Flex
-                className={style.content}
+                className={isSwitchingCollection ? `${style.content} ${style.switching}` : style.content}
                 vertical
             >
                 <Outlet/>

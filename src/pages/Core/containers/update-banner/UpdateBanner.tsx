@@ -10,12 +10,12 @@ import NewVersionNotice from '../new-version-notice';
 import {useUpdateBannerView} from './hooks/useUpdateBannerView';
 import {UpdateBannerModeEnum} from './types';
 
-const {Progress, Deferred, NewVersion} = UpdateBannerModeEnum;
+const {Progress, Deferred, Updated, NewVersion} = UpdateBannerModeEnum;
 
 const UpdateBanner = () => {
     const {t} = useTranslation();
 
-    const {mode, deferredVersion} = useUpdateBannerView();
+    const {mode, deferredVersion, currentReleaseUrl} = useUpdateBannerView();
 
     if (mode === Progress) {
         return <InstallProgress/>;
@@ -38,6 +38,29 @@ const UpdateBanner = () => {
                         {t('update.cancel')}
                     </EnhancedButton>
                 )}
+                showIcon
+            />
+        );
+    }
+
+    if (mode === Updated) {
+        return (
+            <Alert
+                type="success"
+                title={t('update.updated', {version: process.env.APP_VERSION})}
+                action={(
+                    <EnhancedButton
+                        buttonProps={{
+                            type: 'link',
+                            size: 'small',
+                            onClick: () => updateService.openReleasePage(currentReleaseUrl),
+                        }}
+                        withSpinner={false}
+                    >
+                        {t('update.whatsNew')}
+                    </EnhancedButton>
+                )}
+                closable={{onClose: updateService.acknowledgeUpdate}}
                 showIcon
             />
         );

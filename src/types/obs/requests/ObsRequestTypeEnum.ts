@@ -8,4 +8,5 @@ export enum ObsRequestTypeEnum {
     GetVersion = 'GetVersion',
     GetRecordStatus = 'GetRecordStatus',
     SetProfileParameter = 'SetProfileParameter',
+    GetSceneCollectionList = 'GetSceneCollectionList',
 }

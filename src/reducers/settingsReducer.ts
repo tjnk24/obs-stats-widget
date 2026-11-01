@@ -37,6 +37,9 @@ const slice = createSlice({
         setUpdateRemindAt: (state, {payload}: PayloadAction<Nullable<number>>) => {
             state.updateRemindAt = payload;
         },
+        setLastSeenVersion: (state, {payload}: PayloadAction<string>) => {
+            state.lastSeenVersion = payload;
+        },
     },
 });
 

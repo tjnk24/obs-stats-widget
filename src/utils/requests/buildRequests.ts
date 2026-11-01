@@ -12,12 +12,15 @@ const {
     GetProfileParameter,
     GetVersion,
     GetRecordStatus,
+    GetSceneCollectionList,
 } = ObsRequestTypeEnum;
 
 export const buildRequests = (targets: StreamTargetDto[], withDiscovery: boolean): ObsRequestDto[] => {
     const requests: ObsRequestDto[] = [
         {requestType: GetStats},
         {requestType: GetStreamStatus},
+        {requestType: GetProfileParameter, requestData: BRIDGE_PARAMETER},
+        {requestType: GetSceneCollectionList},
         ...targets
             .filter(({outputName}) => outputName !== null)
             .map(({outputName}) => ({requestType: GetOutputStatus, requestData: {outputName}})),
@@ -27,7 +30,6 @@ export const buildRequests = (targets: StreamTargetDto[], withDiscovery: boolean
         requests.push(
             {requestType: GetStreamServiceSettings},
             {requestType: GetOutputList},
-            {requestType: GetProfileParameter, requestData: BRIDGE_PARAMETER},
             {requestType: GetVersion},
             {requestType: GetRecordStatus},
         );

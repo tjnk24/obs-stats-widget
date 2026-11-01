@@ -16,6 +16,8 @@ import PortField from '__components/PortField';
 import {connectionStatusSelector} from '__selectors/connectionSelectors';
 import {settingsPortSelector} from '__selectors/settingsSelectors';
 import {obsConnectionService} from '__services/obsConnectionService';
+import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
+import {isInsideObs} from '__utils/isInsideObs';
 
 import {ERROR_STATUSES, LOGIN_MESSAGES} from './consts';
 import {LoginFormDto} from './types';
@@ -32,7 +34,9 @@ const Page = () => {
 
     const inputRef = useRef<InputRef>(null);
 
-    const messageKey = LOGIN_MESSAGES[status];
+    const messageKey = status === ConnectionStatusEnum.Closed && isInsideObs()
+        ? 'login.webSocketOff'
+        : LOGIN_MESSAGES[status];
 
     useEffect(() => {
         inputRef.current?.focus();

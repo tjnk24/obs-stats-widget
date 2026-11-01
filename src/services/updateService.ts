@@ -42,7 +42,13 @@ class UpdateService {
     start = () => {
         this.stop();
 
-        if (settingsSelector(getStore()).isAutoUpdateCheckEnabled) {
+        const {isAutoUpdateCheckEnabled, lastSeenVersion} = settingsSelector(getStore());
+
+        if (lastSeenVersion === null || (compareVersions(lastSeenVersion, process.env.APP_VERSION) ?? 0) > 0) {
+            this.acknowledgeUpdate();
+        }
+
+        if (isAutoUpdateCheckEnabled) {
             void this.checkForUpdates();
         }
 
@@ -163,6 +169,10 @@ class UpdateService {
 
     remindLater = () => {
         commonActions.settings.setUpdateRemindAt(Date.now() + UPDATE_REMIND_DELAY_MS);
+    };
+
+    acknowledgeUpdate = () => {
+        commonActions.settings.setLastSeenVersion(process.env.APP_VERSION);
     };
 
     showHiddenUpdate = () => {

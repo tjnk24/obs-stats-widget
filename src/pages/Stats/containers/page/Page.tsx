@@ -8,6 +8,7 @@ import {obsWebSocketPortSelector, settingsIsShowGeneralCardSelector} from '__sel
 import {statsTargetsSelector} from '__selectors/statsSelectors';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 import {RECONNECT_INTERVAL_MS} from '__utils/consts';
+import {isInsideObs} from '__utils/isInsideObs';
 
 import GeneralCard from '../general-card';
 import OutputCard from '../output-card';
@@ -27,8 +28,12 @@ const Page = () => {
     if (status !== Identified) {
         const isClosed = status === Closed;
 
+        const isWebSocketOff = isClosed && isInsideObs();
+
+        const seconds = RECONNECT_INTERVAL_MS / 1000;
+
         const message = isClosed
-            ? t('connection.closed', {port, seconds: RECONNECT_INTERVAL_MS / 1000})
+            ? t(isWebSocketOff ? 'connection.webSocketOffTitle' : 'connection.closed', {port, seconds})
             : t('connection.connecting');
 
         return (
@@ -36,6 +41,7 @@ const Page = () => {
                 type={isClosed ? 'error' : 'info'}
                 icon={isClosed ? <ApiOutlined/> : <LoadingOutlined/>}
                 title={message}
+                description={isWebSocketOff ? t('connection.webSocketOff', {port, seconds}) : undefined}
                 showIcon
             />
         );

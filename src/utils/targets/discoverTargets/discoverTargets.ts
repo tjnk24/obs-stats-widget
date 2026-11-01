@@ -11,7 +11,6 @@ import {OutputOriginEnum} from '__types/targets/OutputOriginEnum';
 import {StreamTargetDto} from '__types/targets/StreamTargetDto';
 import {parseBridgeData} from '__utils/bridge/parseBridgeData';
 import {
-    BRIDGE_SCRIPT_NAME,
     MAIN_OUTPUT_NAMES,
     MAIN_TARGET_KEY,
     PLUGIN_OUTPUT_NAMES,
@@ -25,16 +24,18 @@ const {GetStreamServiceSettings, GetOutputList, GetProfileParameter} = ObsReques
 const {Main, Plugin} = OutputOriginEnum;
 
 export const discoverTargets = (pairs: RequestResultPairDto[]): StreamTargetDto[] | null => {
-    if (!pairs.some(({request}) => request.requestType === GetOutputList)) {
+    const service = findResultData<ObsStreamServiceDto>(pairs, isRequestOfType(GetStreamServiceSettings));
+    const outputList = findResultData<ObsOutputListDto>(pairs, isRequestOfType(GetOutputList));
+
+    if (!service || !outputList) {
         return null;
     }
 
-    const service = findResultData<ObsStreamServiceDto>(pairs, isRequestOfType(GetStreamServiceSettings));
-    const outputs = findResultData<ObsOutputListDto>(pairs, isRequestOfType(GetOutputList))?.outputs || [];
+    const outputs = outputList.outputs || [];
     const bridgeData = parseBridgeData(findResultData<ObsProfileParameterDto>(pairs, isRequestOfType(GetProfileParameter)));
     const bridge = bridgeData && new Map(bridgeData.outputs.map(({name, server}) => [name, server]));
 
-    const {service: serviceName, server} = service?.streamServiceSettings || {};
+    const {service: serviceName, server} = service.streamServiceSettings || {};
 
     const main: StreamTargetDto = {
         key: MAIN_TARGET_KEY,
@@ -55,13 +56,6 @@ export const discoverTargets = (pairs: RequestResultPairDto[]): StreamTargetDto[
         const pluginName = PLUGIN_OUTPUT_NAMES[outputName] || null;
         const bridgeServer = bridge?.get(outputName);
         const notes: NoteDto[] = [];
-
-        if (!bridge) {
-            notes.push({
-                text: t('stats.noBridge', {script: BRIDGE_SCRIPT_NAME}),
-                type: 'info',
-            });
-        }
 
         if (counts[outputName] > 1) {
             notes.push({

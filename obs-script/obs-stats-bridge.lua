@@ -46,7 +46,7 @@ end
 local function on_event(event)
     if event == obs.OBS_FRONTEND_EVENT_PROFILE_CHANGING then
         publisher.clear()
-    elseif event == obs.OBS_FRONTEND_EVENT_PROFILE_CHANGED then
+    elseif event == obs.OBS_FRONTEND_EVENT_PROFILE_CHANGED or event == obs.OBS_FRONTEND_EVENT_SCENE_COLLECTION_CHANGED then
         publish()
     elseif event == obs.OBS_FRONTEND_EVENT_SCRIPTING_SHUTDOWN then
         publisher.clear()
