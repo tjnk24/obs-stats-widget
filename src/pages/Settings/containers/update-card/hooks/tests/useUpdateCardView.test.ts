@@ -9,7 +9,9 @@ import {
 } from 'vitest';
 
 import {BaseStore} from '__reducers';
+import {updateService} from '__services/updateService';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
+import {UpdateInstallBlockerEnum} from '__types/update/UpdateInstallBlockerEnum';
 
 import {useUpdateCardView} from '../useUpdateCardView';
 
@@ -21,6 +23,8 @@ import {
 } from './consts';
 
 vi.mock('react-redux', () => ({useSelector: vi.fn()}));
+
+vi.mock('__services/updateService', () => ({updateService: {getInstallBlocker: vi.fn(() => null)}}));
 
 vi.mock('react-i18next', () => ({useTranslation: () => ({t: (key: string) => key, i18n: {language: 'en'}})}));
 
@@ -43,8 +47,25 @@ describe('useUpdateCardView', () => {
             checkText: 'settings.updateAvailable',
             isCheckFailed: false,
             hiddenUpdateText: null,
+            isUpdateShown: true,
+            isManual: false,
             isAutoUpdateCheckEnabled: true,
         });
+    });
+
+    it('offers a manual download when the update cannot be installed automatically', () => {
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(STATE));
+        vi.mocked(updateService.getInstallBlocker).mockReturnValueOnce(UpdateInstallBlockerEnum.NoUpdater);
+
+        expect(useUpdateCardView()).toMatchObject({isUpdateShown: true, isManual: true});
+    });
+
+    it('hides the update button while an update is requested', () => {
+        const state = {...STATE, update: {...STATE.update, request: {version: RELEASE.version, requestedAt: NOW}}};
+
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
+
+        expect(useUpdateCardView().isUpdateShown).toBe(false);
     });
 
     it('says when updates were never checked', () => {

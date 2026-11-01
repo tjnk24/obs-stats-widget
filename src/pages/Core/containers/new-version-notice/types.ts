@@ -3,5 +3,4 @@ export type NewVersionNoticeViewDto = {
     url: string;
     notes: string[];
     isManual: boolean;
-    isObsBusy: boolean;
 };

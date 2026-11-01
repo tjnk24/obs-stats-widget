@@ -6,11 +6,11 @@ import {
 } from 'antd';
 import {useTranslation} from 'react-i18next';
 
+import DownloadButton from '__components/DownloadButton';
 import EnhancedButton from '__components/EnhancedButton';
+import InstallButton from '__components/InstallButton';
 import {updateService} from '__services/updateService';
 import {BRIDGE_SCRIPT_NAME} from '__utils/consts';
-
-import DownloadButton from '../download-button';
 
 import {useInstallProgressView} from './hooks/useInstallProgressView';
 
@@ -25,7 +25,6 @@ const InstallProgress = () => {
         progressStatus,
         isFailed,
         errorKey,
-        isObsBusy,
     } = useInstallProgressView();
 
     return (
@@ -57,23 +56,9 @@ const InstallProgress = () => {
                                 gap="small"
                                 wrap
                             >
-                                <EnhancedButton
-                                    buttonProps={{
-                                        type: 'primary',
-                                        size: 'small',
-                                        onClick: isObsBusy ? undefined : () => updateService.install(),
-                                    }}
-                                    popconfirmProps={isObsBusy
-                                        ? {
-                                            title: t('update.busyConfirm'),
-                                            okText: t('update.afterStream'),
-                                            onConfirm: updateService.installWhenFree,
-                                        }
-                                        : undefined}
-                                    withSpinner={false}
-                                >
+                                <InstallButton>
                                     {t('update.retry')}
-                                </EnhancedButton>
+                                </InstallButton>
 
                                 <DownloadButton type="default"/>
 

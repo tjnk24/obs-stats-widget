@@ -7,7 +7,9 @@ import {
 } from 'antd';
 import {useTranslation} from 'react-i18next';
 
+import DownloadButton from '__components/DownloadButton';
 import EnhancedButton from '__components/EnhancedButton';
+import InstallButton from '__components/InstallButton';
 import {updateService} from '__services/updateService';
 
 import {useUpdateCardView} from './hooks/useUpdateCardView';
@@ -20,8 +22,12 @@ const UpdateCard = () => {
         checkText,
         isCheckFailed,
         hiddenUpdateText,
+        isUpdateShown,
+        isManual,
         isAutoUpdateCheckEnabled,
     } = useUpdateCardView();
+
+    const scrollToTop = () => window.requestAnimationFrame(() => window.scrollTo({top: 0, behavior: 'smooth'}));
 
     return (
         <Card
@@ -61,6 +67,14 @@ const UpdateCard = () => {
                             {checkText}
                         </Typography.Text>
                     )}
+
+                    {isUpdateShown && (isManual
+                        ? <DownloadButton type="primary"/>
+                        : (
+                            <InstallButton onStart={scrollToTop}>
+                                {t('update.install')}
+                            </InstallButton>
+                        ))}
                 </Flex>
 
                 {hiddenUpdateText && (

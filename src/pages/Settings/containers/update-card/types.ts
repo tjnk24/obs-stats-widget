@@ -5,5 +5,7 @@ export type UpdateCardViewDto = {
     checkText: Nullable<string>;
     isCheckFailed: boolean;
     hiddenUpdateText: Nullable<string>;
+    isUpdateShown: boolean;
+    isManual: boolean;
     isAutoUpdateCheckEnabled: boolean;
 };

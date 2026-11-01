@@ -15,7 +15,7 @@ export const RELEASE: ReleaseDto = {
 };
 
 export const STATE = {
-    update: {checkStatus: UpdateCheckStatusEnum.Available, latest: RELEASE},
+    update: {checkStatus: UpdateCheckStatusEnum.Available, latest: RELEASE, request: null, deferredVersion: null},
     settings: {
         lastUpdateCheckAt: NOW - 60_000,
         isAutoUpdateCheckEnabled: true,

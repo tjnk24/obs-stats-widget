@@ -5,10 +5,10 @@ import {
 } from 'antd';
 import {useTranslation} from 'react-i18next';
 
+import DownloadButton from '__components/DownloadButton';
 import EnhancedButton from '__components/EnhancedButton';
+import InstallButton from '__components/InstallButton';
 import {updateService} from '__services/updateService';
-
-import DownloadButton from '../download-button';
 
 import {useNewVersionNoticeView} from './hooks/useNewVersionNoticeView';
 
@@ -21,13 +21,7 @@ const NewVersionNotice = () => {
         return null;
     }
 
-    const {
-        version,
-        url,
-        notes,
-        isManual,
-        isObsBusy,
-    } = view;
+    const {version, url, notes, isManual} = view;
 
     return (
         <Alert
@@ -54,23 +48,9 @@ const NewVersionNotice = () => {
                             )
                             : (
                                 <>
-                                    <EnhancedButton
-                                        buttonProps={{
-                                            type: 'primary',
-                                            size: 'small',
-                                            onClick: isObsBusy ? undefined : () => updateService.install(),
-                                        }}
-                                        popconfirmProps={isObsBusy
-                                            ? {
-                                                title: t('update.busyConfirm'),
-                                                okText: t('update.afterStream'),
-                                                onConfirm: updateService.installWhenFree,
-                                            }
-                                            : undefined}
-                                        withSpinner={false}
-                                    >
+                                    <InstallButton>
                                         {t('update.install')}
-                                    </EnhancedButton>
+                                    </InstallButton>
 
                                     <EnhancedButton
                                         buttonProps={{

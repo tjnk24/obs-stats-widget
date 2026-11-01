@@ -10,7 +10,7 @@ import {BRIDGE_SCRIPT_NAME} from '__utils/consts';
 import {COMPATIBILITY_PROBLEM_TEXTS, COMPATIBILITY_WARNING_TEXTS} from '../consts';
 import {NewVersionNoticeViewDto} from '../types';
 
-const {ObsBusy, NoUpdater, Incompatible} = UpdateInstallBlockerEnum;
+const {NoUpdater, Incompatible} = UpdateInstallBlockerEnum;
 
 export const useNewVersionNoticeView = (): Nullable<NewVersionNoticeViewDto> => {
     const {latest} = useSelector(updateSelector);
@@ -41,6 +41,5 @@ export const useNewVersionNoticeView = (): Nullable<NewVersionNoticeViewDto> => 
         url: latest.url,
         notes: [...noUpdaterNotes, ...noteKeys.map(noteKey => t(noteKey, noteValues))],
         isManual: blocker === NoUpdater || blocker === Incompatible,
-        isObsBusy: blocker === ObsBusy,
     };
 };
