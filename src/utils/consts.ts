@@ -9,6 +9,10 @@ import {OutputViewDto} from '__types/stats/views/OutputViewDto';
 import {PlatformRuleDto} from '__types/targets/PlatformRuleDto';
 import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
 
+const {Ru, Es, De, PtBr} = LanguageEnum;
+
+const {Preparing, Downloading, Verifying, Installing} = UpdateStageEnum;
+
 const DEFAULT_OBS_WEBSOCKET_PORT = 4455;
 export const OBS_WEBSOCKET_PROTOCOL = 'obswebsocket.json';
 export const OBS_RPC_VERSION = 1;
@@ -39,14 +43,16 @@ export const DEFAULT_SETTINGS: SettingsDto = {
     language: null,
     isAutoUpdateCheckEnabled: true,
     lastUpdateCheckAt: null,
+    skippedUpdateVersion: null,
+    updateRemindAt: null,
     isMockEnabled: false,
 };
 
 export const OBS_LANGUAGE_PREFIXES: ObsLanguagePrefixDto[] = [
-    {prefix: 'ru', language: LanguageEnum.Ru},
-    {prefix: 'es', language: LanguageEnum.Es},
-    {prefix: 'de', language: LanguageEnum.De},
-    {prefix: 'pt', language: LanguageEnum.PtBr},
+    {prefix: 'ru', language: Ru},
+    {prefix: 'es', language: Es},
+    {prefix: 'de', language: De},
+    {prefix: 'pt', language: PtBr},
 ];
 
 export const MAIN_TARGET_KEY = 'main';
@@ -70,6 +76,7 @@ export const UPDATE_STATUS_STALE_SEC = 120;
 export const GITHUB_LATEST_RELEASE_URL = 'https://api.github.com/repos/tjnk24/obs-stats-widget/releases/latest';
 export const UPDATE_CHECK_PERIOD_MS = 24 * 60 * 60 * 1000;
 export const UPDATE_CHECK_TIMER_MS = 60 * 60 * 1000;
+export const UPDATE_REMIND_DELAY_MS = 24 * 60 * 60 * 1000;
 
 export const UNKNOWN_PLATFORM_COLOR = '#9aa0ae';
 
@@ -156,10 +163,10 @@ export const COMPATIBILITY_PATTERN: RegExp = /<!--\s*compatibility:\s*([\s\S]*?)
 export const CHROMIUM_PATTERN: RegExp = /Chrome\/(\d+)\./;
 
 export const RUNNING_UPDATE_STAGES: UpdateStageEnum[] = [
-    UpdateStageEnum.Preparing,
-    UpdateStageEnum.Downloading,
-    UpdateStageEnum.Verifying,
-    UpdateStageEnum.Installing,
+    Preparing,
+    Downloading,
+    Verifying,
+    Installing,
 ];
 
 export const FIRST_BRIDGE_VERSION: number = 1;

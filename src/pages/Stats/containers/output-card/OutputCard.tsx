@@ -9,85 +9,34 @@ import {
 } from 'antd';
 import cn from 'classnames';
 import {useTranslation} from 'react-i18next';
-import {useSelector} from 'react-redux';
-
-import {statsViewSelector} from '__selectors/statsSelectors';
-import {HealthLevelEnum} from '__types/stats/views/HealthLevelEnum';
-import {OFF_OUTPUT_VIEW, RECENT_WINDOW_SEC} from '__utils/consts';
 
 import BitrateGraph from '../../components/bitrate-graph';
-import CongestionProgress from '../../components/congestion-progress';
-import StatList, {StatItemDto} from '../../components/stat-list';
+import StatList from '../../components/stat-list';
 import {formatNumber} from '../../utils/formatNumber';
-import {formatPercent} from '../../utils/formatPercent';
-import {formatTimecode} from '../../utils/formatTimecode';
 
-import {HEALTH_TAGS, PLATFORM_MARKS} from './consts';
-import {OutputStatKeyEnum, Props} from './types';
-import {getTargetTag} from './utils/getTargetTag';
+import {useOutputCardView} from './hooks/useOutputCardView';
+import {Props} from './types';
 
 import style from './style.module.scss';
-
-const {Off, Warn} = HealthLevelEnum;
 
 const OutputCard = ({target}: Props) => {
     const {t} = useTranslation();
 
-    const {outputs, now} = useSelector(statsViewSelector);
-
-    const view = outputs[target.key] || OFF_OUTPUT_VIEW;
-
-    const {platform, notes} = target;
-    const {title, color} = platform;
-
     const {
+        title,
+        color,
+        notes,
+        platformMark,
+        originTag,
+        healthTag,
+        statusKey,
         isActive,
-        isReconnecting,
-        level,
-        kbps,
-        timecode,
-        dropped,
-        total,
-        recentDropped,
-        recentTotal,
-        congestion,
+        bitrate,
+        isBitrateLoading,
         graph,
-    } = view;
-
-    const valueLevel = isActive ? undefined : Off;
-    const healthLevel = isReconnecting ? Warn : level;
-    const originTag = getTargetTag(target);
-    const platformMark = PLATFORM_MARKS[title];
-
-    const items: StatItemDto[] = [
-        {
-            key: OutputStatKeyEnum.Timecode,
-            label: t('stats.onAir'),
-            level: valueLevel,
-            value: isActive ? formatTimecode(timecode) : '—',
-        },
-        {
-            key: OutputStatKeyEnum.Dropped,
-            label: t('stats.dropped'),
-            hint: t('stats.hints.dropped'),
-            level: valueLevel,
-            value: isActive ? `${formatNumber(dropped)} (${formatPercent(dropped, total)})` : '—',
-        },
-        {
-            key: OutputStatKeyEnum.Recent,
-            label: t('stats.recent'),
-            hint: t('stats.hints.recent', {seconds: RECENT_WINDOW_SEC}),
-            level: isActive ? level : Off,
-            value: !isActive ? '—' : recentDropped > 0 ? `${formatNumber(recentDropped)} (${formatPercent(recentDropped, recentTotal)})` : '0',
-        },
-        {
-            key: OutputStatKeyEnum.Congestion,
-            label: t('stats.congestion'),
-            hint: t('stats.hints.congestion'),
-            level: valueLevel,
-            value: isActive ? <CongestionProgress value={congestion}/> : '—',
-        },
-    ];
+        now,
+        items,
+    } = useOutputCardView(target);
 
     return (
         <Card
@@ -126,10 +75,10 @@ const OutputCard = ({target}: Props) => {
             )}
             extra={(
                 <Tag
-                    color={HEALTH_TAGS[healthLevel].color}
-                    variant={HEALTH_TAGS[healthLevel].variant}
+                    color={healthTag.color}
+                    variant={healthTag.variant}
                 >
-                    {isReconnecting ? t('stats.statuses.reconnecting') : t(`stats.statuses.${level}`)}
+                    {t(statusKey)}
                 </Tag>
             )}
         >
@@ -139,8 +88,8 @@ const OutputCard = ({target}: Props) => {
                 gap="middle"
             >
                 <Statistic
-                    value={isActive && kbps !== null ? Math.round(kbps) : '—'}
-                    loading={isActive && kbps === null}
+                    value={bitrate}
+                    loading={isBitrateLoading}
                     formatter={value => (typeof value === 'number' ? formatNumber(value) : value)}
                     suffix={t('stats.bitrateUnit')}
                     classNames={{

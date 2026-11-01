@@ -20,11 +20,13 @@ import {CopyResultEnum} from '__types/CopyResultEnum';
 
 import style from './style.module.scss';
 
-const DiagnosticsCard = () => {
-    const {t} = useTranslation();
+const {Copied, Selected} = CopyResultEnum;
 
+const DiagnosticsCard = () => {
     const [copyResult, setCopyResult] = useState<Nullable<CopyResultEnum>>(null);
     const [fallbackText, setFallbackText] = useState<Nullable<string>>(null);
+
+    const {t} = useTranslation();
 
     const textRef = useRef<TextAreaRef>(null);
 
@@ -37,7 +39,7 @@ const DiagnosticsCard = () => {
         const isCopied = await reportService.copy(diagnostics);
 
         setFallbackText(isCopied ? null : diagnostics);
-        setCopyResult(isCopied ? CopyResultEnum.Copied : CopyResultEnum.Selected);
+        setCopyResult(isCopied ? Copied : Selected);
     };
 
     return (

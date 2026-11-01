@@ -10,4 +10,6 @@ export type SettingsDto = {
     isMockEnabled: boolean;
     isAutoUpdateCheckEnabled: boolean;
     lastUpdateCheckAt: Nullable<number>;
+    skippedUpdateVersion: Nullable<string>;
+    updateRemindAt: Nullable<number>;
 };

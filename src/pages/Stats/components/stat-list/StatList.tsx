@@ -1,8 +1,13 @@
-import {Descriptions, Typography} from 'antd';
+import {QuestionCircleOutlined} from '@ant-design/icons';
+import {
+    Descriptions,
+    Flex,
+    Tooltip,
+    Typography,
+} from 'antd';
 
 import {LEVEL_TEXT_TYPES} from './consts';
 import {Props} from './types';
-import {renderLabel} from './utils/renderLabel';
 
 import style from './style.module.scss';
 
@@ -16,12 +21,37 @@ const StatList = ({items, column = 1}: Props) => (
             label: style.itemLabel,
             content: style.itemContent,
         }}
-        items={items.map(item => ({
-            key: item.key,
-            label: renderLabel(item),
+        items={items.map(({
+            key,
+            label,
+            hint,
+            level,
+            value,
+        }) => ({
+            key,
+            label: (
+                <Flex
+                    className={style.label}
+                    align="center"
+                    gap={4}
+                >
+                    <Typography.Text
+                        className={style.labelText}
+                        ellipsis={{tooltip: label}}
+                    >
+                        {label}
+                    </Typography.Text>
+
+                    {hint && (
+                        <Tooltip title={hint}>
+                            <QuestionCircleOutlined/>
+                        </Tooltip>
+                    )}
+                </Flex>
+            ),
             children: (
-                <Typography.Text type={item.level ? LEVEL_TEXT_TYPES[item.level] : undefined}>
-                    {item.value}
+                <Typography.Text type={level ? LEVEL_TEXT_TYPES[level] : undefined}>
+                    {value}
                 </Typography.Text>
             ),
         }))}

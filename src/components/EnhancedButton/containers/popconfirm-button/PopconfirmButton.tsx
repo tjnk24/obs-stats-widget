@@ -37,16 +37,18 @@ const PopconfirmButton = ({
             disabled={disabled}
             title={title}
         >
-            <TooltipButton
-                buttonProps={{
-                    ...buttonProps,
-                    loading: isPending,
-                }}
-                tooltipProps={tooltipProps}
-                withSpinner={withSpinner}
-            >
-                {children}
-            </TooltipButton>
+            <span>
+                <TooltipButton
+                    buttonProps={{
+                        ...buttonProps,
+                        loading: isPending,
+                    }}
+                    tooltipProps={tooltipProps}
+                    withSpinner={withSpinner}
+                >
+                    {children}
+                </TooltipButton>
+            </span>
         </Popconfirm>
     );
 };

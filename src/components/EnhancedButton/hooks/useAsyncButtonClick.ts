@@ -8,10 +8,11 @@ import {
 } from 'react';
 
 export const useAsyncButtonClick = (onClick: MouseEventHandler<HTMLElement> | undefined) => {
-    const isMountedRef = useRef(false);
-    const isPendingRef = useRef(false);
-
     const [isPending, setIsPending] = useState(false);
+
+    const isMountedRef = useRef(false);
+
+    const isPendingRef = useRef(false);
 
     const handleClick = useCallback(
         async (event: MouseEvent<HTMLElement>) => {

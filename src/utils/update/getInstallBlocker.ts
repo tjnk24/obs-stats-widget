@@ -7,33 +7,49 @@ import {RUNNING_UPDATE_STAGES} from '__utils/consts';
 
 import {compareVersions} from './compareVersions';
 
+const {
+    NoRelease,
+    NotNewer,
+    NoUpdater,
+    Incompatible,
+    InProgress,
+    ObsBusy,
+} = UpdateInstallBlockerEnum;
+
 export const getInstallBlocker = (context: UpdateInstallContextDto): Nullable<UpdateInstallBlockerEnum> => {
-    const {release, currentVersion, bridge, compatibility, isObsBusy, now} = context;
+    const {
+        release,
+        currentVersion,
+        bridge,
+        compatibility,
+        isObsBusy,
+        now,
+    } = context;
 
     if (!release) {
-        return UpdateInstallBlockerEnum.NoRelease;
+        return NoRelease;
     }
 
     if ((compareVersions(release.version, currentVersion) ?? 0) <= 0) {
-        return UpdateInstallBlockerEnum.NotNewer;
+        return NotNewer;
     }
 
     if (!bridge?.isAvailable) {
-        return UpdateInstallBlockerEnum.NoUpdater;
+        return NoUpdater;
     }
 
     if (compatibility && compatibility.problems.length > 0) {
-        return UpdateInstallBlockerEnum.Incompatible;
+        return Incompatible;
     }
 
     const status = bridge.status;
 
     if (status && RUNNING_UPDATE_STAGES.includes(status.stage) && (now / 1000) - status.updated < UPDATE_STATUS_STALE_SEC) {
-        return UpdateInstallBlockerEnum.InProgress;
+        return InProgress;
     }
 
     if (isObsBusy) {
-        return UpdateInstallBlockerEnum.ObsBusy;
+        return ObsBusy;
     }
 
     return null;

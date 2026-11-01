@@ -1,8 +1,8 @@
 import i18n from 'i18next';
 import type {Nullable} from 'infrastructure/common';
 
-import {connectionObsVersionSelector, connectionStatusSelector} from '__selectors/connectionSelectors';
-import {statsHardwareSelector, statsTargetsSelector} from '__selectors/statsSelectors';
+import {connectionSelector} from '__selectors/connectionSelectors';
+import {statsSelector} from '__selectors/statsSelectors';
 import {getStore} from '__store';
 import {OutputOriginEnum} from '__types/targets/OutputOriginEnum';
 import {StreamTargetDto} from '__types/targets/StreamTargetDto';
@@ -10,16 +10,15 @@ import {BYTES_IN_GIGABYTE} from '__utils/consts';
 
 class ReportService {
     buildDiagnostics = () => {
-        const state = getStore();
-        const {gpu, systemMemory} = statsHardwareSelector(state);
-        const targets = statsTargetsSelector(state);
+        const {hardware: {gpu, systemMemory}, targets} = statsSelector(getStore());
         const isBridgeActive = gpu !== null || systemMemory !== null;
+        const memoryText = systemMemory ? `${(systemMemory.total / BYTES_IN_GIGABYTE).toFixed(1)} GB` : 'unknown';
 
         return [
             ...this.buildEnvironmentLines(),
             `Bridge script: ${isBridgeActive ? 'active' : 'not detected'}`,
             `GPU: ${gpu?.name ?? 'unknown'}`,
-            `System memory: ${systemMemory ? `${(systemMemory.total / BYTES_IN_GIGABYTE).toFixed(1)} GB` : 'unknown'}`,
+            `System memory: ${memoryText}`,
             `Time: ${new Date().toISOString()}`,
             '',
             'Outputs:',
@@ -49,15 +48,14 @@ class ReportService {
     };
 
     private buildEnvironmentLines = () => {
-        const state = getStore();
-        const obsVersion = connectionObsVersionSelector(state);
+        const {obsVersion, status} = connectionSelector(getStore());
 
         return [
             `Widget: obs-stats-widget ${process.env.APP_VERSION}`,
             `OBS: ${obsVersion?.obsVersion ?? 'unknown'}`,
             `obs-websocket: ${obsVersion?.obsWebSocketVersion ?? 'unknown'}`,
             `Platform: ${obsVersion?.platformDescription ?? 'unknown'}`,
-            `Connection: ${connectionStatusSelector(state)}`,
+            `Connection: ${status}`,
             `Language: ${i18n.language}`,
             `Browser: ${navigator.userAgent}`,
         ];

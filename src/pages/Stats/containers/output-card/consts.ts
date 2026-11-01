@@ -1,15 +1,8 @@
-import {TagProps} from 'antd';
-
 import {HealthLevelEnum} from '__types/stats/views/HealthLevelEnum';
 
-import {PlatformMarkDto} from './types';
+import {HealthTagDto, PlatformMarkDto} from './types';
 
-const {
-    Ok,
-    Warn,
-    Bad,
-    Off,
-} = HealthLevelEnum;
+const {Ok, Warn, Bad, Off} = HealthLevelEnum;
 
 export const PLATFORM_MARKS: Partial<Record<string, PlatformMarkDto>> = {
     'VK Video Live': {
@@ -18,7 +11,7 @@ export const PLATFORM_MARKS: Partial<Record<string, PlatformMarkDto>> = {
     },
 };
 
-export const HEALTH_TAGS: Record<HealthLevelEnum, Pick<TagProps, 'color' | 'variant'>> = {
+export const HEALTH_TAGS: Record<HealthLevelEnum, HealthTagDto> = {
     [Ok]: {color: 'success', variant: 'solid'},
     [Warn]: {color: 'warning', variant: 'solid'},
     [Bad]: {color: 'error', variant: 'solid'},

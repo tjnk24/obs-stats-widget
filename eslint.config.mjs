@@ -185,6 +185,10 @@ export default [
                     multiline: true,
                     minProperties: 3,
                 },
+                ObjectPattern: {
+                    minProperties: 5,
+                    consistent: false,
+                },
             }],
 
             eqeqeq: "error",

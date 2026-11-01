@@ -17,21 +17,25 @@ import style from './style.module.scss';
 const {Closed, Identified} = ConnectionStatusEnum;
 
 const Page = () => {
-    const {t} = useTranslation();
-
     const status = useSelector(connectionStatusSelector);
     const port = useSelector(obsWebSocketPortSelector);
     const targets = useSelector(statsTargetsSelector);
     const isShowGeneralCard = useSelector(settingsIsShowGeneralCardSelector);
 
+    const {t} = useTranslation();
+
     if (status !== Identified) {
         const isClosed = status === Closed;
+
+        const message = isClosed
+            ? t('connection.closed', {port, seconds: RECONNECT_INTERVAL_MS / 1000})
+            : t('connection.connecting');
 
         return (
             <Alert
                 type={isClosed ? 'error' : 'info'}
                 icon={isClosed ? <ApiOutlined/> : <LoadingOutlined/>}
-                title={isClosed ? t('connection.closed', {port, seconds: RECONNECT_INTERVAL_MS / 1000}) : t('connection.connecting')}
+                title={message}
                 showIcon
             />
         );

@@ -20,6 +20,8 @@ import {Props, State} from './types';
 
 import style from './style.module.scss';
 
+const {Copied, Selected} = CopyResultEnum;
+
 class ErrorBoundary extends Component<Props, State> {
     public override state: State = {
         hasError: false,
@@ -44,7 +46,7 @@ class ErrorBoundary extends Component<Props, State> {
             this.reportRef.current?.focus({cursor: 'all'});
         }
 
-        this.setState({copyResult: isCopied ? CopyResultEnum.Copied : CopyResultEnum.Selected});
+        this.setState({copyResult: isCopied ? Copied : Selected});
     };
 
     public override render() {

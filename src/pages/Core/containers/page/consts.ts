@@ -7,11 +7,20 @@ import ruRU from 'antd/locale/ru_RU';
 
 import {LanguageEnum} from '__types/i18n/LanguageEnum';
 
+const {
+    En,
+    Ru,
+    Es,
+    De,
+    PtBr,
+    Frog,
+} = LanguageEnum;
+
 export const ANTD_LOCALES: Record<LanguageEnum, Locale> = {
-    [LanguageEnum.En]: enUS,
-    [LanguageEnum.Ru]: ruRU,
-    [LanguageEnum.Es]: esES,
-    [LanguageEnum.De]: deDE,
-    [LanguageEnum.PtBr]: ptBR,
-    [LanguageEnum.Frog]: ruRU,
+    [En]: enUS,
+    [Ru]: ruRU,
+    [Es]: esES,
+    [De]: deDE,
+    [PtBr]: ptBR,
+    [Frog]: ruRU,
 };

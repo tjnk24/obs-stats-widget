@@ -2,11 +2,7 @@ import {PasswordChangeResultEnum} from '__types/connection/PasswordChangeResultE
 
 import {ResultAlertDto} from './types';
 
-const {
-    Accepted,
-    Rejected,
-    NoConnection,
-} = PasswordChangeResultEnum;
+const {Accepted, Rejected, NoConnection} = PasswordChangeResultEnum;
 
 export const RESULT_ALERTS: Record<PasswordChangeResultEnum, ResultAlertDto> = {
     [Accepted]: {

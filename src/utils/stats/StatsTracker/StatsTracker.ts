@@ -79,11 +79,7 @@ export class StatsTracker {
             return OFF_OUTPUT_VIEW;
         }
 
-        const {
-            outputBytes,
-            outputSkippedFrames,
-            outputTotalFrames,
-        } = status;
+        const {outputBytes, outputSkippedFrames, outputTotalFrames} = status;
 
         const {previous} = output;
 
@@ -126,12 +122,7 @@ export class StatsTracker {
             return null;
         }
 
-        const {
-            outputSkippedFrames,
-            outputTotalFrames,
-            renderSkippedFrames,
-            renderTotalFrames,
-        } = stats;
+        const {outputSkippedFrames, outputTotalFrames, renderSkippedFrames, renderTotalFrames} = stats;
 
         return {
             fps: stats.activeFps,

@@ -19,19 +19,15 @@ import {drawGraph} from './utils/drawGraph';
 
 import style from './style.module.scss';
 
-const BitrateGraph = ({
-    points,
-    now,
-    color,
-    isActive,
-}: Props) => {
+const BitrateGraph = ({points, now, color, isActive}: Props) => {
+    const [size, setSize] = useState({width: 0, height: 0});
+
     const {t} = useTranslation();
+
     const {token} = theme.useToken();
 
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-
-    const [size, setSize] = useState({width: 0, height: 0});
 
     const hasLine = points.length >= 2;
 

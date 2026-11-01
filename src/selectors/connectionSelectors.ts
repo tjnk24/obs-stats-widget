@@ -1,5 +1,5 @@
 import {BaseStore} from '__reducers';
 
-export const connectionStatusSelector = (state: BaseStore) => state.connection.status;
+export const connectionSelector = (state: BaseStore) => state.connection;
 
-export const connectionObsVersionSelector = (state: BaseStore) => state.connection.obsVersion;
+export const connectionStatusSelector = (state: BaseStore) => state.connection.status;

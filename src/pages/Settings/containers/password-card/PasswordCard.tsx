@@ -18,11 +18,11 @@ import {PasswordFormDto} from './types';
 import style from './style.module.scss';
 
 const PasswordCard = () => {
-    const {t} = useTranslation();
+    const [result, setResult] = useState<Nullable<PasswordChangeResultEnum>>(null);
 
     const [form] = Form.useForm<PasswordFormDto>();
 
-    const [result, setResult] = useState<Nullable<PasswordChangeResultEnum>>(null);
+    const {t} = useTranslation();
 
     const onSubmit = async () => {
         const {password} = await form.validateFields();

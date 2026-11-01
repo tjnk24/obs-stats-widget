@@ -9,15 +9,10 @@ import {routerManager} from '__services/routerManager';
 import {PASSWORD_STATUSES, PASSWORD_PAGE_STATUSES} from './consts';
 import {Props} from './types';
 
-const AppRoute = ({
-    titleKey,
-    isAuthRequired,
-    isLoginPage,
-    children,
-}: Props) => {
-    const {t} = useTranslation();
-
+const AppRoute = ({titleKey, isAuthRequired, isLoginPage, children}: Props) => {
     const status = useSelector(connectionStatusSelector);
+
+    const {t} = useTranslation();
 
     const title = t(titleKey);
 

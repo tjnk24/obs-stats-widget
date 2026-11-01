@@ -12,17 +12,26 @@ import {frog} from './locales/frog';
 import {ptBr} from './locales/ptBr';
 import {ru} from './locales/ru';
 
+const {
+    En,
+    Ru,
+    Es,
+    De,
+    PtBr,
+    Frog,
+} = LanguageEnum;
+
 void i18n.use(initReactI18next).init({
     resources: {
-        [LanguageEnum.En]: {translation: en},
-        [LanguageEnum.Ru]: {translation: ru},
-        [LanguageEnum.Es]: {translation: es},
-        [LanguageEnum.De]: {translation: de},
-        [LanguageEnum.PtBr]: {translation: ptBr},
-        [LanguageEnum.Frog]: {translation: frog},
+        [En]: {translation: en},
+        [Ru]: {translation: ru},
+        [Es]: {translation: es},
+        [De]: {translation: de},
+        [PtBr]: {translation: ptBr},
+        [Frog]: {translation: frog},
     },
     lng: languageService.resolveLanguage(storageService.loadSettings().language),
-    fallbackLng: LanguageEnum.En,
+    fallbackLng: En,
     interpolation: {escapeValue: false},
     initAsync: false,
 });

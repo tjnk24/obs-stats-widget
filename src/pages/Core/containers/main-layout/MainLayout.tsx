@@ -15,15 +15,18 @@ import {settingsIsMockEnabledSelector} from '__selectors/settingsSelectors';
 import {obsConnectionService} from '__services/obsConnectionService';
 import {routerManager} from '__services/routerManager';
 
+import UpdateBanner from '../update-banner';
+
 import {CONNECTION_BADGES} from './consts';
 
 import style from './style.module.scss';
 
 const MainLayout = () => {
-    const {t} = useTranslation();
-
     const status = useSelector(connectionStatusSelector);
     const isMockEnabled = useSelector(settingsIsMockEnabledSelector);
+
+    const {t} = useTranslation();
+
     const isSettingsPage = Boolean(useMatch(ROUTES.SETTINGS.INDEX));
 
     const {status: badgeStatus, textKey} = CONNECTION_BADGES[status];
@@ -84,6 +87,8 @@ const MainLayout = () => {
                     showIcon
                 />
             )}
+
+            <UpdateBanner/>
 
             <Flex
                 className={style.content}

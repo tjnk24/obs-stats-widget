@@ -20,6 +20,8 @@ An optional Lua script adds the platform of plugin outputs, GPU load and system 
   With the bridge script: GPU load, hardware encoder load, video memory and system memory.
 - **Interface in English, Russian, Spanish, German and Brazilian Portuguese**, picked from the OBS language
   and changeable in the settings.
+- **Updates from the dock:** a banner tells about a new version, and one button downloads it, checks its signature
+  and installs it, never during a stream or recording.
 - **Diagnostics and error reports** that can be copied and attached to an issue.
 - **Built-in mock mode** to see the dock with several platforms without streaming.
 
@@ -58,8 +60,13 @@ If OBS has never been started on this computer, start it once, close it and run 
 If obs-websocket has never been turned on, the installer leaves it to you: Tools → WebSocket Server Settings →
 Enable WebSocket server. For a portable OBS, use the [zip](#from-the-zip-archive).
 
-**Update** by running the installer of the new version: it replaces the files and adds the bridge script to scene
-collections created since the last install; the rest of your OBS settings stays as it is.
+**Update** from the dock: when a new version is out, a banner offers Update, Skip this version and Remind me
+tomorrow. Update downloads the installer of the new version, checks its minisign signature and runs it silently;
+then the dock reloads. While a stream or recording is running, the dock offers to update right after it stops.
+If the new version needs a newer OBS, or the bridge script is not loaded in the current scene collection, the
+banner links to the release instead. Running the installer of the new version by hand works too: it replaces the
+files and adds the bridge script to scene collections created since the last install; the rest of your OBS
+settings stays as it is.
 **Uninstall** in Settings → Apps → obs-stats-widget with OBS closed: the dock and the bridge script are removed
 from OBS too. The obs-websocket server stays on, since other programs may use it.
 
@@ -121,11 +128,17 @@ The gear in the top right corner opens the settings:
 - **Port** and **Password** of obs-websocket, each with its own Save button. A new password is used only after
   OBS accepts it; until then the old one keeps working.
 - **Display:** interface language, the OBS card on or off, and the mock mode.
+- **Updates:** the current version, the time of the last check, a Check for updates button and the
+  Check for updates automatically switch (on by default: at start and once a day the dock asks the GitHub API
+  about the latest release; off, it goes online only when you press the button). A skipped or postponed version
+  can be brought back with Update anyway.
 - **Diagnostics:** copies the versions, the GPU and the outputs the dock found, for a bug report.
 
 ## Privacy and security
 
-- The dock connects only to obs-websocket on `127.0.0.1`.
+- The dock connects to obs-websocket on `127.0.0.1` and, to check for updates, to `api.github.com` for the
+  latest release: at start and once a day while the automatic check is on, otherwise only when you press the
+  button. Nothing about you or your stream is sent there.
 - The stream key is never read: from the stream settings the dock takes only the service name and the server.
 - The obs-websocket password is stored only in the dock's own browser storage.
 - Diagnostics and error reports contain no keys, passwords or server addresses.

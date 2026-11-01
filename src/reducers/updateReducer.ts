@@ -4,13 +4,15 @@ import type {Nullable} from 'infrastructure/common';
 import {BridgeUpdateStateDto} from '__types/update/bridge/BridgeUpdateStateDto';
 import {ReleaseDto} from '__types/update/ReleaseDto';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
+import {UpdateRequestDto} from '__types/update/UpdateRequestDto';
 
 export type UpdateReducer = {
     checkStatus: UpdateCheckStatusEnum;
     latest: Nullable<ReleaseDto>;
     bridge: Nullable<BridgeUpdateStateDto>;
     isObsBusy: boolean;
-    requestedVersion: Nullable<string>;
+    request: Nullable<UpdateRequestDto>;
+    deferredVersion: Nullable<string>;
 };
 
 const initialState: UpdateReducer = {
@@ -18,7 +20,8 @@ const initialState: UpdateReducer = {
     latest: null,
     bridge: null,
     isObsBusy: false,
-    requestedVersion: null,
+    request: null,
+    deferredVersion: null,
 };
 
 const slice = createSlice({
@@ -37,8 +40,11 @@ const slice = createSlice({
         setIsObsBusy: (state, {payload}: PayloadAction<boolean>) => {
             state.isObsBusy = payload;
         },
-        setRequestedVersion: (state, {payload}: PayloadAction<Nullable<string>>) => {
-            state.requestedVersion = payload;
+        setRequest: (state, {payload}: PayloadAction<Nullable<UpdateRequestDto>>) => {
+            state.request = payload;
+        },
+        setDeferredVersion: (state, {payload}: PayloadAction<Nullable<string>>) => {
+            state.deferredVersion = payload;
         },
     },
 });

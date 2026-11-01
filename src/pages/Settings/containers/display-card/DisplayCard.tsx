@@ -1,0 +1,90 @@
+import {GlobalOutlined} from '@ant-design/icons';
+import {
+    Card,
+    Flex,
+    Select,
+    Switch,
+    Typography,
+} from 'antd';
+import {useTranslation} from 'react-i18next';
+import {useSelector} from 'react-redux';
+
+import {commonActions} from '__actions';
+import {settingsSelector} from '__selectors/settingsSelectors';
+import {languageService} from '__services/languageService';
+import {obsConnectionService} from '__services/obsConnectionService';
+import {LanguageEnum} from '__types/i18n/LanguageEnum';
+
+import {LANGUAGE_OPTIONS} from './consts';
+
+import style from './style.module.scss';
+
+const DisplayCard = () => {
+    const {isShowGeneralCard, language, isMockEnabled} = useSelector(settingsSelector);
+
+    const {t} = useTranslation();
+
+    return (
+        <Card
+            size="small"
+            title={t('settings.displayTitle')}
+        >
+            <Flex
+                gap={14}
+                vertical
+            >
+                <Flex
+                    align="center"
+                    justify="space-between"
+                    gap="small"
+                >
+                    <Typography.Text>
+                        <GlobalOutlined/>
+
+                        {` ${t('settings.languageLabel')}`}
+                    </Typography.Text>
+
+                    <Select<LanguageEnum>
+                        className={style.languageSelect}
+                        value={languageService.resolveLanguage(language)}
+                        options={LANGUAGE_OPTIONS}
+                        aria-label={t('settings.languageLabel')}
+                        onChange={languageService.setLanguage}
+                    />
+                </Flex>
+
+                <Flex
+                    align="center"
+                    justify="space-between"
+                    gap="small"
+                >
+                    <Typography.Text>
+                        {t('settings.generalCard')}
+                    </Typography.Text>
+
+                    <Switch
+                        checked={isShowGeneralCard}
+                        onChange={commonActions.settings.setIsShowGeneralCard}
+                    />
+                </Flex>
+
+                <Flex
+                    align="center"
+                    justify="space-between"
+                    gap="small"
+                >
+                    <Typography.Text>
+                        {t('settings.mockMode')}
+                    </Typography.Text>
+
+                    <Switch
+                        checked={isMockEnabled}
+                        onChange={obsConnectionService.setMockEnabled}
+                    />
+                </Flex>
+            </Flex>
+        </Card>
+    );
+};
+
+export default DisplayCard;

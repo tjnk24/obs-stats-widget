@@ -11,7 +11,14 @@ export const parseCompatibility = (value: unknown): Nullable<CompatibilityDto> =
     }
 
     const data = value as Partial<Record<keyof CompatibilityDto, unknown>>;
-    const {version, minObsVersion, obsWebSocketRpcVersion, minChromiumVersion, minBridgeVersion, requiredRequests} = data;
+    const {
+        version,
+        minObsVersion,
+        obsWebSocketRpcVersion,
+        minChromiumVersion,
+        minBridgeVersion,
+        requiredRequests,
+    } = data;
 
     if (
         typeof version !== 'string' || !parseVersion(version)

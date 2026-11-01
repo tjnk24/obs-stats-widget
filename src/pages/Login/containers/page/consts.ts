@@ -2,11 +2,7 @@ import type {ParseKeys} from 'i18next';
 
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 
-const {
-    Connecting,
-    Closed,
-    WrongPassword,
-} = ConnectionStatusEnum;
+const {Connecting, Closed, WrongPassword} = ConnectionStatusEnum;
 
 export const LOGIN_MESSAGES: Partial<Record<ConnectionStatusEnum, ParseKeys>> = {
     [Connecting]: 'connection.connecting',

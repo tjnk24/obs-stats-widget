@@ -23,16 +23,16 @@ import {LoginFormDto} from './types';
 import style from './style.module.scss';
 
 const Page = () => {
-    const {t} = useTranslation();
-
     const status = useSelector(connectionStatusSelector);
     const port = useSelector(settingsPortSelector);
 
     const [form] = Form.useForm<LoginFormDto>();
 
-    const messageKey = LOGIN_MESSAGES[status];
+    const {t} = useTranslation();
 
     const inputRef = useRef<InputRef>(null);
+
+    const messageKey = LOGIN_MESSAGES[status];
 
     useEffect(() => {
         inputRef.current?.focus();

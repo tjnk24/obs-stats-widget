@@ -12,7 +12,12 @@ const CongestionProgress = ({value}: Props) => {
     const {token} = theme.useToken();
 
     const share = Math.max(0, Math.min(1, value || 0));
-    const strokeColor = share < CONGESTION_WARN_SHARE ? token.colorSuccess : share < CONGESTION_BAD_SHARE ? token.colorWarning : token.colorError;
+
+    const strokeColor = share < CONGESTION_WARN_SHARE
+        ? token.colorSuccess
+        : share < CONGESTION_BAD_SHARE
+            ? token.colorWarning
+            : token.colorError;
 
     return (
         <Progress

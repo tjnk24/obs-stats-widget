@@ -1,0 +1,91 @@
+import {useTranslation} from 'react-i18next';
+import {useSelector} from 'react-redux';
+
+import {statsViewSelector} from '__selectors/statsSelectors';
+import {HealthLevelEnum} from '__types/stats/views/HealthLevelEnum';
+import {StreamTargetDto} from '__types/targets/StreamTargetDto';
+import {OFF_OUTPUT_VIEW, RECENT_WINDOW_SEC} from '__utils/consts';
+
+import CongestionProgress from '../../../components/congestion-progress';
+import {formatNumber} from '../../../utils/formatNumber';
+import {formatPercent} from '../../../utils/formatPercent';
+import {formatTimecode} from '../../../utils/formatTimecode';
+import {HEALTH_TAGS, PLATFORM_MARKS} from '../consts';
+import {OutputCardViewDto, OutputStatKeyEnum} from '../types';
+import {getTargetTag} from '../utils/getTargetTag';
+
+const {Off, Warn} = HealthLevelEnum;
+
+const {Timecode, Dropped, Recent, Congestion} = OutputStatKeyEnum;
+
+export const useOutputCardView = (target: StreamTargetDto): OutputCardViewDto => {
+    const {outputs, now} = useSelector(statsViewSelector);
+
+    const {t} = useTranslation();
+
+    const {platform: {title, color}, notes} = target;
+
+    const {
+        isActive,
+        isReconnecting,
+        level,
+        kbps,
+        timecode,
+        dropped,
+        total,
+        recentDropped,
+        recentTotal,
+        congestion,
+        graph,
+    } = outputs[target.key] || OFF_OUTPUT_VIEW;
+
+    const valueLevel = isActive ? undefined : Off;
+
+    const recentValue = recentDropped > 0
+        ? `${formatNumber(recentDropped)} (${formatPercent(recentDropped, recentTotal)})`
+        : '0';
+
+    return {
+        title,
+        color,
+        notes,
+        platformMark: PLATFORM_MARKS[title] ?? null,
+        originTag: getTargetTag(target),
+        healthTag: HEALTH_TAGS[isReconnecting ? Warn : level],
+        statusKey: isReconnecting ? 'stats.statuses.reconnecting' : `stats.statuses.${level}`,
+        isActive,
+        bitrate: isActive && kbps !== null ? Math.round(kbps) : '—',
+        isBitrateLoading: isActive && kbps === null,
+        graph,
+        now,
+        items: [
+            {
+                key: Timecode,
+                label: t('stats.onAir'),
+                level: valueLevel,
+                value: isActive ? formatTimecode(timecode) : '—',
+            },
+            {
+                key: Dropped,
+                label: t('stats.dropped'),
+                hint: t('stats.hints.dropped'),
+                level: valueLevel,
+                value: isActive ? `${formatNumber(dropped)} (${formatPercent(dropped, total)})` : '—',
+            },
+            {
+                key: Recent,
+                label: t('stats.recent'),
+                hint: t('stats.hints.recent', {seconds: RECENT_WINDOW_SEC}),
+                level: isActive ? level : Off,
+                value: isActive ? recentValue : '—',
+            },
+            {
+                key: Congestion,
+                label: t('stats.congestion'),
+                hint: t('stats.hints.congestion'),
+                level: valueLevel,
+                value: isActive ? <CongestionProgress value={congestion}/> : '—',
+            },
+        ],
+    };
+};

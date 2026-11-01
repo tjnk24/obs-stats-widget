@@ -9,9 +9,11 @@ import {SERVICE_OUTPUT_FLAG} from '__utils/consts';
 import {findResultData} from './findResultData';
 import {isRequestOfType} from './isRequestOfType';
 
+const {GetOutputList, GetRecordStatus} = ObsRequestTypeEnum;
+
 export const isObsBusy = (pairs: RequestResultPairDto[]): Nullable<boolean> => {
-    const outputList = findResultData<ObsOutputListDto>(pairs, isRequestOfType(ObsRequestTypeEnum.GetOutputList));
-    const recordStatus = findResultData<ObsRecordStatusDto>(pairs, isRequestOfType(ObsRequestTypeEnum.GetRecordStatus));
+    const outputList = findResultData<ObsOutputListDto>(pairs, isRequestOfType(GetOutputList));
+    const recordStatus = findResultData<ObsRecordStatusDto>(pairs, isRequestOfType(GetRecordStatus));
 
     if (!outputList && !recordStatus) {
         return null;

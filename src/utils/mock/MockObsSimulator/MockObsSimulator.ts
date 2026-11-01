@@ -27,6 +27,18 @@ import {randomBetween} from './randomBetween';
 import {failureResult} from './results/failureResult';
 import {successResult} from './results/successResult';
 
+const {
+    GetStats,
+    GetStreamStatus,
+    GetOutputStatus,
+    GetStreamServiceSettings,
+    GetOutputList,
+    GetProfileParameter,
+    GetRecordStatus,
+    SetProfileParameter,
+    GetVersion,
+} = ObsRequestTypeEnum;
+
 export class MockObsSimulator {
     private readonly startedAt = performance.now();
 
@@ -62,14 +74,18 @@ export class MockObsSimulator {
     private isTwitchDropping = (runningSeconds: number) => runningSeconds % 30 >= 10 && runningSeconds % 30 < 14;
 
     private advance = (now: number, elapsedSeconds: number, runningSeconds: number) => {
-        growMockOutput(this.mainOutput, elapsedSeconds, this.isMainDipping(runningSeconds) ? 6500 : randomBetween(17700, 18300), 0);
+        const mainKbps = this.isMainDipping(runningSeconds) ? 6500 : randomBetween(17700, 18300);
+
+        growMockOutput(this.mainOutput, elapsedSeconds, mainKbps, 0);
 
         if (runningSeconds >= MOCK_TWITCH_DELAY_SEC && !this.twitchOutput) {
             this.twitchOutput = createMockOutput(now);
         }
 
         if (this.twitchOutput && !this.isTwitchReconnecting(runningSeconds)) {
-            growMockOutput(this.twitchOutput, elapsedSeconds, randomBetween(5800, 6200), this.isTwitchDropping(runningSeconds) ? 5 : 0);
+            const twitchDroppedFrames = this.isTwitchDropping(runningSeconds) ? 5 : 0;
+
+            growMockOutput(this.twitchOutput, elapsedSeconds, randomBetween(5800, 6200), twitchDroppedFrames);
         }
 
         MOCK_EXTRA_TARGETS.forEach(({outputName, minKbps, maxKbps}) => {
@@ -90,7 +106,7 @@ export class MockObsSimulator {
         const {requestType} = request;
 
         switch (requestType) {
-            case ObsRequestTypeEnum.GetStats:
+            case GetStats:
                 return successResult(requestType, {
                     activeFps: MOCK_FPS,
                     averageFrameRenderTime: randomBetween(0.8, 1.1),
@@ -103,40 +119,47 @@ export class MockObsSimulator {
                     outputTotalFrames: this.encoderTotalFrames,
                 });
 
-            case ObsRequestTypeEnum.GetStreamStatus:
+            case GetStreamStatus:
                 return successResult(
                     requestType,
-                    buildMockOutputStatus(this.mainOutput, now, this.isMainDipping(runningSeconds) ? 0.6 : 0.02, false),
+                    buildMockOutputStatus(
+                        this.mainOutput,
+                        now,
+                        this.isMainDipping(runningSeconds) ? 0.6 : 0.02,
+                        false,
+                    ),
                 );
 
-            case ObsRequestTypeEnum.GetOutputStatus:
+            case GetOutputStatus:
                 return this.answerOutputStatus(requestType, String(request.requestData?.outputName), now, runningSeconds);
 
-            case ObsRequestTypeEnum.GetStreamServiceSettings:
+            case GetStreamServiceSettings:
                 return successResult(requestType, {
                     streamServiceType: 'rtmp_common',
                     streamServiceSettings: {service: 'YouTube - RTMPS', server: 'rtmps://a.rtmps.youtube.com:443/live2'},
                 });
 
-            case ObsRequestTypeEnum.GetOutputList:
+            case GetOutputList:
                 return successResult(requestType, {
                     outputs: [
                         buildMockOutputListItem(MOCK_MAIN_OUTPUT_NAME, true),
-                        ...(this.twitchOutput ? [buildMockOutputListItem(MOCK_TWITCH_OUTPUT_NAME, !this.isTwitchReconnecting(runningSeconds))] : []),
+                        ...(this.twitchOutput
+                            ? [buildMockOutputListItem(MOCK_TWITCH_OUTPUT_NAME, !this.isTwitchReconnecting(runningSeconds))]
+                            : []),
                         ...MOCK_EXTRA_TARGETS.map(({outputName}) => buildMockOutputListItem(outputName, true)),
                     ],
                 });
 
-            case ObsRequestTypeEnum.GetProfileParameter:
+            case GetProfileParameter:
                 return successResult(requestType, {parameterValue: JSON.stringify(this.buildBridgeData())});
 
-            case ObsRequestTypeEnum.GetRecordStatus:
+            case GetRecordStatus:
                 return successResult(requestType, {outputActive: false});
 
-            case ObsRequestTypeEnum.SetProfileParameter:
+            case SetProfileParameter:
                 return successResult(requestType, {});
 
-            case ObsRequestTypeEnum.GetVersion:
+            case GetVersion:
                 return successResult(requestType, {
                     obsVersion: 'mock',
                     obsWebSocketVersion: 'mock',
@@ -167,8 +190,9 @@ export class MockObsSimulator {
     };
 
     private buildBridgeData = (): BridgeDataDto => ({
-        bridgeVersion: 1,
+        bridgeVersion: 2,
         updated: Math.floor(Date.now() / 1000),
+        update: {available: true, status: null},
         outputs: [
             ...(this.twitchOutput ? [{name: MOCK_TWITCH_OUTPUT_NAME, server: MOCK_TWITCH_SERVER}] : []),
             ...MOCK_EXTRA_TARGETS.map(({outputName, server}) => ({name: outputName, server})),

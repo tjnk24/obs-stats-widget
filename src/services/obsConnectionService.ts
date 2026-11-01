@@ -2,10 +2,10 @@ import type {Nullable} from 'infrastructure/common';
 import isEqual from 'lodash/isEqual';
 
 import {commonActions} from '__actions';
-import {connectionObsVersionSelector, connectionStatusSelector} from '__selectors/connectionSelectors';
-import {obsWebSocketPortSelector, settingsIsMockEnabledSelector} from '__selectors/settingsSelectors';
-import {statsTargetsSelector} from '__selectors/statsSelectors';
-import {updateIsObsBusySelector} from '__selectors/updateSelectors';
+import {connectionSelector} from '__selectors/connectionSelectors';
+import {obsWebSocketPortSelector, settingsSelector} from '__selectors/settingsSelectors';
+import {statsSelector} from '__selectors/statsSelectors';
+import {updateSelector} from '__selectors/updateSelectors';
 import {getStore} from '__store';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 import {PasswordChangeDto} from '__types/connection/PasswordChangeDto';
@@ -47,12 +47,9 @@ const {
     RequestBatchResponse,
 } = ObsOpCodeEnum;
 
-const {
-    Connecting,
-    Closed,
-    NeedPassword,
-    WrongPassword,
-} = ConnectionStatusEnum;
+const {Connecting, Closed, NeedPassword, WrongPassword} = ConnectionStatusEnum;
+
+const {Rejected, NoConnection, Accepted} = PasswordChangeResultEnum;
 
 class ObsConnectionService {
     private socket: Nullable<WebSocket> = null;
@@ -139,7 +136,9 @@ class ObsConnectionService {
     private connect = () => {
         this.clearReconnectTimer();
 
-        if (settingsIsMockEnabledSelector(getStore())) {
+        const state = getStore();
+
+        if (settingsSelector(state).isMockEnabled) {
             this.simulator = new MockObsSimulator();
 
             commonActions.connection.setStatus(ConnectionStatusEnum.Identified);
@@ -149,9 +148,9 @@ class ObsConnectionService {
             return;
         }
 
-        connectionStatusSelector(getStore()) !== Closed && commonActions.connection.setStatus(Connecting);
+        connectionSelector(state).status !== Closed && commonActions.connection.setStatus(Connecting);
 
-        const socket = new WebSocket(`ws://127.0.0.1:${obsWebSocketPortSelector(getStore())}`, OBS_WEBSOCKET_PROTOCOL);
+        const socket = new WebSocket(`ws://127.0.0.1:${obsWebSocketPortSelector(state)}`, OBS_WEBSOCKET_PROTOCOL);
 
         socket.onmessage = ({data}: MessageEvent<string>) => {
             void this.onMessage(socket, JSON.parse(data) as ObsMessageDto);
@@ -196,13 +195,13 @@ class ObsConnectionService {
         this.onDisconnected();
 
         if (code === AUTHENTICATION_FAILED_CLOSE_CODE && this.passwordChange) {
-            this.finishPasswordChange(PasswordChangeResultEnum.Rejected);
+            this.finishPasswordChange(Rejected);
             this.connect();
 
             return;
         }
 
-        this.passwordChange && this.finishPasswordChange(PasswordChangeResultEnum.NoConnection);
+        this.passwordChange && this.finishPasswordChange(NoConnection);
 
         if (code === AUTHENTICATION_FAILED_CLOSE_CODE) {
             storageService.savePassword(null);
@@ -245,7 +244,7 @@ class ObsConnectionService {
             }
 
             case Identified:
-                this.passwordChange && this.finishPasswordChange(PasswordChangeResultEnum.Accepted);
+                this.passwordChange && this.finishPasswordChange(Accepted);
                 this.password && storageService.savePassword(this.password);
 
                 commonActions.connection.setStatus(ConnectionStatusEnum.Identified);
@@ -318,7 +317,7 @@ class ObsConnectionService {
         const pairs = requests.map((request, index) => ({request, result: results[index]}));
         const discovered = discoverTargets(pairs);
 
-        if (discovered && !isEqual(discovered, statsTargetsSelector(getStore()))) {
+        if (discovered && !isEqual(discovered, statsSelector(getStore()).targets)) {
             commonActions.stats.setTargets(discovered);
         }
 
@@ -329,17 +328,17 @@ class ObsConnectionService {
 
         const isBusy = isObsBusy(pairs);
 
-        if (isBusy !== null && isBusy !== updateIsObsBusySelector(getStore())) {
+        if (isBusy !== null && isBusy !== updateSelector(getStore()).isObsBusy) {
             commonActions.update.setIsObsBusy(isBusy);
         }
 
         const obsVersion = getObsVersion(pairs);
 
-        if (obsVersion && !isEqual(obsVersion, connectionObsVersionSelector(getStore()))) {
+        if (obsVersion && !isEqual(obsVersion, connectionSelector(getStore()).obsVersion)) {
             commonActions.connection.setObsVersion(obsVersion);
         }
 
-        commonActions.stats.setView(this.tracker.ingest(statsTargetsSelector(getStore()), pairs, performance.now()));
+        commonActions.stats.setView(this.tracker.ingest(statsSelector(getStore()).targets, pairs, performance.now()));
     };
 
     private finishPasswordChange = (result: PasswordChangeResultEnum) => {
@@ -351,7 +350,7 @@ class ObsConnectionService {
 
         this.passwordChange = null;
 
-        if (result === PasswordChangeResultEnum.Accepted) {
+        if (result === Accepted) {
             this.password = passwordChange.password;
         }
 
@@ -360,7 +359,7 @@ class ObsConnectionService {
 
     private buildBatch = (): ObsRequestDto[] => {
         const requests = [
-            ...buildRequests(statsTargetsSelector(getStore()), this.pollIndex++ % DISCOVERY_EVERY_POLLS === 0),
+            ...buildRequests(statsSelector(getStore()).targets, this.pollIndex++ % DISCOVERY_EVERY_POLLS === 0),
             ...this.pendingRequests,
         ];
 

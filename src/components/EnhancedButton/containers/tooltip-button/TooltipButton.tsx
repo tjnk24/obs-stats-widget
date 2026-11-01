@@ -7,23 +7,10 @@ import {Props} from './types';
 
 import style from './style.module.scss';
 
-const TooltipButton = ({
-    buttonProps,
-    tooltipProps,
-    children,
-    withSpinner,
-}: Props) => {
-    const {
-        className: tooltipClassName,
-        trigger = ['hover', 'click'],
-        ...tooltipPropsRest
-    }: TooltipProps = tooltipProps || {};
+const TooltipButton = ({buttonProps, tooltipProps, children, withSpinner}: Props) => {
+    const {className: tooltipClassName, trigger = ['hover', 'click'], ...tooltipPropsRest}: TooltipProps = tooltipProps || {};
 
-    const {
-        className: buttonClassName,
-        disabled,
-        ...buttonPropsRest
-    } = buttonProps;
+    const {className: buttonClassName, disabled, ...buttonPropsRest} = buttonProps;
 
     return (
         <Tooltip

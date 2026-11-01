@@ -22,7 +22,13 @@ export const parseUpdateStatus = (raw: Nullable<string>): Nullable<UpdateStatusD
         return null;
     }
 
-    const {version, stage, percent, error, updated} = parsed as Partial<Record<keyof UpdateStatusDto, unknown>>;
+    const {
+        version,
+        stage,
+        percent,
+        error,
+        updated,
+    } = parsed as Partial<Record<keyof UpdateStatusDto, unknown>>;
 
     if (
         typeof version !== 'string'
