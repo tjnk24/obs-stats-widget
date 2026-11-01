@@ -11,5 +11,13 @@ export const loadAssets = () => (webpackConfig: Configuration): Configuration =>
         },
     });
 
+    webpackConfig.module?.rules?.push({
+        test: /\.woff2?$/i,
+        type: 'asset/resource',
+        generator: {
+            filename: `fonts/[name]${CONTENT_HASH}[ext]`,
+        },
+    });
+
     return webpackConfig;
 };

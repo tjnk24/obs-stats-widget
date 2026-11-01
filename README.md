@@ -259,4 +259,6 @@ without publishing.
 ## License
 
 [MIT](LICENSE). The installer also includes [minisign](https://github.com/jedisct1/minisign) by Frank Denis
-(ISC license, `installer/third-party/minisign-LICENSE.txt`), used to check the signature of updates.
+(ISC license, `installer/third-party/minisign-LICENSE.txt`), used to check the signature of updates. The dock
+bundles the [Inter](https://github.com/rsms/inter) font by The Inter Project Authors (SIL Open Font License 1.1,
+`dock/fonts/Inter-LICENSE.txt` in the release), so it makes no requests to font services.

@@ -10,4 +10,8 @@ export const RELEASE_DIRECTORY = path.join(ROOT_DIRECTORY, 'release');
 
 export const PACKAGE_DIRECTORY = path.join(RELEASE_DIRECTORY, `obs-stats-widget-${VERSION}`);
 
+export const FONT_LICENSE_SOURCE = path.join(ROOT_DIRECTORY, 'node_modules', '@fontsource-variable', 'inter', 'LICENSE');
+
+export const FONT_LICENSE_TARGET = path.join(PACKAGE_DIRECTORY, 'dock', 'fonts', 'Inter-LICENSE.txt');
+
 export const README_TEMPLATE_PATH = path.join(import.meta.dirname, 'README.template.txt');

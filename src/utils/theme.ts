@@ -36,7 +36,7 @@ export const THEME: ThemeConfig = {
         colorBorderSecondary: '#3c404d',
         borderRadius: 5,
         fontSize: 14,
-        fontFamily: 'Inter, Roboto, \'Helvetica Neue\', Geneva, arial, Tahoma, verdana, sans-serif',
+        fontFamily: '\'Inter Variable\', Inter, Roboto, \'Helvetica Neue\', Geneva, arial, Tahoma, verdana, sans-serif',
     },
     components: {
         Descriptions: {

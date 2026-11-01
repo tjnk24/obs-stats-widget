@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom/client';
 import {Provider} from 'react-redux';
 import {createHashRouter, RouterProvider} from 'react-router';
 
+import '@fontsource-variable/inter';
+
 import '__i18n';
 import Core from '__pages/Core';
 import {routerManager} from '__services/routerManager';
