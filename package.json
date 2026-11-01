@@ -1,6 +1,6 @@
 {
   "name": "obs-stats-widget",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OBS dock with live stream stats for the main output and obs-multi-rtmp targets, via obs-websocket",
   "main": "src/index.tsx",
   "license": "MIT",
