@@ -44,7 +44,7 @@ const UpdateCard = () => {
 
                 <Flex
                     align="center"
-                    gap="small"
+                    gap={14}
                     wrap
                 >
                     <EnhancedButton
@@ -86,25 +86,25 @@ const UpdateCard = () => {
                     </Flex>
                 )}
 
-                <Flex vertical>
-                    <Flex
-                        align="center"
-                        justify="space-between"
-                        gap="small"
-                    >
+                <Flex
+                    align="center"
+                    justify="space-between"
+                    gap={14}
+                >
+                    <Flex vertical>
                         <Typography.Text>
                             {t('settings.autoUpdateCheck')}
                         </Typography.Text>
 
-                        <Switch
-                            checked={isAutoUpdateCheckEnabled}
-                            onChange={updateService.setAutoCheckEnabled}
-                        />
+                        <Typography.Text type="secondary">
+                            {t('settings.autoUpdateCheckHint')}
+                        </Typography.Text>
                     </Flex>
 
-                    <Typography.Text type="secondary">
-                        {t('settings.autoUpdateCheckHint')}
-                    </Typography.Text>
+                    <Switch
+                        checked={isAutoUpdateCheckEnabled}
+                        onChange={updateService.setAutoCheckEnabled}
+                    />
                 </Flex>
             </Flex>
         </Card>

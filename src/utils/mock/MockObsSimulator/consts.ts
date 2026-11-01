@@ -6,7 +6,7 @@ export const MOCK_MAIN_OUTPUT_NAME = 'adv_stream';
 export const MOCK_TWITCH_OUTPUT_NAME = 'multi-output';
 export const MOCK_TWITCH_SERVER = 'rtmp://ingest.global-contribute.live-video.net';
 export const MOCK_TWITCH_DELAY_SEC = 5;
-export const MOCK_SCENE_COLLECTION: string = 'Mock scenes';
+export const MOCK_SCENE_COLLECTION = 'Mock scenes';
 
 export const MOCK_EXTRA_TARGETS: MockTargetDto[] = [
     {
@@ -34,5 +34,5 @@ export const MOCK_SYSTEM_MEMORY = {
     total: 31.9 * BYTES_IN_GIGABYTE,
 };
 
-export const OBS_OUTPUT_NOT_FOUND_CODE: number = 600;
-export const OBS_UNKNOWN_REQUEST_CODE: number = 204;
+export const OBS_OUTPUT_NOT_FOUND_CODE = 600;
+export const OBS_UNKNOWN_REQUEST_CODE = 204;

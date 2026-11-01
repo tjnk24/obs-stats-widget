@@ -1,47 +1,33 @@
 import {ApiOutlined, LoadingOutlined} from '@ant-design/icons';
 import {Alert, Flex} from 'antd';
-import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
 import {connectionStatusSelector} from '__selectors/connectionSelectors';
-import {obsWebSocketPortSelector, settingsIsShowGeneralCardSelector} from '__selectors/settingsSelectors';
+import {settingsIsShowGeneralCardSelector} from '__selectors/settingsSelectors';
 import {statsTargetsSelector} from '__selectors/statsSelectors';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
-import {RECONNECT_INTERVAL_MS} from '__utils/consts';
-import {isInsideObs} from '__utils/isInsideObs';
 
 import GeneralCard from '../general-card';
 import OutputCard from '../output-card';
 
-import style from './style.module.scss';
+import {useConnectionAlertView} from './hooks/useConnectionAlertView';
 
-const {Closed, Identified} = ConnectionStatusEnum;
+import style from './style.module.scss';
 
 const Page = () => {
     const status = useSelector(connectionStatusSelector);
-    const port = useSelector(obsWebSocketPortSelector);
     const targets = useSelector(statsTargetsSelector);
     const isShowGeneralCard = useSelector(settingsIsShowGeneralCardSelector);
 
-    const {t} = useTranslation();
+    const {isClosed, title, description} = useConnectionAlertView();
 
-    if (status !== Identified) {
-        const isClosed = status === Closed;
-
-        const isWebSocketOff = isClosed && isInsideObs();
-
-        const seconds = RECONNECT_INTERVAL_MS / 1000;
-
-        const message = isClosed
-            ? t(isWebSocketOff ? 'connection.webSocketOffTitle' : 'connection.closed', {port, seconds})
-            : t('connection.connecting');
-
+    if (status !== ConnectionStatusEnum.Identified) {
         return (
             <Alert
                 type={isClosed ? 'error' : 'info'}
                 icon={isClosed ? <ApiOutlined/> : <LoadingOutlined/>}
-                title={message}
-                description={isWebSocketOff ? t('connection.webSocketOff', {port, seconds}) : undefined}
+                title={title}
+                description={description}
                 showIcon
             />
         );

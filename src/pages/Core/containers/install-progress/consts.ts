@@ -25,7 +25,7 @@ const {
     Unexpected,
 } = UpdateErrorEnum;
 
-export const UPDATE_BRIDGE_RESPONSE_TIMEOUT_MS: number = 30 * 1000;
+export const UPDATE_BRIDGE_RESPONSE_TIMEOUT_MS = 30 * 1000;
 
 export const UPDATE_STAGE_VIEWS: Record<UpdateStageEnum, UpdateStageViewDto> = {
     [Preparing]: {textKey: 'update.stages.preparing', percent: 0},

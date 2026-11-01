@@ -36,7 +36,7 @@ const DisplayCard = () => {
                 <Flex
                     align="center"
                     justify="space-between"
-                    gap="small"
+                    gap={14}
                 >
                     <Typography.Text>
                         <GlobalOutlined/>
@@ -56,7 +56,7 @@ const DisplayCard = () => {
                 <Flex
                     align="center"
                     justify="space-between"
-                    gap="small"
+                    gap={14}
                 >
                     <Typography.Text>
                         {t('settings.generalCard')}
@@ -71,7 +71,7 @@ const DisplayCard = () => {
                 <Flex
                     align="center"
                     justify="space-between"
-                    gap="small"
+                    gap={14}
                 >
                     <Typography.Text>
                         {t('settings.mockMode')}

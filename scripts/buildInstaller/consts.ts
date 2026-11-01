@@ -12,19 +12,19 @@ export const MINISIGN_CACHE_DIRECTORY = path.join(ROOT_DIRECTORY, 'node_modules'
 
 export const MINISIGN_EXECUTABLE = path.join(MINISIGN_CACHE_DIRECTORY, 'minisign-win64', 'x86_64', 'minisign.exe');
 
-export const COMPILER_LOCATIONS: Array<string | undefined> = [
+export const COMPILER_LOCATIONS = [
     process.env.ISCC_PATH,
     process.env.LOCALAPPDATA && path.join(process.env.LOCALAPPDATA, 'Programs', 'Inno Setup 6', 'ISCC.exe'),
     process.env['ProgramFiles(x86)'] && path.join(process.env['ProgramFiles(x86)'], 'Inno Setup 6', 'ISCC.exe'),
     process.env.ProgramFiles && path.join(process.env.ProgramFiles, 'Inno Setup 6', 'ISCC.exe'),
 ];
 
-export const UPDATER_SOURCE_DIRECTORY: string = path.join(ROOT_DIRECTORY, 'installer', 'updater');
+export const UPDATER_SOURCE_DIRECTORY = path.join(ROOT_DIRECTORY, 'installer', 'updater');
 
-export const TEST_UPDATER_DIRECTORY: string = path.join(RELEASE_DIRECTORY, 'test-updater');
+export const TEST_UPDATER_DIRECTORY = path.join(RELEASE_DIRECTORY, 'test-updater');
 
-export const UPDATER_ENTRY_NAME: string = 'Update-Widget.ps1';
+export const UPDATER_ENTRY_NAME = 'Update-Widget.ps1';
 
-export const RELEASE_BASE_URL_PATTERN: RegExp = /(\[string\]\$ReleaseBaseUrl = ')[^']*(')/;
+export const RELEASE_BASE_URL_PATTERN = /(\[string\]\$ReleaseBaseUrl = ')[^']*(')/;
 
-export const PUBLIC_KEY_PATTERN: RegExp = /(\[string\]\$PublicKey = ')[^']*(')/;
+export const PUBLIC_KEY_PATTERN = /(\[string\]\$PublicKey = ')[^']*(')/;

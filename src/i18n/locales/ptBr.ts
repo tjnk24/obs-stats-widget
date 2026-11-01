@@ -19,9 +19,11 @@ export const ptBr: TranslationDto = {
     },
     connection: {
         connecting: 'Conectando ao OBS...',
-        closed: 'Sem conexão com o OBS (obs-websocket, porta {{port}}). Nova tentativa em {{seconds}} s...',
+        closed: 'Sem conexão com o OBS (obs-websocket, porta {{port}}). {{retry}}',
         webSocketOffTitle: 'O obs-websocket não responde na porta {{port}}',
-        webSocketOff: 'Provavelmente o servidor WebSocket está desligado. Ative-o em $t(obs.tools) → $t(obs.webSocketSettings) → “$t(obs.enableWebSocketServer)”. Confira ali também “$t(obs.serverPort)”: deve ser {{port}}; se não for, mude a porta nas configurações do painel. Nova tentativa em {{seconds}} s...',
+        webSocketOff: 'Provavelmente o servidor WebSocket está desligado. Ative-o em $t(obs.tools) → $t(obs.webSocketSettings) → “$t(obs.enableWebSocketServer)”. Confira ali também “$t(obs.serverPort)”: deve ser {{port}}; se não for, mude a porta nas configurações do painel. {{retry}}',
+        retryIn: 'Nova tentativa em {{seconds}} s…',
+        retrying: 'Tentando novamente…',
     },
     login: {
         title: 'Conectar ao OBS',
@@ -36,7 +38,6 @@ export const ptBr: TranslationDto = {
     portField: {
         label: 'Porta do obs-websocket',
         range: 'A porta é um número de {{min}} a {{max}}',
-        devOverride: 'A porta {{port}} está definida no endereço do painel (?port=) e tem prioridade sobre esta configuração.',
     },
     settings: {
         portTitle: 'Porta',

@@ -3,7 +3,7 @@ import isEqual from 'lodash/isEqual';
 
 import {commonActions} from '__actions';
 import {connectionSelector} from '__selectors/connectionSelectors';
-import {obsWebSocketPortSelector, settingsSelector} from '__selectors/settingsSelectors';
+import {settingsSelector} from '__selectors/settingsSelectors';
 import {statsSelector} from '__selectors/statsSelectors';
 import {updateSelector} from '__selectors/updateSelectors';
 import {getStore} from '__store';
@@ -164,7 +164,7 @@ class ObsConnectionService {
 
         connectionSelector(state).status !== Closed && commonActions.connection.setStatus(Connecting);
 
-        const socket = new WebSocket(`ws://127.0.0.1:${obsWebSocketPortSelector(state)}`, OBS_WEBSOCKET_PROTOCOL);
+        const socket = new WebSocket(`ws://127.0.0.1:${settingsSelector(state).port}`, OBS_WEBSOCKET_PROTOCOL);
 
         socket.onmessage = ({data}: MessageEvent<string>) => {
             void this.onMessage(socket, JSON.parse(data) as ObsMessageDto);
@@ -233,6 +233,7 @@ class ObsConnectionService {
         }
 
         commonActions.connection.setStatus(Closed);
+        commonActions.connection.setReconnectAt(Date.now() + RECONNECT_INTERVAL_MS);
 
         this.reconnectTimer = window.setTimeout(this.connect, RECONNECT_INTERVAL_MS);
     };

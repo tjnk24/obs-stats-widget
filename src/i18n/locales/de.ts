@@ -19,9 +19,11 @@ export const de: TranslationDto = {
     },
     connection: {
         connecting: 'Verbindung zu OBS...',
-        closed: 'Keine Verbindung zu OBS (obs-websocket, Port {{port}}). Neuer Versuch in {{seconds}} s...',
+        closed: 'Keine Verbindung zu OBS (obs-websocket, Port {{port}}). {{retry}}',
         webSocketOffTitle: 'obs-websocket antwortet nicht auf Port {{port}}',
-        webSocketOff: 'Wahrscheinlich ist der WebSocket-Server ausgeschaltet. Schalte ihn unter $t(obs.tools) → $t(obs.webSocketSettings) → „$t(obs.enableWebSocketServer)“ ein. Prüfe dort auch „$t(obs.serverPort)“: Er sollte {{port}} sein, sonst ändere den Port in den Dock-Einstellungen. Neuer Versuch in {{seconds}} s...',
+        webSocketOff: 'Wahrscheinlich ist der WebSocket-Server ausgeschaltet. Schalte ihn unter $t(obs.tools) → $t(obs.webSocketSettings) → „$t(obs.enableWebSocketServer)“ ein. Prüfe dort auch „$t(obs.serverPort)“: Er sollte {{port}} sein, sonst ändere den Port in den Dock-Einstellungen. {{retry}}',
+        retryIn: 'Neuer Versuch in {{seconds}} s…',
+        retrying: 'Neuer Versuch läuft…',
     },
     login: {
         title: 'Mit OBS verbinden',
@@ -36,7 +38,6 @@ export const de: TranslationDto = {
     portField: {
         label: 'obs-websocket-Port',
         range: 'Der Port ist eine Zahl von {{min}} bis {{max}}',
-        devOverride: 'Port {{port}} ist in der Adresse des Docks (?port=) angegeben und hat Vorrang vor dieser Einstellung.',
     },
     settings: {
         portTitle: 'Port',

@@ -3,7 +3,7 @@ import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
 import {UpdateStatusDto} from '__types/update/bridge/UpdateStatusDto';
 import {UpdateRequestDto} from '__types/update/UpdateRequestDto';
 
-export const NOW: number = 1_800_000_000_000;
+export const NOW = 1_800_000_000_000;
 
 export const REQUEST: UpdateRequestDto = {version: '0.2.0', requestedAt: NOW - 10_000};
 

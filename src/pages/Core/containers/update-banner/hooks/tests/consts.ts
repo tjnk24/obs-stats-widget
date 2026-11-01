@@ -3,13 +3,13 @@ import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 import {ReleaseDto} from '__types/update/ReleaseDto';
 import {UpdateRequestDto} from '__types/update/UpdateRequestDto';
 
-export const NOW: number = 1_800_000_000_000;
+export const NOW = 1_800_000_000_000;
 
-export const CURRENT_VERSION: string = '0.1.0';
+export const CURRENT_VERSION = '0.1.0';
 
-export const OLDER_VERSION: string = '0.0.9';
+export const OLDER_VERSION = '0.0.9';
 
-export const CURRENT_RELEASE_URL: string = 'https://github.com/tjnk24/obs-stats-widget/releases/tag/v0.1.0';
+export const CURRENT_RELEASE_URL = 'https://github.com/tjnk24/obs-stats-widget/releases/tag/v0.1.0';
 
 export const RELEASE: ReleaseDto = {
     version: '0.2.0',

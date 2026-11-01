@@ -9,6 +9,7 @@ export type ConnectionReducer = {
     obsVersion: Nullable<ObsVersionDto>;
     sceneCollection: Nullable<string>;
     isSwitchingCollection: boolean;
+    reconnectAt: Nullable<number>;
 };
 
 const initialState: ConnectionReducer = {
@@ -16,6 +17,7 @@ const initialState: ConnectionReducer = {
     obsVersion: null,
     sceneCollection: null,
     isSwitchingCollection: false,
+    reconnectAt: null,
 };
 
 const slice = createSlice({
@@ -33,6 +35,9 @@ const slice = createSlice({
         },
         setIsSwitchingCollection: (state, {payload}: PayloadAction<boolean>) => {
             state.isSwitchingCollection = payload;
+        },
+        setReconnectAt: (state, {payload}: PayloadAction<Nullable<number>>) => {
+            state.reconnectAt = payload;
         },
     },
 });

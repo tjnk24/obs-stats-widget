@@ -19,9 +19,11 @@ export const ru: TranslationDto = {
     },
     connection: {
         connecting: 'Подключение к OBS...',
-        closed: 'Нет связи с OBS (obs-websocket, порт {{port}}). Повтор через {{seconds}} с...',
+        closed: 'Нет связи с OBS (obs-websocket, порт {{port}}). {{retry}}',
         webSocketOffTitle: 'obs-websocket не отвечает на порту {{port}}',
-        webSocketOff: 'Скорее всего, выключен сервер WebSocket. Включите его: $t(obs.tools) → $t(obs.webSocketSettings) → «$t(obs.enableWebSocketServer)». Там же проверьте «$t(obs.serverPort)»: он должен быть {{port}}, иначе поменяйте порт в настройках панели. Повтор через {{seconds}} с...',
+        webSocketOff: 'Скорее всего, выключен сервер WebSocket. Включите его: $t(obs.tools) → $t(obs.webSocketSettings) → «$t(obs.enableWebSocketServer)». Там же проверьте «$t(obs.serverPort)»: он должен быть {{port}}, иначе поменяйте порт в настройках панели. {{retry}}',
+        retryIn: 'Повтор через {{seconds}} с…',
+        retrying: 'Повторяю попытку…',
     },
     login: {
         title: 'Подключение к OBS',
@@ -36,7 +38,6 @@ export const ru: TranslationDto = {
     portField: {
         label: 'Порт obs-websocket',
         range: 'Порт - число от {{min}} до {{max}}',
-        devOverride: 'Сейчас порт {{port}} задан в адресе панели (?port=) и важнее этой настройки.',
     },
     settings: {
         portTitle: 'Порт',

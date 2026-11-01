@@ -11,7 +11,7 @@ export const UPDATE_STATUS: UpdateStatusDto = {
     updated: 1793400000,
 };
 
-export const REQUESTED_AT: number = 1_800_000_000_000;
+export const REQUESTED_AT = 1_800_000_000_000;
 
 export const REQUEST: UpdateRequestDto = {version: '0.2.0', requestedAt: REQUESTED_AT};
 
@@ -23,9 +23,9 @@ export const FRESH_DONE_STATUS: UpdateStatusDto = {
     updated: (REQUESTED_AT + 30_000) / 1000,
 };
 
-export const BRIDGE_PUBLISHED_AT: number = 1_800_000_000;
+export const BRIDGE_PUBLISHED_AT = 1_800_000_000;
 
-export const BRIDGE_SCENE_COLLECTION: string = 'Main scenes';
+export const BRIDGE_SCENE_COLLECTION = 'Main scenes';
 
 export const BRIDGE_PARAMETER: ObsProfileParameterDto = {
     parameterValue: JSON.stringify({bridgeVersion: 2, updated: BRIDGE_PUBLISHED_AT, sceneCollection: BRIDGE_SCENE_COLLECTION, outputs: []}),

@@ -21,6 +21,7 @@ export const AUTHENTICATION_FAILED_CLOSE_CODE = 4009;
 export const POLL_INTERVAL_MS = 1000;
 export const REQUEST_TIMEOUT_MS = 5000;
 export const RECONNECT_INTERVAL_MS = 3000;
+export const RECONNECT_COUNTDOWN_TICK_MS = 250;
 export const GRAPH_SPAN_SEC = 120;
 export const RECENT_WINDOW_SEC = 60;
 export const DISCOVERY_EVERY_POLLS = 5;
@@ -68,8 +69,8 @@ export const BRIDGE_PARAMETER: ProfileParameterKeyDto = {
     parameterName: 'PluginOutputs',
 };
 export const BRIDGE_STALE_SEC = 8;
-export const CONFIG_EVENT_SUBSCRIPTION: number = 1 << 1;
-export const COLLECTION_SWITCH_TIMEOUT_MS: number = 15_000;
+export const CONFIG_EVENT_SUBSCRIPTION = 1 << 1;
+export const COLLECTION_SWITCH_TIMEOUT_MS = 15_000;
 
 export const UPDATE_COMMAND_PARAMETER: ProfileParameterKeyDto = {
     parameterCategory: 'ObsStatsDock',
@@ -79,12 +80,12 @@ export const OPEN_URL_COMMAND_PARAMETER: ProfileParameterKeyDto = {
     parameterCategory: 'ObsStatsDock',
     parameterName: 'OpenUrlCommand',
 };
-export const OPEN_URL_MIN_BRIDGE_VERSION: number = 2;
+export const OPEN_URL_MIN_BRIDGE_VERSION = 2;
 export const UPDATE_STATUS_STALE_SEC = 120;
-export const UPDATE_STATUS_CLOCK_SLACK_MS: number = 2000;
-export const RELEASES_PAGE_URL: string = 'https://github.com/tjnk24/obs-stats-widget/releases';
+export const UPDATE_STATUS_CLOCK_SLACK_MS = 2000;
+export const RELEASES_PAGE_URL = 'https://github.com/tjnk24/obs-stats-widget/releases';
 const GITHUB_LATEST_RELEASE_URL = 'https://api.github.com/repos/tjnk24/obs-stats-widget/releases/latest';
-export const LATEST_RELEASE_URL: string = process.env.TEST_UPDATE_SERVER ? `${process.env.TEST_UPDATE_SERVER}/latest` : GITHUB_LATEST_RELEASE_URL;
+export const LATEST_RELEASE_URL = process.env.TEST_UPDATE_SERVER ? `${process.env.TEST_UPDATE_SERVER}/latest` : GITHUB_LATEST_RELEASE_URL;
 export const UPDATE_CHECK_PERIOD_MS = 24 * 60 * 60 * 1000;
 export const UPDATE_CHECK_TIMER_MS = 60 * 60 * 1000;
 export const UPDATE_REMIND_DELAY_MS = 24 * 60 * 60 * 1000;
@@ -162,29 +163,29 @@ export const OFF_OUTPUT_VIEW: OutputViewDto = {
     graph: [],
 };
 
-export const FIRST_SETTINGS_VERSION: number = 1;
+export const FIRST_SETTINGS_VERSION = 1;
 
 export const DISCARDED_SETTINGS: MigratedSettingsDto = {settings: DEFAULT_SETTINGS, isDiscarded: true, isChanged: true};
 
 export const SETTINGS_MIGRATIONS: SettingsMigrationDto[] = [];
 
-export const VERSION_PATTERN: RegExp = /^(\d+)\.(\d+)\.(\d+)/;
-export const TAG_PATTERN: RegExp = /^v(\d+\.\d+\.\d+)$/;
-export const COMPATIBILITY_PATTERN: RegExp = /<!--\s*compatibility:\s*([\s\S]*?)\s*-->/;
-export const CHROMIUM_PATTERN: RegExp = /Chrome\/(\d+)\./;
-export const OBS_USER_AGENT_PATTERN: RegExp = /\bOBS\/\d/;
+export const VERSION_PATTERN = /^(\d+)\.(\d+)\.(\d+)/;
+export const TAG_PATTERN = /^v(\d+\.\d+\.\d+)$/;
+export const COMPATIBILITY_PATTERN = /<!--\s*compatibility:\s*([\s\S]*?)\s*-->/;
+export const CHROMIUM_PATTERN = /Chrome\/(\d+)\./;
+export const OBS_USER_AGENT_PATTERN = /\bOBS\/\d/;
 
-export const RUNNING_UPDATE_STAGES: UpdateStageEnum[] = [
+export const RUNNING_UPDATE_STAGES = [
     Preparing,
     Downloading,
     Verifying,
     Installing,
 ];
 
-export const FIRST_BRIDGE_VERSION: number = 1;
+export const FIRST_BRIDGE_VERSION = 1;
 
 export const UPDATE_STAGES: string[] = Object.values(UpdateStageEnum);
 
-export const SERVICE_OUTPUT_FLAG: string = 'OBS_OUTPUT_SERVICE';
+export const SERVICE_OUTPUT_FLAG = 'OBS_OUTPUT_SERVICE';
 
-export const HTTP_NOT_FOUND: number = 404;
+export const HTTP_NOT_FOUND = 404;

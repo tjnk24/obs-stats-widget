@@ -2,9 +2,9 @@ import {BaseStore} from '__reducers';
 import {ReleaseDto} from '__types/update/ReleaseDto';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
 
-export const NOW: number = 1_800_000_000_000;
+export const NOW = 1_800_000_000_000;
 
-export const CURRENT_VERSION: string = '0.1.0';
+export const CURRENT_VERSION = '0.1.0';
 
 export const RELEASE: ReleaseDto = {
     version: '0.2.0',

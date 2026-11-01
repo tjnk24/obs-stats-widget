@@ -17,9 +17,11 @@ export const en = {
     },
     connection: {
         connecting: 'Connecting to OBS...',
-        closed: 'No connection to OBS (obs-websocket, port {{port}}). Retrying in {{seconds}} s...',
+        closed: 'No connection to OBS (obs-websocket, port {{port}}). {{retry}}',
         webSocketOffTitle: 'obs-websocket does not answer on port {{port}}',
-        webSocketOff: 'The WebSocket server is probably turned off. Turn it on in $t(obs.tools) → $t(obs.webSocketSettings) → “$t(obs.enableWebSocketServer)”. Check “$t(obs.serverPort)” there too: it should be {{port}}, otherwise change the port in the dock settings. Retrying in {{seconds}} s...',
+        webSocketOff: 'The WebSocket server is probably turned off. Turn it on in $t(obs.tools) → $t(obs.webSocketSettings) → “$t(obs.enableWebSocketServer)”. Check “$t(obs.serverPort)” there too: it should be {{port}}, otherwise change the port in the dock settings. {{retry}}',
+        retryIn: 'Retrying in {{seconds}} s…',
+        retrying: 'Retrying…',
     },
     login: {
         title: 'Connect to OBS',
@@ -34,7 +36,6 @@ export const en = {
     portField: {
         label: 'obs-websocket port',
         range: 'The port is a number from {{min}} to {{max}}',
-        devOverride: 'Port {{port}} is set in the dock address (?port=) and overrides this setting.',
     },
     settings: {
         portTitle: 'Port',

@@ -16,7 +16,9 @@ export const frog: DeepPartial<TranslationDto> = {
     },
     connection: {
         connecting: 'Прыгаем к болоту...',
-        closed: 'Болото молчит (obs-websocket, кувшинка {{port}}). Снова прыгнем через {{seconds}} с...',
+        closed: 'Болото молчит (obs-websocket, кувшинка {{port}}). {{retry}}',
+        retryIn: 'Снова прыгнем через {{seconds}} с…',
+        retrying: 'Прыгаем…',
     },
     login: {
         title: 'Вход в болото',

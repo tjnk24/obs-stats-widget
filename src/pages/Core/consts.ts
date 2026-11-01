@@ -1,1 +1,1 @@
-export const BRIDGE_MISSING_CHECKS: number = 2;
+export const BRIDGE_MISSING_CHECKS = 2;
