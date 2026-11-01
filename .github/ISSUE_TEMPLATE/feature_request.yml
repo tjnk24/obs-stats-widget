@@ -1,0 +1,20 @@
+name: Feature request
+description: A new platform, stat, setting or anything else the dock could do.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: English or Russian is fine.
+  - type: textarea
+    id: idea
+    attributes:
+      label: What you would like
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it would help
+      description: How you stream and what the dock is missing for it.
+    validations:
+      required: true

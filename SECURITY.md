@@ -1,0 +1,31 @@
+# Security
+
+## Supported versions
+
+Only the latest release gets fixes. The dock offers updates by itself, so staying on the latest version is one
+button away.
+
+## Reporting a problem
+
+Report security problems privately: open the Security tab of this repository and press
+[Report a vulnerability](https://github.com/tjnk24/obs-stats-widget/security/advisories/new).
+Please do not open a public issue for them. English or Russian is fine.
+
+Things worth reporting include:
+
+- a way to make the updater install something other than a signed release of this project;
+- a way to make the bridge script run a command or open an address it should not;
+- the dock, the diagnostics or the error report exposing the obs-websocket password or a stream key;
+- the installer changing OBS settings beyond what the README describes.
+
+## How releases are protected
+
+- Releases are built and signed by GitHub Actions; the secret key exists only as a repository secret.
+- The installer, the zip archive and `compatibility.json` are signed with [minisign](https://jedisct1.github.io/minisign/).
+  The public key is [minisign.pub](minisign.pub) and is also built into the updater.
+- The updater downloads only from this repository's releases, checks the signatures before running anything
+  and refuses versions older than or equal to the installed one.
+- The bridge script opens in the browser only this repository's GitHub pages and local `http://127.0.0.1:` addresses
+  (used to test updates), through the Windows URL handler; the only other program it starts is the bundled updater.
+
+To check a download yourself, see [Releases in the README](README.md#releases).

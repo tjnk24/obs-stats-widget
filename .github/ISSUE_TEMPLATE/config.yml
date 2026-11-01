@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or idea to discuss
+    url: https://github.com/tjnk24/obs-stats-widget/discussions
+    about: Ask how to set something up or talk an idea through before opening an issue.
+  - name: Security problem
+    url: https://github.com/tjnk24/obs-stats-widget/security/advisories/new
+    about: Report it privately, not as a public issue.

@@ -7,6 +7,12 @@ side by side, plus the health of OBS itself.
 It talks to OBS through the built-in obs-websocket server, so it needs no plugin of its own.
 An optional Lua script adds the platform of plugin outputs, GPU load and system memory.
 
+<p align="center">
+  <img src="docs/images/stats-wide.png" alt="The dock with four streaming outputs and the OBS card" width="560">
+  <img src="docs/images/stats-narrow.png" alt="The same dock in a narrow column" width="190">
+</p>
+<p align="center"><sub>Mock data: YouTube as the main stream; Kick, Twitch through obs-multi-rtmp and VK Video Live as plugin outputs.</sub></p>
+
 ## Features
 
 - **A card per streaming output.** The main stream from Settings → Stream gets a card, and so does every
@@ -157,6 +163,10 @@ The gear in the top right corner opens the settings:
 
 ## Troubleshooting
 
+- **"Windows protected your PC" when running the installer.** Windows SmartScreen shows this for programs that are
+  not signed with a paid code-signing certificate and are not downloaded often yet; obs-stats-widget is one of them.
+  Click More info → Run anyway. Some antivirus programs are wary of new unsigned installers for the same reason.
+  To make sure the file is the one GitHub Actions built, [check its signature or checksum](#releases) first.
 - **The dock is not visible after installing.** Turn it on in Docks → obs-stats-widget.
 - **The installer says OBS was not set up.** The reason is on its last page; the details are in
   `%LOCALAPPDATA%\obs-stats-widget\configure-obs.log`. Nothing in OBS was changed, so you can close OBS
@@ -248,6 +258,12 @@ To check a download, use the public key [minisign.pub](minisign.pub):
 
 ```bash
 minisign -Vm obs-stats-widget-setup-0.1.0.exe -p minisign.pub
+```
+
+Without minisign, compare the checksum with the line in `SHA256SUMS.txt` of the same release, in PowerShell:
+
+```powershell
+Get-FileHash .\obs-stats-widget-setup-0.1.0.exe -Algorithm SHA256
 ```
 
 Every push to `main` and every pull request also runs the lint, the release build and the installer tests (`ci.yml`).
