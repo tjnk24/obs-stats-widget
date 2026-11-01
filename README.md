@@ -34,8 +34,6 @@ An optional Lua script adds the platform of plugin outputs, GPU load and system 
 
 ## Installation
 
-The first release, 0.1.0, is not published yet. Until it is, use [From source](#from-source).
-
 ### With the installer (Windows, recommended)
 
 1. **Download** `obs-stats-widget-setup-<version>.exe` from the
