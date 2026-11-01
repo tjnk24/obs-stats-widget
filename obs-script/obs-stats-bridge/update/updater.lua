@@ -1,31 +1,12 @@
-local obs = obslua
-
 local consts = require('obs-stats-bridge.consts')
 local environment = require('obs-stats-bridge.utils.environment')
 local process = require('obs-stats-bridge.utils.process')
+local profile_parameter = require('obs-stats-bridge.utils.profile_parameter')
 local text_file = require('obs-stats-bridge.utils.text_file')
 
 local Updater = {}
 
 Updater.__index = Updater
-
-local function read_command()
-    local config = obs.obs_frontend_get_profile_config()
-
-    if config == nil then
-        return nil
-    end
-
-    local command = obs.config_get_string(config, consts.PARAMETER_SECTION, consts.UPDATE_COMMAND_NAME)
-
-    if command == nil or command == '' then
-        return nil
-    end
-
-    obs.config_remove_value(config, consts.PARAMETER_SECTION, consts.UPDATE_COMMAND_NAME)
-
-    return command
-end
 
 local function start_update(self, version)
     local command_line = string.format(
@@ -51,7 +32,7 @@ function Updater:is_available()
 end
 
 function Updater:handle_command()
-    local command = read_command()
+    local command = profile_parameter.take(consts.UPDATE_COMMAND_NAME)
 
     if command == nil or not self:is_available() then
         return

@@ -117,6 +117,7 @@ class ObsConnectionService {
 
     sendRequest = (request: ObsRequestDto) => {
         this.pendingRequests.push(request);
+        this.poll();
     };
 
     private applyDevConnection = async () => {

@@ -11,8 +11,11 @@ import {CompatibilityResultDto} from '__types/update/compatibility/Compatibility
 import {GithubReleaseDto} from '__types/update/GithubReleaseDto';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
 import {UpdateInstallBlockerEnum} from '__types/update/UpdateInstallBlockerEnum';
+import {isRequestedStatus} from '__utils/bridge/isRequestedStatus';
 import {
     LATEST_RELEASE_URL,
+    OPEN_URL_COMMAND_PARAMETER,
+    OPEN_URL_MIN_BRIDGE_VERSION,
     UPDATE_CHECK_PERIOD_MS,
     UPDATE_CHECK_TIMER_MS,
     UPDATE_COMMAND_PARAMETER,
@@ -28,6 +31,8 @@ import {parseRelease} from '__utils/update/parseRelease';
 import {obsConnectionService} from './obsConnectionService';
 
 const {Checking, UpToDate, Available, Failed} = UpdateCheckStatusEnum;
+
+const {SetProfileParameter} = ObsRequestTypeEnum;
 
 class UpdateService {
     private timer: Nullable<number> = null;
@@ -109,7 +114,7 @@ class UpdateService {
         }
 
         obsConnectionService.sendRequest({
-            requestType: ObsRequestTypeEnum.SetProfileParameter,
+            requestType: SetProfileParameter,
             requestData: {...UPDATE_COMMAND_PARAMETER, parameterValue: `install:${release.version}`},
         });
 
@@ -122,7 +127,26 @@ class UpdateService {
     installWhenFree = () => {
         const {latest} = updateSelector(getStore());
 
-        latest && commonActions.update.setDeferredVersion(latest.version);
+        if (latest) {
+            commonActions.update.setRequest(null);
+            commonActions.update.setDeferredVersion(latest.version);
+        }
+    };
+
+    openReleasePage = (url: string) => {
+        const state = getStore();
+        const {bridge} = updateSelector(state);
+
+        if (settingsSelector(state).isMockEnabled || !bridge || bridge.bridgeVersion < OPEN_URL_MIN_BRIDGE_VERSION) {
+            window.open(url, '_blank', 'noreferrer');
+
+            return;
+        }
+
+        obsConnectionService.sendRequest({
+            requestType: SetProfileParameter,
+            requestData: {...OPEN_URL_COMMAND_PARAMETER, parameterValue: url},
+        });
     };
 
     cancelDeferredInstall = () => {
@@ -187,9 +211,9 @@ class UpdateService {
 
     private onStoreChange = () => {
         const {request, bridge, deferredVersion, isObsBusy} = updateSelector(getStore());
-        const status = bridge?.status;
+        const status = bridge?.status ?? null;
 
-        if (request && status?.stage === UpdateStageEnum.Done && status.version === request.version) {
+        if (status?.stage === UpdateStageEnum.Done && isRequestedStatus(status, request)) {
             this.stop();
             window.location.reload();
 

@@ -4,6 +4,7 @@ local consts = require('obs-stats-bridge.consts')
 local Gpu = require('obs-stats-bridge.hardware.gpu')
 local StreamOutputs = require('obs-stats-bridge.outputs.stream_outputs')
 local publisher = require('obs-stats-bridge.publisher')
+local release_links = require('obs-stats-bridge.update.release_links')
 local Updater = require('obs-stats-bridge.update.updater')
 
 local sources = {}
@@ -30,11 +31,15 @@ local function close_sources()
     sources = {}
 end
 
-local function publish()
+local function handle_commands()
     if sources.updater ~= nil then
         pcall(sources.updater.handle_command, sources.updater)
     end
 
+    pcall(release_links.handle_command)
+end
+
+local function publish()
     publisher.publish(sources)
 end
 
@@ -64,10 +69,12 @@ function script_load(_settings)
 
     obs.obs_frontend_add_event_callback(on_event)
     obs.timer_add(publish, consts.PUBLISH_INTERVAL_MS)
+    obs.timer_add(handle_commands, consts.COMMAND_INTERVAL_MS)
     publish()
 end
 
 function script_unload()
     obs.timer_remove(publish)
+    obs.timer_remove(handle_commands)
     close_sources()
 end

@@ -8,7 +8,7 @@ import {useTranslation} from 'react-i18next';
 import EnhancedButton from '__components/EnhancedButton';
 import {updateService} from '__services/updateService';
 
-import DownloadButton from '../../components/download-button';
+import DownloadButton from '../download-button';
 
 import {useNewVersionNoticeView} from './hooks/useNewVersionNoticeView';
 
@@ -50,10 +50,7 @@ const NewVersionNotice = () => {
                     >
                         {isManual
                             ? (
-                                <DownloadButton
-                                    url={url}
-                                    type="primary"
-                                />
+                                <DownloadButton type="primary"/>
                             )
                             : (
                                 <>
@@ -79,9 +76,7 @@ const NewVersionNotice = () => {
                                         buttonProps={{
                                             type: 'link',
                                             size: 'small',
-                                            href: url,
-                                            target: '_blank',
-                                            rel: 'noreferrer',
+                                            onClick: () => updateService.openReleasePage(url),
                                         }}
                                         withSpinner={false}
                                     >

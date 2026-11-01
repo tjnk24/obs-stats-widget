@@ -114,6 +114,9 @@ obs-websocket reports the stats of plugin outputs but not where they stream to, 
   and host, never the stream key or the URL path. Without the script, plugin cards show "Unknown platform".
 - **GPU and memory (Windows).** It reads the GPU load, the hardware encoder load and video memory from the same
   performance counters Task Manager uses, so it works with NVIDIA, AMD and Intel GPUs. It also reads system memory.
+- **Updates and release links.** When you press Update, it starts the bundled updater. "What's new" and
+  "Download manually" ask it to open the release page in your default browser: the browser built into OBS would
+  open it in its own window, where a download does not work. It opens only this project's GitHub pages.
 
 The script publishes this every three seconds as the profile parameter `[ObsStatsDock] PluginOutputs`,
 which the dock reads through obs-websocket.

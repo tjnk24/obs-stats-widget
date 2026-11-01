@@ -7,7 +7,13 @@ return {
     UPDATE_COMMAND_NAME = 'UpdateCommand',
     UPDATE_SCRIPT_PATH = 'updater/Update-Widget.ps1',
     UPDATE_STATUS_PATH = 'obs-stats-widget\\update-status.json',
+    OPEN_URL_COMMAND_NAME = 'OpenUrlCommand',
+    OPEN_URL_ALLOWED_PREFIXES = {'https://github.com/tjnk24/obs-stats-widget/', 'http://127.0.0.1:'},
+    OPEN_URL_PATTERN = '^[%w%-%._~:/%?#@!%$&%(%)%*%+,;=%%]+$',
+    OPEN_URL_MAX_LENGTH = 2048,
+    OPEN_URL_COMMAND_LINE = '"%s\\System32\\rundll32.exe" url.dll,FileProtocolHandler %s',
     PUBLISH_INTERVAL_MS = 3000,
+    COMMAND_INTERVAL_MS = 250,
     FALLBACK_OUTPUT_NAMES = {'multi-output'},
     SERVER_URL_INFO = 0,
     COUNTER_PATHS = {

@@ -72,7 +72,13 @@ export const UPDATE_COMMAND_PARAMETER: ProfileParameterKeyDto = {
     parameterCategory: 'ObsStatsDock',
     parameterName: 'UpdateCommand',
 };
+export const OPEN_URL_COMMAND_PARAMETER: ProfileParameterKeyDto = {
+    parameterCategory: 'ObsStatsDock',
+    parameterName: 'OpenUrlCommand',
+};
+export const OPEN_URL_MIN_BRIDGE_VERSION: number = 2;
 export const UPDATE_STATUS_STALE_SEC = 120;
+export const UPDATE_STATUS_CLOCK_SLACK_MS: number = 2000;
 const GITHUB_LATEST_RELEASE_URL = 'https://api.github.com/repos/tjnk24/obs-stats-widget/releases/latest';
 export const LATEST_RELEASE_URL: string = process.env.TEST_UPDATE_SERVER ? `${process.env.TEST_UPDATE_SERVER}/latest` : GITHUB_LATEST_RELEASE_URL;
 export const UPDATE_CHECK_PERIOD_MS = 24 * 60 * 60 * 1000;

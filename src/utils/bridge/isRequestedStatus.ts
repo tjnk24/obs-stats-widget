@@ -1,0 +1,12 @@
+import type {Nullable} from 'infrastructure/common';
+
+import {UpdateStatusDto} from '__types/update/bridge/UpdateStatusDto';
+import {UpdateRequestDto} from '__types/update/UpdateRequestDto';
+import {UPDATE_STATUS_CLOCK_SLACK_MS} from '__utils/consts';
+
+export const isRequestedStatus = (status: Nullable<UpdateStatusDto>, request: Nullable<UpdateRequestDto>): boolean => (
+    status !== null
+    && request !== null
+    && status.version === request.version
+    && status.updated * 1000 >= request.requestedAt - UPDATE_STATUS_CLOCK_SLACK_MS
+);

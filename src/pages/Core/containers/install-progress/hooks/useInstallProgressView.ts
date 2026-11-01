@@ -15,7 +15,7 @@ import {InstallProgressViewDto} from '../types';
 const {Failed, Preparing, Done} = UpdateStageEnum;
 
 export const useInstallProgressView = (): InstallProgressViewDto => {
-    const {bridge, request} = useSelector(updateSelector);
+    const {bridge, request, isObsBusy} = useSelector(updateSelector);
 
     const now = Date.now();
 
@@ -49,5 +49,6 @@ export const useInstallProgressView = (): InstallProgressViewDto => {
         progressStatus,
         isFailed,
         errorKey,
+        isObsBusy,
     };
 };

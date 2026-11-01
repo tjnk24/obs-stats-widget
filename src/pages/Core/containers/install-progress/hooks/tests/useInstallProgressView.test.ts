@@ -77,6 +77,12 @@ describe('useInstallProgressView', () => {
         expect(useInstallProgressView().errorKey).toBe('update.errors.unexpected');
     });
 
+    it('passes on whether a stream or recording is running', () => {
+        vi.mocked(useSelector).mockReturnValue({bridge: {...BRIDGE, status: FAILED_STATUS}, request: REQUEST, isObsBusy: true});
+
+        expect(useInstallProgressView().isObsBusy).toBe(true);
+    });
+
     it('marks a finished update as success', () => {
         vi.mocked(useSelector).mockReturnValue({bridge: {...BRIDGE, status: DONE_STATUS}, request: REQUEST});
 

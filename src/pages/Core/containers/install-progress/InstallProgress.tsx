@@ -5,20 +5,16 @@ import {
     Typography,
 } from 'antd';
 import {useTranslation} from 'react-i18next';
-import {useSelector} from 'react-redux';
 
 import EnhancedButton from '__components/EnhancedButton';
-import {updateSelector} from '__selectors/updateSelectors';
 import {updateService} from '__services/updateService';
 import {BRIDGE_SCRIPT_NAME} from '__utils/consts';
 
-import DownloadButton from '../../components/download-button';
+import DownloadButton from '../download-button';
 
 import {useInstallProgressView} from './hooks/useInstallProgressView';
 
 const InstallProgress = () => {
-    const {latest} = useSelector(updateSelector);
-
     const {t} = useTranslation();
 
     const {
@@ -29,6 +25,7 @@ const InstallProgress = () => {
         progressStatus,
         isFailed,
         errorKey,
+        isObsBusy,
     } = useInstallProgressView();
 
     return (
@@ -64,19 +61,21 @@ const InstallProgress = () => {
                                     buttonProps={{
                                         type: 'primary',
                                         size: 'small',
-                                        onClick: () => updateService.install(),
+                                        onClick: isObsBusy ? undefined : () => updateService.install(),
                                     }}
+                                    popconfirmProps={isObsBusy
+                                        ? {
+                                            title: t('update.busyConfirm'),
+                                            okText: t('update.afterStream'),
+                                            onConfirm: updateService.installWhenFree,
+                                        }
+                                        : undefined}
                                     withSpinner={false}
                                 >
                                     {t('update.retry')}
                                 </EnhancedButton>
 
-                                {latest && (
-                                    <DownloadButton
-                                        url={latest.url}
-                                        type="default"
-                                    />
-                                )}
+                                <DownloadButton type="default"/>
 
                                 <EnhancedButton
                                     buttonProps={{

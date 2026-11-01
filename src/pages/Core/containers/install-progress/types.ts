@@ -15,4 +15,5 @@ export type InstallProgressViewDto = {
     progressStatus: ProgressProps['status'];
     isFailed: boolean;
     errorKey: ParseKeys;
+    isObsBusy: boolean;
 };
