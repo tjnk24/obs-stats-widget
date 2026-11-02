@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="docs/images/froghead-works-banner.png" width="650" alt="Froghead Works — Unofficial Software Division">
+  <img src="docs/images/streamoscope-icon-512.png" width="128" alt="StreamoScope icon">
 </p>
 
 <p align="center">
-  <img src="docs/images/streamoscope-icon-512.png" width="128" alt="StreamoScope icon">
+  <img src="docs/images/froghead-works-banner.png" width="650" alt="Froghead Works — Unofficial Software Division">
 </p>
 
 <h1 align="center">StreamoScope</h1>
