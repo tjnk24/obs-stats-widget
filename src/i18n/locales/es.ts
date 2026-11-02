@@ -81,6 +81,7 @@ export const es: TranslationDto = {
             reconnecting: 'Reconectando',
         },
         bitrateUnit: 'kbps',
+        source: 'Origen',
         onAir: 'En directo',
         dropped: 'Perdidos (red)',
         recent: 'Último minuto',

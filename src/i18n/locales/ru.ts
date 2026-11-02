@@ -81,6 +81,7 @@ export const ru: TranslationDto = {
             reconnecting: 'Переподключение',
         },
         bitrateUnit: 'кбит/с',
+        source: 'Источник',
         onAir: 'В эфире',
         dropped: 'Потеряно (сеть)',
         recent: 'За минуту',

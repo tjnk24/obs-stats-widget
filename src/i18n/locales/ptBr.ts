@@ -81,6 +81,7 @@ export const ptBr: TranslationDto = {
             reconnecting: 'Reconectando',
         },
         bitrateUnit: 'kbps',
+        source: 'Origem',
         onAir: 'Ao vivo há',
         dropped: 'Perdidos (rede)',
         recent: 'Último minuto',

@@ -81,6 +81,7 @@ export const de: TranslationDto = {
             reconnecting: 'Verbindet neu',
         },
         bitrateUnit: 'kbit/s',
+        source: 'Quelle',
         onAir: 'Live seit',
         dropped: 'Verloren (Netzwerk)',
         recent: 'Letzte Minute',

@@ -3,9 +3,9 @@ import {t} from 'i18next';
 import {OutputOriginEnum} from '__types/targets/OutputOriginEnum';
 import {StreamTargetDto} from '__types/targets/StreamTargetDto';
 
-import {TagDto} from '../../../types';
+import {TargetSourceDto} from '../types';
 
-export const getTargetTag = ({origin, pluginName, outputName}: StreamTargetDto): TagDto => {
+export const getTargetSource = ({origin, pluginName, outputName}: StreamTargetDto): TargetSourceDto => {
     if (origin === OutputOriginEnum.Main) {
         return {
             text: t('stats.mainTag'),
@@ -17,5 +17,6 @@ export const getTargetTag = ({origin, pluginName, outputName}: StreamTargetDto):
     return {
         text: pluginName ?? t('stats.pluginTag'),
         hint: t('stats.pluginTagHint', {name: outputName}),
+        color: null,
     };
 };

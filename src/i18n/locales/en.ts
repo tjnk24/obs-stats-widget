@@ -79,6 +79,7 @@ export const en = {
             reconnecting: 'Reconnecting',
         },
         bitrateUnit: 'kbps',
+        source: 'Source',
         onAir: 'Live for',
         dropped: 'Dropped (network)',
         recent: 'Last minute',

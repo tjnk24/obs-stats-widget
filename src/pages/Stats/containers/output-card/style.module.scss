@@ -3,8 +3,12 @@
     flex-direction: column;
 }
 
-.card .title {
-    white-space: normal;
+.heading {
+    min-width: 0;
+}
+
+.sourceTag {
+    margin-inline-end: 0;
 }
 
 .card .body {

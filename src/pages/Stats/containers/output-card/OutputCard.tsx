@@ -6,6 +6,7 @@ import {
     Statistic,
     Tag,
     Tooltip,
+    Typography,
 } from 'antd';
 import cn from 'classnames';
 import {useTranslation} from 'react-i18next';
@@ -27,7 +28,6 @@ const OutputCard = ({target}: Props) => {
         color,
         notes,
         platformMark,
-        originTag,
         healthTag,
         statusKey,
         isActive,
@@ -48,29 +48,21 @@ const OutputCard = ({target}: Props) => {
             }}
             title={(
                 <Flex
-                    wrap
+                    className={style.heading}
                     align="center"
                     gap={6}
                 >
-                    <Badge
-                        color={color}
-                        text={title}
-                    />
+                    <Badge color={color}/>
+
+                    <Typography.Text ellipsis={{tooltip: title}}>
+                        {title}
+                    </Typography.Text>
 
                     {platformMark && (
                         <Tooltip title={t(platformMark.hintKey)}>
                             <span>{platformMark.emoji}</span>
                         </Tooltip>
                     )}
-
-                    <Tooltip title={originTag.hint}>
-                        <Tag
-                            color={originTag.color}
-                            variant="outlined"
-                        >
-                            {originTag.text}
-                        </Tag>
-                    </Tooltip>
                 </Flex>
             )}
             extra={(

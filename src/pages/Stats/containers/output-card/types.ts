@@ -7,14 +7,20 @@ import {NoteDto} from '__types/targets/NoteDto';
 import {StreamTargetDto} from '__types/targets/StreamTargetDto';
 
 import {StatItemDto} from '../../components/stat-list';
-import {TagDto} from '../../types';
 
 export enum OutputStatKeyEnum {
+    Source = 'source',
     Timecode = 'timecode',
     Dropped = 'dropped',
     Recent = 'recent',
     Congestion = 'congestion',
 }
+
+export type TargetSourceDto = {
+    text: string;
+    hint: string;
+    color: Nullable<string>;
+};
 
 export type PlatformMarkDto = {
     emoji: string;
@@ -28,7 +34,6 @@ export type OutputCardViewDto = {
     color: string;
     notes: NoteDto[];
     platformMark: Nullable<PlatformMarkDto>;
-    originTag: TagDto;
     healthTag: HealthTagDto;
     statusKey: ParseKeys;
     isActive: boolean;
