@@ -177,4 +177,4 @@ Uses [minisign](https://github.com/jedisct1/minisign) (ISC) and the [Inter font]
 
 ---
 
-<sub><strong>Froghead Works</strong> · Independent Software Workshop · No plugin loyalty. No unnecessary nonsense.</sub>
+<sub><strong>Froghead Works</strong> · Independent Software Workshop · No unnecessary nonsense.</sub>
