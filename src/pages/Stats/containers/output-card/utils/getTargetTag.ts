@@ -14,10 +14,8 @@ export const getTargetTag = ({origin, pluginName, outputName}: StreamTargetDto):
         };
     }
 
-    const pluginTag = t('stats.pluginTag');
-
     return {
-        text: pluginName ? `${pluginTag} · ${pluginName}` : pluginTag,
+        text: pluginName ?? t('stats.pluginTag'),
         hint: t('stats.pluginTagHint', {name: outputName}),
     };
 };
