@@ -54,7 +54,7 @@ BeforeAll {
         Add-TestSignature -Path $compatibility -Key $Key
 
         if (-not $SkipSetup) {
-            $setup = Join-Path $release "obs-stats-widget-setup-$Version.exe"
+            $setup = Join-Path $release "streamoscope-setup-$Version.exe"
             [System.IO.File]::WriteAllBytes($setup, [byte[]]::new(300000))
             Add-TestSignature -Path $setup -Key $Key
 
@@ -113,8 +113,8 @@ Describe 'Invoke-UpdateWidget' {
         Invoke-TestUpdate -Release $release | Should -Be 'done'
         (Get-TestStatus -Release $release).stage | Should -Be 'done'
         (Get-TestStatus -Release $release).version | Should -Be '0.2.0'
-        Should -Invoke Invoke-Installer -Times 1 -ParameterFilter { $SetupPath -like '*obs-stats-widget-setup-0.2.0.exe' }
-        Test-Path -LiteralPath (Join-Path ([System.IO.Path]::GetTempPath()) 'obs-stats-widget-update-0.2.0') | Should -BeFalse
+        Should -Invoke Invoke-Installer -Times 1 -ParameterFilter { $SetupPath -like '*streamoscope-setup-0.2.0.exe' }
+        Test-Path -LiteralPath (Join-Path ([System.IO.Path]::GetTempPath()) 'streamoscope-update-0.2.0') | Should -BeFalse
     }
 
     It 'reports every stage and the download progress' {

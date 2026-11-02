@@ -9,6 +9,6 @@ export const buildCompatibility = () => ({
     minObsVersion: requirements.minObsVersion,
     obsWebSocketRpcVersion: readNumberFromSource('src/utils/consts.ts', /OBS_RPC_VERSION\s*=\s*(\d+)/),
     minChromiumVersion: requirements.minChromiumVersion,
-    minBridgeVersion: readNumberFromSource('obs-script/obs-stats-bridge/consts.lua', /BRIDGE_VERSION\s*=\s*(\d+)/),
+    minBridgeVersion: readNumberFromSource('obs-script/streamoscope-bridge/consts.lua', /BRIDGE_VERSION\s*=\s*(\d+)/),
     requiredRequests: readRequiredRequests(),
 });

@@ -35,7 +35,7 @@ const result = spawnSync(findCompiler(), [
     `/DMinisignPath=${minisign}`,
     `/DOutputDir=${RELEASE_DIRECTORY}`,
     ...updaterArguments,
-    path.join(ROOT_DIRECTORY, 'installer', 'obs-stats-widget.iss'),
+    path.join(ROOT_DIRECTORY, 'installer', 'streamoscope.iss'),
 ], {stdio: 'inherit'});
 
 if (result.status !== 0) {
@@ -46,4 +46,4 @@ if (testServer) {
     console.log(`TEST BUILD: the dock and the updater take releases from ${testServer}`);
 }
 
-console.log(`Built ${path.relative(ROOT_DIRECTORY, path.join(RELEASE_DIRECTORY, `obs-stats-widget-setup-${VERSION}.exe`))}`);
+console.log(`Built ${path.relative(ROOT_DIRECTORY, path.join(RELEASE_DIRECTORY, `streamoscope-setup-${VERSION}.exe`))}`);

@@ -1,9 +1,9 @@
-obs-stats-widget {{version}}
+StreamoScope {{version}}
 
-1. Copy this folder somewhere permanent, for example %LOCALAPPDATA%\obs-stats-widget.
+1. Copy this folder somewhere permanent, for example %LOCALAPPDATA%\streamoscope.
 2. OBS: Docks -> Custom Browser Docks. Add a dock with the URL file:///<folder>/dock/index.html
 3. OBS: Tools -> WebSocket Server Settings. Enable the server and note the port and password.
-4. OBS: Tools -> Scripts. Add obs-stats-bridge.lua (needed for obs-multi-rtmp outputs, GPU and memory).
-   Keep the obs-stats-bridge folder next to it: the script loads its parts from there.
+4. OBS: Tools -> Scripts. Add streamoscope-bridge.lua (needed for obs-multi-rtmp outputs, GPU and memory).
+   Keep the streamoscope-bridge folder next to it: the script loads its parts from there.
 
-Full guide: https://github.com/tjnk24/obs-stats-widget#readme
+Full guide: https://github.com/tjnk24/streamoscope#readme

@@ -1,6 +1,6 @@
 local ffi = require('ffi')
 
-local wide_string = require('obs-stats-bridge.utils.wide_string')
+local wide_string = require('streamoscope-bridge.utils.wide_string')
 
 local environment = {}
 

@@ -10,7 +10,7 @@ function Get-UpdateFile {
 
     if ($request -is [System.Net.HttpWebRequest]) {
         $request.ReadWriteTimeout = $script:DownloadTimeoutMilliseconds
-        $request.UserAgent = 'obs-stats-widget-updater'
+        $request.UserAgent = 'streamoscope-updater'
     }
 
     $response = $request.GetResponse()

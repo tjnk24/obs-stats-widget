@@ -8,7 +8,7 @@ button away.
 ## Reporting a problem
 
 Report security problems privately: open the Security tab of this repository and press
-[Report a vulnerability](https://github.com/tjnk24/obs-stats-widget/security/advisories/new).
+[Report a vulnerability](https://github.com/tjnk24/streamoscope/security/advisories/new).
 Please do not open a public issue for them. English or Russian is fine.
 
 Things worth reporting include:

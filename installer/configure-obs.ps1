@@ -3,7 +3,7 @@ param(
     [string]$InstallDirectory,
     [string]$ObsDirectory,
     [string]$ConfigDirectory,
-    [string]$DataDirectory = (Join-Path $env:LOCALAPPDATA 'obs-stats-widget')
+    [string]$DataDirectory = (Join-Path $env:LOCALAPPDATA 'streamoscope')
 )
 
 $ErrorActionPreference = 'Stop'

@@ -122,7 +122,7 @@ export const de: TranslationDto = {
             encoding: 'Frames, die der Encoder nicht rechtzeitig komprimieren konnte ($t(obs.skippedFrames)). Für alle Plattformen gemeinsam.',
             rendering: 'Frames, die OBS nicht rechtzeitig rendern konnte ($t(obs.missedFrames)).',
             memory: 'Wie viel Arbeitsspeicher OBS selbst belegt ($t(obs.memoryUsage) im Fenster „$t(obs.stats)“)',
-            gpu: 'Auslastung der Grafikkarte wie im Reiter GPU des Task-Managers. Liefert das Skript obs-stats-bridge.lua',
+            gpu: 'Auslastung der Grafikkarte wie im Reiter GPU des Task-Managers. Liefert das Skript streamoscope-bridge.lua',
             gpuEncoder: 'Auslastung des Hardware-Encoders: NVENC bei NVIDIA, AMF bei AMD, Quick Sync bei Intel',
             gpuSharedMemory: 'Integrierte Grafik hat keinen eigenen Speicher und nutzt einen Teil des Arbeitsspeichers',
         },

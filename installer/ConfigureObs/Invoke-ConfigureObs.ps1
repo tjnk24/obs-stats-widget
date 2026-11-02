@@ -34,7 +34,7 @@ function Invoke-ConfigureObs {
     }
 
     $dockUrl = ConvertTo-FileUrl -Path (Join-Path $InstallDirectory 'dock\index.html')
-    $bridgePath = (Join-Path $InstallDirectory 'obs-stats-bridge.lua').Replace('\', '/')
+    $bridgePath = (Join-Path $InstallDirectory 'streamoscope-bridge.lua').Replace('\', '/')
     $dockUuid = if ($null -ne $manifest) { $manifest.dockUuid } else { $null }
 
     try {

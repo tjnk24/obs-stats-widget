@@ -1,11 +1,11 @@
 local obs = obslua
 
-local consts = require('obs-stats-bridge.consts')
-local Gpu = require('obs-stats-bridge.hardware.gpu')
-local StreamOutputs = require('obs-stats-bridge.outputs.stream_outputs')
-local publisher = require('obs-stats-bridge.publisher')
-local release_links = require('obs-stats-bridge.update.release_links')
-local Updater = require('obs-stats-bridge.update.updater')
+local consts = require('streamoscope-bridge.consts')
+local Gpu = require('streamoscope-bridge.hardware.gpu')
+local StreamOutputs = require('streamoscope-bridge.outputs.stream_outputs')
+local publisher = require('streamoscope-bridge.publisher')
+local release_links = require('streamoscope-bridge.update.release_links')
+local Updater = require('streamoscope-bridge.update.updater')
 
 local sources = {}
 
@@ -56,11 +56,11 @@ end
 
 function script_description()
     if string.sub(obs.obs_get_locale(), 1, 2) == 'ru' then
-        return 'Сообщает панели obs-stats-widget, на какую площадку стримят выходы плагинов (obs-multi-rtmp и любые другие), ' ..
+        return 'Сообщает панели StreamoScope, на какую площадку стримят выходы плагинов (obs-multi-rtmp и любые другие), ' ..
             'загрузку видеокарты и занятую память системы. Передаёт только адрес сервера без пути и ключа.'
     end
 
-    return 'Tells the obs-stats-widget dock which platform plugin outputs stream to (obs-multi-rtmp and any other), ' ..
+    return 'Tells the StreamoScope dock which platform plugin outputs stream to (obs-multi-rtmp and any other), ' ..
         'the GPU load and the system memory in use. Only the server address is passed, without the path or the key.'
 end
 

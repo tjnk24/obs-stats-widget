@@ -8,7 +8,7 @@ export const ROOT_DIRECTORY = path.resolve(import.meta.dirname, '../..');
 
 export const RELEASE_DIRECTORY = path.join(ROOT_DIRECTORY, 'release');
 
-export const PACKAGE_DIRECTORY = path.join(RELEASE_DIRECTORY, `obs-stats-widget-${VERSION}`);
+export const PACKAGE_DIRECTORY = path.join(RELEASE_DIRECTORY, `streamoscope-${VERSION}`);
 
 export const FONT_LICENSE_SOURCE = path.join(ROOT_DIRECTORY, 'node_modules', '@fontsource-variable', 'inter', 'LICENSE');
 

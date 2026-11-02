@@ -122,7 +122,7 @@ export const ru: TranslationDto = {
             encoding: 'Кадры, которые кодировщик не успел сжать ($t(obs.skippedFrames)). Общие для всех площадок.',
             rendering: 'Кадры, которые OBS не успел отрисовать ($t(obs.missedFrames)).',
             memory: 'Сколько оперативной памяти занимает сам OBS ($t(obs.memoryUsage) в окне «$t(obs.stats)»)',
-            gpu: 'Загрузка видеокарты, как на вкладке «Графический процессор» в диспетчере задач. Передаёт скрипт obs-stats-bridge.lua',
+            gpu: 'Загрузка видеокарты, как на вкладке «Графический процессор» в диспетчере задач. Передаёт скрипт streamoscope-bridge.lua',
             gpuEncoder: 'Загрузка аппаратного кодировщика: NVENC у NVIDIA, AMF у AMD, Quick Sync у Intel',
             gpuSharedMemory: 'У встроенной графики нет своей памяти, она берёт часть оперативной',
         },

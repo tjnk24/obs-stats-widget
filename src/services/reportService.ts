@@ -51,7 +51,7 @@ class ReportService {
         const {obsVersion, status} = connectionSelector(getStore());
 
         return [
-            `Widget: obs-stats-widget ${process.env.APP_VERSION}`,
+            `StreamoScope: ${process.env.APP_VERSION}`,
             `OBS: ${obsVersion?.obsVersion ?? 'unknown'}`,
             `obs-websocket: ${obsVersion?.obsWebSocketVersion ?? 'unknown'}`,
             `Platform: ${obsVersion?.platformDescription ?? 'unknown'}`,

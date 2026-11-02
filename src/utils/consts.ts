@@ -32,9 +32,14 @@ export const BAD_DROP_SHARE = 0.01;
 
 export const DEV_OBS_CONNECTION_URL = '/dev/obs-connection';
 
-export const PASSWORD_STORAGE_KEY = 'obs-stats-dock.password';
-export const SETTINGS_STORAGE_KEY = 'obs-stats-dock.settings';
-export const DISCARDED_SETTINGS_STORAGE_KEY = 'obs-stats-dock.settings.discarded';
+export const PASSWORD_STORAGE_KEY = 'streamoscope.password';
+export const SETTINGS_STORAGE_KEY = 'streamoscope.settings';
+export const DISCARDED_SETTINGS_STORAGE_KEY = 'streamoscope.settings.discarded';
+export const LEGACY_STORAGE_KEYS: Record<string, string> = {
+    [PASSWORD_STORAGE_KEY]: 'obs-stats-dock.password',
+    [SETTINGS_STORAGE_KEY]: 'obs-stats-dock.settings',
+    [DISCARDED_SETTINGS_STORAGE_KEY]: 'obs-stats-dock.settings.discarded',
+};
 export const SETTINGS_VERSION = 1;
 
 export const DEFAULT_SETTINGS: SettingsDto = {
@@ -63,9 +68,9 @@ export const PLUGIN_OUTPUT_NAMES: Record<string, string> = {
     'multi-output': 'multi-rtmp',
 };
 
-export const BRIDGE_SCRIPT_NAME = 'obs-stats-bridge.lua';
+export const BRIDGE_SCRIPT_NAME = 'streamoscope-bridge.lua';
 export const BRIDGE_PARAMETER: ProfileParameterKeyDto = {
-    parameterCategory: 'ObsStatsDock',
+    parameterCategory: 'StreamoScope',
     parameterName: 'PluginOutputs',
 };
 export const BRIDGE_STALE_SEC = 8;
@@ -73,18 +78,18 @@ export const CONFIG_EVENT_SUBSCRIPTION = 1 << 1;
 export const COLLECTION_SWITCH_TIMEOUT_MS = 15_000;
 
 export const UPDATE_COMMAND_PARAMETER: ProfileParameterKeyDto = {
-    parameterCategory: 'ObsStatsDock',
+    parameterCategory: 'StreamoScope',
     parameterName: 'UpdateCommand',
 };
 export const OPEN_URL_COMMAND_PARAMETER: ProfileParameterKeyDto = {
-    parameterCategory: 'ObsStatsDock',
+    parameterCategory: 'StreamoScope',
     parameterName: 'OpenUrlCommand',
 };
 export const OPEN_URL_MIN_BRIDGE_VERSION = 2;
 export const UPDATE_STATUS_STALE_SEC = 120;
 export const UPDATE_STATUS_CLOCK_SLACK_MS = 2000;
-export const RELEASES_PAGE_URL = 'https://github.com/tjnk24/obs-stats-widget/releases';
-const GITHUB_LATEST_RELEASE_URL = 'https://api.github.com/repos/tjnk24/obs-stats-widget/releases/latest';
+export const RELEASES_PAGE_URL = 'https://github.com/tjnk24/streamoscope/releases';
+const GITHUB_LATEST_RELEASE_URL = 'https://api.github.com/repos/tjnk24/streamoscope/releases/latest';
 export const LATEST_RELEASE_URL = process.env.TEST_UPDATE_SERVER ? `${process.env.TEST_UPDATE_SERVER}/latest` : GITHUB_LATEST_RELEASE_URL;
 export const UPDATE_CHECK_PERIOD_MS = 24 * 60 * 60 * 1000;
 export const UPDATE_CHECK_TIMER_MS = 60 * 60 * 1000;

@@ -1,7 +1,7 @@
 local ffi = require('ffi')
 
-local consts = require('obs-stats-bridge.consts')
-local wide_string = require('obs-stats-bridge.utils.wide_string')
+local consts = require('streamoscope-bridge.consts')
+local wide_string = require('streamoscope-bridge.utils.wide_string')
 
 local gpu_names = {}
 

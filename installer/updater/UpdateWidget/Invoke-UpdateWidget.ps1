@@ -32,7 +32,7 @@ function Invoke-UpdateWidget {
         return $ErrorCode
     }
 
-    $workDirectory = Join-Path ([System.IO.Path]::GetTempPath()) "obs-stats-widget-update-$Version"
+    $workDirectory = Join-Path ([System.IO.Path]::GetTempPath()) "streamoscope-update-$Version"
 
     try {
         & $report 'preparing'
@@ -55,7 +55,7 @@ function Invoke-UpdateWidget {
 
         $releaseUrl = "$($ReleaseBaseUrl.TrimEnd('/'))/v$Version"
         $compatibilityPath = Join-Path $workDirectory 'compatibility.json'
-        $setupName = "obs-stats-widget-setup-$Version.exe"
+        $setupName = "streamoscope-setup-$Version.exe"
         $setupPath = Join-Path $workDirectory $setupName
 
         try {

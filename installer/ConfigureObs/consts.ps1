@@ -4,5 +4,5 @@ $script:JsonNumber = [regex]::new('\G-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?
 $script:JsonLiteral = [regex]::new('\G(?:true|false|null)', 'Compiled')
 $script:StrictUtf8 = [System.Text.UTF8Encoding]::new($false, $true)
 $script:KeptBackups = 5
-$script:DockTitle = 'obs-stats-widget'
+$script:DockTitle = 'StreamoScope'
 $script:PortableMarkers = @('portable_mode', 'obs_portable_mode', 'portable_mode.txt', 'obs_portable_mode.txt')

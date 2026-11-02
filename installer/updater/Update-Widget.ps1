@@ -1,8 +1,8 @@
 param(
     [Parameter(Mandatory)][string]$Version,
     [string]$InstallDirectory,
-    [string]$StatusPath = (Join-Path $env:LOCALAPPDATA 'obs-stats-widget\update-status.json'),
-    [string]$ReleaseBaseUrl = 'https://github.com/tjnk24/obs-stats-widget/releases/download',
+    [string]$StatusPath = (Join-Path $env:LOCALAPPDATA 'streamoscope\update-status.json'),
+    [string]$ReleaseBaseUrl = 'https://github.com/tjnk24/streamoscope/releases/download',
     [string]$PublicKey = 'RWRzpUdJutr3gDJeHN8YtU6E/Vw3Am48D72eSvZaX1EWA69uhrc6f3f2',
     [string]$MinisignPath
 )

@@ -120,7 +120,7 @@ export const en = {
             encoding: 'Frames the encoder failed to compress in time ($t(obs.skippedFrames)). Shared by all platforms.',
             rendering: 'Frames OBS failed to render in time ($t(obs.missedFrames)).',
             memory: 'How much RAM OBS itself uses ($t(obs.memoryUsage) in the $t(obs.stats) window)',
-            gpu: 'GPU load, as on the GPU tab of Task Manager. Provided by the obs-stats-bridge.lua script',
+            gpu: 'GPU load, as on the GPU tab of Task Manager. Provided by the streamoscope-bridge.lua script',
             gpuEncoder: 'Hardware encoder load: NVENC on NVIDIA, AMF on AMD, Quick Sync on Intel',
             gpuSharedMemory: 'Integrated graphics have no memory of their own and take part of the RAM',
         },

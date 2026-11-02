@@ -1,7 +1,7 @@
 {
-  "name": "obs-stats-widget",
+  "name": "streamoscope",
   "version": "0.2.0",
-  "description": "OBS dock with live stream stats for the main output and obs-multi-rtmp targets, via obs-websocket",
+  "description": "StreamoScope: live bitrate, dropped frames and stream health inside OBS Studio",
   "main": "src/index.tsx",
   "license": "MIT",
   "private": true,

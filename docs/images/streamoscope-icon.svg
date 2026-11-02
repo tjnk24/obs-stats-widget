@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">StreamoScope app icon</title>
+  <desc id="desc">A skeptical lime-green frog watching over a retro oscilloscope with a bright signal trace.</desc>
+  <rect x="5" y="5" width="246" height="246" rx="45" fill="#131B17" stroke="#F0E7CB" stroke-width="9"/>
+  <!-- Frog's brow and eye stalks -->
+  <path d="M39 120C34 109 33 96 37 78C42 53 58 40 79 40C99 40 113 50 119 67C125 63 131 63 137 67C143 50 157 40 177 40C198 40 214 53 219 78C223 96 222 109 217 120L210 146H46Z" fill="#B6D63E" stroke="#111914" stroke-width="8" stroke-linejoin="round"/>
+  <!-- Heavy-lidded, unimpressed eyes -->
+  <path d="M46 102Q76 92 107 105Q98 129 79 133Q58 133 46 102Z" fill="#F1E9D2" stroke="#151C16" stroke-width="6"/>
+  <path d="M149 105Q179 92 210 102Q198 132 177 133Q158 129 149 105Z" fill="#F1E9D2" stroke="#151C16" stroke-width="6"/>
+  <path d="M45 101Q77 78 109 102" stroke="#141C16" stroke-width="17" fill="none" stroke-linecap="round"/>
+  <path d="M147 102Q179 78 211 101" stroke="#141C16" stroke-width="17" fill="none" stroke-linecap="round"/>
+  <path d="M79 105V124M177 105V124" stroke="#141C16" stroke-width="15" stroke-linecap="round"/>
+  <path d="M118 137L124 140M132 140L138 137" stroke="#151C16" stroke-width="5" stroke-linecap="round"/>
+  <!-- Retro screen, kept simple for legibility at small sizes -->
+  <rect x="26" y="142" width="204" height="93" rx="17" fill="#121A16" stroke="#F0E7CB" stroke-width="8"/>
+  <rect x="37" y="153" width="182" height="71" rx="9" fill="#19251A" stroke="#6B8428" stroke-width="2"/>
+  <path d="M47 191H76L92 172L109 208L130 163L151 190H169L181 178L191 190H209" fill="none" stroke="#B6E433" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

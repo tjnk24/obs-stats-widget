@@ -6,7 +6,7 @@ function Write-TextFile {
     )
 
     $encoding = [System.Text.UTF8Encoding]::new($HasBom, $true)
-    $temporaryPath = "$Path.obs-stats-widget.tmp"
+    $temporaryPath = "$Path.streamoscope.tmp"
 
     [System.IO.File]::WriteAllText($temporaryPath, $Text, $encoding)
 

@@ -122,7 +122,7 @@ export const es: TranslationDto = {
             encoding: 'Fotogramas que el codificador no pudo comprimir a tiempo ($t(obs.skippedFrames)). Comunes a todas las plataformas.',
             rendering: 'Fotogramas que OBS no pudo renderizar a tiempo ($t(obs.missedFrames)).',
             memory: 'Cuánta RAM usa el propio OBS ($t(obs.memoryUsage) en la ventana «$t(obs.stats)»)',
-            gpu: 'Carga de la tarjeta gráfica, como en la pestaña GPU del Administrador de tareas. La envía el script obs-stats-bridge.lua',
+            gpu: 'Carga de la tarjeta gráfica, como en la pestaña GPU del Administrador de tareas. La envía el script streamoscope-bridge.lua',
             gpuEncoder: 'Carga del codificador por hardware: NVENC en NVIDIA, AMF en AMD, Quick Sync en Intel',
             gpuSharedMemory: 'Los gráficos integrados no tienen memoria propia y usan parte de la RAM',
         },

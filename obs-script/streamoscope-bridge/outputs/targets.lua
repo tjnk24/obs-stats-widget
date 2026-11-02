@@ -1,4 +1,4 @@
-local named_outputs = require('obs-stats-bridge.outputs.named_outputs')
+local named_outputs = require('streamoscope-bridge.outputs.named_outputs')
 
 local targets = {}
 

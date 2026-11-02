@@ -1,6 +1,6 @@
 local obs = obslua
 
-local consts = require('obs-stats-bridge.consts')
+local consts = require('streamoscope-bridge.consts')
 
 local profile_parameter = {}
 

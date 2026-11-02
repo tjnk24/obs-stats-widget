@@ -1,9 +1,9 @@
 local obs = obslua
 
-local consts = require('obs-stats-bridge.consts')
-local system_memory = require('obs-stats-bridge.hardware.system_memory')
-local targets = require('obs-stats-bridge.outputs.targets')
-local json = require('obs-stats-bridge.utils.json')
+local consts = require('streamoscope-bridge.consts')
+local system_memory = require('streamoscope-bridge.hardware.system_memory')
+local targets = require('streamoscope-bridge.outputs.targets')
+local json = require('streamoscope-bridge.utils.json')
 
 local publisher = {}
 

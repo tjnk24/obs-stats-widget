@@ -125,45 +125,45 @@ Describe 'Add-BrowserDock' {
     It 'creates the list when there is none' -TestCases @(@{Json = $null}, @{Json = ''}, @{Json = '[]'}) {
         param($Json)
 
-        $result = Add-BrowserDock -DocksJson $Json -Title 'obs-stats-widget' -Url 'file:///C:/dock/index.html' -Uuid 'abc'
+        $result = Add-BrowserDock -DocksJson $Json -Title 'StreamoScope' -Url 'file:///C:/dock/index.html' -Uuid 'abc'
 
-        $result.Json | Should -BeExactly '[{"title": "obs-stats-widget", "url": "file:///C:/dock/index.html", "uuid": "abc"}]'
+        $result.Json | Should -BeExactly '[{"title": "StreamoScope", "url": "file:///C:/dock/index.html", "uuid": "abc"}]'
     }
 
     It 'appends in the format OBS writes and keeps other docks' {
         $original = '[{"title": "Chat", "url": "https://example.com/chat", "uuid": "1"}]'
-        $result = Add-BrowserDock -DocksJson $original -Title 'obs-stats-widget' -Url 'file:///C:/dock/index.html' -Uuid 'abc'
+        $result = Add-BrowserDock -DocksJson $original -Title 'StreamoScope' -Url 'file:///C:/dock/index.html' -Uuid 'abc'
 
-        $result.Json | Should -BeExactly ($original.TrimEnd(']') + ', {"title": "obs-stats-widget", "url": "file:///C:/dock/index.html", "uuid": "abc"}]')
+        $result.Json | Should -BeExactly ($original.TrimEnd(']') + ', {"title": "StreamoScope", "url": "file:///C:/dock/index.html", "uuid": "abc"}]')
     }
 
     It 'keeps a dock that already has this address' {
         $original = '[{"title": "Stats", "url": "file:///C:/dock/index.html", "uuid": "existing"}]'
-        $result = Add-BrowserDock -DocksJson $original -Title 'obs-stats-widget' -Url 'file:///C:/dock/index.html' -Uuid 'abc'
+        $result = Add-BrowserDock -DocksJson $original -Title 'StreamoScope' -Url 'file:///C:/dock/index.html' -Uuid 'abc'
 
         $result.Changed | Should -BeFalse
         $result.Uuid | Should -Be 'existing'
     }
 
     It 'moves its own dock to a new address' {
-        $original = '[{"title": "obs-stats-widget", "url": "file:///C:/old/index.html", "uuid": "abc"}]'
-        $result = Add-BrowserDock -DocksJson $original -Title 'obs-stats-widget' -Url 'file:///C:/new/index.html' -Uuid 'abc'
+        $original = '[{"title": "StreamoScope", "url": "file:///C:/old/index.html", "uuid": "abc"}]'
+        $result = Add-BrowserDock -DocksJson $original -Title 'StreamoScope' -Url 'file:///C:/new/index.html' -Uuid 'abc'
 
-        $result.Json | Should -BeExactly '[{"title": "obs-stats-widget", "url": "file:///C:/new/index.html", "uuid": "abc"}]'
+        $result.Json | Should -BeExactly '[{"title": "StreamoScope", "url": "file:///C:/new/index.html", "uuid": "abc"}]'
     }
 
     It 'picks a free title when another dock uses it' {
-        $original = '[{"title": "obs-stats-widget", "url": "https://other", "uuid": "1"}, {"title": "obs-stats-widget (2)", "url": "https://other2", "uuid": "2"}]'
-        $result = Add-BrowserDock -DocksJson $original -Title 'obs-stats-widget' -Url 'file:///C:/dock/index.html' -Uuid 'abc'
+        $original = '[{"title": "StreamoScope", "url": "https://other", "uuid": "1"}, {"title": "StreamoScope (2)", "url": "https://other2", "uuid": "2"}]'
+        $result = Add-BrowserDock -DocksJson $original -Title 'StreamoScope' -Url 'file:///C:/dock/index.html' -Uuid 'abc'
 
         (Read-JsonDocument -Text $result.Json).Items.Count | Should -Be 3
-        $result.Json | Should -Match '"title": "obs-stats-widget \(3\)"'
+        $result.Json | Should -Match '"title": "StreamoScope \(3\)"'
     }
 }
 
 Describe 'Remove-BrowserDock' {
     BeforeAll {
-        $script:docks = '[{"title": "Chat", "url": "https://example.com/chat", "uuid": "1"}, {"title": "obs-stats-widget", "url": "file:///C:/dock/index.html", "uuid": "abc"}]'
+        $script:docks = '[{"title": "Chat", "url": "https://example.com/chat", "uuid": "1"}, {"title": "StreamoScope", "url": "file:///C:/dock/index.html", "uuid": "abc"}]'
     }
 
     It 'removes the dock by uuid' {

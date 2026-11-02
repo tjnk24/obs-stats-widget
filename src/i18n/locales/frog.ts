@@ -79,7 +79,7 @@ export const frog: DeepPartial<TranslationDto> = {
             encoding: 'Мухи-кадры, которых квакодировщик не успел проглотить ($t(obs.skippedFrames)). Общие для всех прудов.',
             rendering: 'Кадры, до которых OBS не допрыгнул ($t(obs.missedFrames)).',
             memory: 'Сколько оперативной тины занимает само болото OBS ($t(obs.memoryUsage) в окне «$t(obs.stats)»)',
-            gpu: 'Загрузка квидеокарты, как на вкладке «Графический процессор» в диспетчере задач. Приносит скрипт obs-stats-bridge.lua',
+            gpu: 'Загрузка квидеокарты, как на вкладке «Графический процессор» в диспетчере задач. Приносит скрипт streamoscope-bridge.lua',
             gpuEncoder: 'Загрузка железного квакодировщика: NVENC у NVIDIA, AMF у AMD, Quick Sync у Intel',
             gpuSharedMemory: 'У встроенной квидеокарты нет своего пруда, она отпивает из оперативной памяти',
         },

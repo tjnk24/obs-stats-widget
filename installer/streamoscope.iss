@@ -18,11 +18,13 @@
   #define UpdaterDir "updater"
 #endif
 
-#define AppName "obs-stats-widget"
-#define AppUrl "https://github.com/tjnk24/obs-stats-widget"
+#define AppName "StreamoScope"
+#define AppSlug "streamoscope"
+#define OldAppUninstallKey "Software\Microsoft\Windows\CurrentVersion\Uninstall\{6F3A2C1E-8B4D-4E7A-9C2F-1D5B8E3A7C40}_is1"
+#define AppUrl "https://github.com/tjnk24/streamoscope"
 
 [Setup]
-AppId={{6F3A2C1E-8B4D-4E7A-9C2F-1D5B8E3A7C40}
+AppId={{6D39D358-2386-4437-8FE3-CF5511816FD1}
 AppName={#AppName}
 AppVersion={#AppVersion}
 AppVerName={#AppName} {#AppVersion}
@@ -30,14 +32,14 @@ AppPublisher=tjnk24
 AppPublisherURL={#AppUrl}
 AppSupportURL={#AppUrl}/issues
 AppUpdatesURL={#AppUrl}/releases
-DefaultDirName={autopf}\{#AppName}
+DefaultDirName={autopf}\{#AppSlug}
 DisableDirPage=yes
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 OutputDir={#OutputDir}
-OutputBaseFilename={#AppName}-setup-{#AppVersion}
+OutputBaseFilename={#AppSlug}-setup-{#AppVersion}
 Compression=lzma2/max
 SolidCompression=yes
 WizardStyle=modern
@@ -55,7 +57,7 @@ Name: "ptbr"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 
 [InstallDelete]
 Type: filesandordirs; Name: "{app}\dock"
-Type: filesandordirs; Name: "{app}\obs-stats-bridge"
+Type: filesandordirs; Name: "{app}\streamoscope-bridge"
 Type: filesandordirs; Name: "{app}\ConfigureObs"
 Type: filesandordirs; Name: "{app}\updater"
 
@@ -70,7 +72,7 @@ Source: "third-party\minisign-LICENSE.txt"; DestDir: "{app}\updater"; Flags: ign
 [UninstallDelete]
 Type: files; Name: "{app}\install-manifest.json"
 Type: filesandordirs; Name: "{app}\dock"
-Type: filesandordirs; Name: "{app}\obs-stats-bridge"
+Type: filesandordirs; Name: "{app}\streamoscope-bridge"
 Type: filesandordirs; Name: "{app}\ConfigureObs"
 Type: filesandordirs; Name: "{app}\updater"
 
@@ -81,10 +83,11 @@ en.SetupSkipped=OBS was not set up. Close OBS and run this setup again, or add t
 en.ObsNotStarted=OBS has not been started on this computer yet. Start OBS once, close it and run this setup again.
 en.SetupFailed=OBS could not be set up automatically, and nothing was changed in it. Add the dock and the script by hand as described in the guide:
 en.WebSocketNotConfigured=Turn on the WebSocket server: Tools → WebSocket Server Settings → Enable WebSocket server.
-en.FinishedHowTo=Start OBS and open Docks → obs-stats-widget. On first start the dock asks for the WebSocket password: Tools → WebSocket Server Settings → Show Connect Info.
+en.FinishedHowTo=Start OBS and open Docks → StreamoScope. On first start the dock asks for the WebSocket password: Tools → WebSocket Server Settings → Show Connect Info.
 en.UninstallObsRunning=OBS is running. Close OBS and try again, so that the dock and the script are removed from OBS too.
 en.UninstallFilesOnly=Delete only the files and leave the dock and the script in the OBS settings?
 en.UninstallFailed=The dock and the script could not be removed from OBS automatically. Remove the dock in Docks and the script in Tools → Scripts.
+en.OldVersionNotRemoved=The previous version (obs-stats-widget) could not be removed. Close OBS and run this setup again, or first uninstall obs-stats-widget in Settings → Apps.
 en.Details=Details:
 
 ru.ConfiguringObs=Настройка OBS...
@@ -93,10 +96,11 @@ ru.SetupSkipped=OBS не настроен. Закройте OBS и запуст�
 ru.ObsNotStarted=OBS на этом компьютере ещё ни разу не запускался. Запустите OBS один раз, закройте его и запустите установку ещё раз.
 ru.SetupFailed=Не удалось настроить OBS автоматически, в нём ничего не изменено. Добавьте панель и скрипт вручную по инструкции:
 ru.WebSocketNotConfigured=Включите сервер WebSocket: Сервис → Настройки сервера WebSocket → Включить сервер WebSocket.
-ru.FinishedHowTo=Запустите OBS и откройте Док-панели → obs-stats-widget. При первом запуске панель попросит пароль WebSocket: Сервис → Настройки сервера WebSocket → Показать сведения о подключении.
+ru.FinishedHowTo=Запустите OBS и откройте Док-панели → StreamoScope. При первом запуске панель попросит пароль WebSocket: Сервис → Настройки сервера WebSocket → Показать сведения о подключении.
 ru.UninstallObsRunning=OBS запущен. Закройте OBS и повторите попытку, чтобы панель и скрипт убрались и из OBS.
 ru.UninstallFilesOnly=Удалить только файлы, а панель и скрипт оставить в настройках OBS?
 ru.UninstallFailed=Не удалось убрать панель и скрипт из OBS автоматически. Удалите панель в меню Док-панели, а скрипт — в Сервис → Скрипты.
+ru.OldVersionNotRemoved=Не удалось удалить прежнюю версию (obs-stats-widget). Закройте OBS и запустите установку ещё раз или сначала удалите obs-stats-widget в Параметры → Приложения.
 ru.Details=Подробности:
 
 es.ConfiguringObs=Configurando OBS...
@@ -105,10 +109,11 @@ es.SetupSkipped=OBS no se ha configurado. Cierre OBS y vuelva a ejecutar el inst
 es.ObsNotStarted=OBS aún no se ha abierto en este equipo. Abra OBS una vez, ciérrelo y vuelva a ejecutar el instalador.
 es.SetupFailed=No se pudo configurar OBS automáticamente y no se ha cambiado nada en él. Añada el panel y el script a mano según la guía:
 es.WebSocketNotConfigured=Active el servidor WebSocket: Herramientas → Ajustes del servidor WebSocket → Habilitar servidor WebSocket.
-es.FinishedHowTo=Abra OBS y elija Paneles → obs-stats-widget. La primera vez el panel pedirá la contraseña de WebSocket: Herramientas → Ajustes del servidor WebSocket → Mostrar información de conexión.
+es.FinishedHowTo=Abra OBS y elija Paneles → StreamoScope. La primera vez el panel pedirá la contraseña de WebSocket: Herramientas → Ajustes del servidor WebSocket → Mostrar información de conexión.
 es.UninstallObsRunning=OBS está abierto. Cierre OBS y vuelva a intentarlo para quitar también el panel y el script de OBS.
 es.UninstallFilesOnly=¿Eliminar solo los archivos y dejar el panel y el script en la configuración de OBS?
 es.UninstallFailed=No se pudieron quitar el panel y el script de OBS automáticamente. Quite el panel en Paneles y el script en Herramientas → Scripts.
+es.OldVersionNotRemoved=No se pudo quitar la versión anterior (obs-stats-widget). Cierre OBS y vuelva a ejecutar el instalador, o desinstale primero obs-stats-widget en Configuración → Aplicaciones.
 es.Details=Detalles:
 
 de.ConfiguringObs=OBS wird eingerichtet...
@@ -117,10 +122,11 @@ de.SetupSkipped=OBS wurde nicht eingerichtet. Schließen Sie OBS und starten Sie
 de.ObsNotStarted=OBS wurde auf diesem Computer noch nie gestartet. Starten Sie OBS einmal, schließen Sie es und starten Sie das Setup erneut.
 de.SetupFailed=OBS konnte nicht automatisch eingerichtet werden, es wurde nichts daran geändert. Fügen Sie Dock und Skript laut Anleitung von Hand hinzu:
 de.WebSocketNotConfigured=Aktivieren Sie den WebSocket-Server: Werkzeuge → WebSocket-Servereinstellungen → WebSocket-Server aktivieren.
-de.FinishedHowTo=Starten Sie OBS und öffnen Sie Docks → obs-stats-widget. Beim ersten Start fragt das Dock nach dem WebSocket-Passwort: Werkzeuge → WebSocket-Servereinstellungen → Verbindungsinformationen anzeigen.
+de.FinishedHowTo=Starten Sie OBS und öffnen Sie Docks → StreamoScope. Beim ersten Start fragt das Dock nach dem WebSocket-Passwort: Werkzeuge → WebSocket-Servereinstellungen → Verbindungsinformationen anzeigen.
 de.UninstallObsRunning=OBS ist geöffnet. Schließen Sie OBS und versuchen Sie es erneut, damit Dock und Skript auch aus OBS entfernt werden.
 de.UninstallFilesOnly=Nur die Dateien löschen und Dock und Skript in den OBS-Einstellungen lassen?
 de.UninstallFailed=Dock und Skript konnten nicht automatisch aus OBS entfernt werden. Entfernen Sie das Dock unter Docks und das Skript unter Werkzeuge → Skripte.
+de.OldVersionNotRemoved=Die vorherige Version (obs-stats-widget) konnte nicht entfernt werden. Schließen Sie OBS und starten Sie das Setup erneut, oder deinstallieren Sie zuerst obs-stats-widget unter Einstellungen → Apps.
 de.Details=Details:
 
 ptbr.ConfiguringObs=Configurando o OBS...
@@ -129,10 +135,11 @@ ptbr.SetupSkipped=O OBS não foi configurado. Feche o OBS e execute o instalador
 ptbr.ObsNotStarted=O OBS ainda não foi aberto neste computador. Abra o OBS uma vez, feche-o e execute o instalador novamente.
 ptbr.SetupFailed=Não foi possível configurar o OBS automaticamente e nada foi alterado nele. Adicione o painel e o script manualmente seguindo o guia:
 ptbr.WebSocketNotConfigured=Ative o servidor WebSocket: Ferramentas → Configurações do servidor WebSocket → Ativar servidor WebSocket.
-ptbr.FinishedHowTo=Abra o OBS e escolha Painéis → obs-stats-widget. Na primeira vez o painel pedirá a senha do WebSocket: Ferramentas → Configurações do servidor WebSocket → Mostrar informações da conexão.
+ptbr.FinishedHowTo=Abra o OBS e escolha Painéis → StreamoScope. Na primeira vez o painel pedirá a senha do WebSocket: Ferramentas → Configurações do servidor WebSocket → Mostrar informações da conexão.
 ptbr.UninstallObsRunning=O OBS está aberto. Feche o OBS e tente novamente para remover também o painel e o script do OBS.
 ptbr.UninstallFilesOnly=Excluir apenas os arquivos e deixar o painel e o script nas configurações do OBS?
 ptbr.UninstallFailed=Não foi possível remover o painel e o script do OBS automaticamente. Remova o painel em Painéis e o script em Ferramentas → Scripts.
+ptbr.OldVersionNotRemoved=Não foi possível remover a versão anterior (obs-stats-widget). Feche o OBS e execute o instalador novamente, ou desinstale primeiro o obs-stats-widget em Configurações → Aplicativos.
 ptbr.Details=Detalhes:
 
 [Code]
@@ -143,13 +150,16 @@ const
   ResultObsConfigNotFound = 3;
   ResultSuccessWithoutWebSocket = 10;
   GuideUrl = '{#AppUrl}#readme';
+  OldAppUninstallKey = '{#OldAppUninstallKey}';
+  OldAppRemovalTimeoutMs = 60000;
+  OldAppRemovalPollMs = 500;
 
 var
   ObsSetupNote: String;
 
 function GetLogPath: String;
 begin
-  Result := ExpandConstant('{localappdata}\obs-stats-widget\configure-obs.log');
+  Result := ExpandConstant('{localappdata}\streamoscope\configure-obs.log');
 end;
 
 function RunConfigureObs(const Mode: String): Integer;
@@ -194,6 +204,44 @@ begin
   end;
 
   Log('configure-obs.ps1 exit code: ' + IntToStr(Code));
+end;
+
+function RemoveOldApp: Boolean;
+var
+  UninstallString: String;
+  ResultCode: Integer;
+  WaitedMs: Integer;
+begin
+  Result := True;
+
+  if not RegQueryStringValue(HKCU, OldAppUninstallKey, 'UninstallString', UninstallString) then
+    Exit;
+
+  Log('Removing the previous version: ' + UninstallString);
+
+  if not Exec(RemoveQuotes(UninstallString), '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+  WaitedMs := 0;
+
+  while RegKeyExists(HKCU, OldAppUninstallKey) and (WaitedMs < OldAppRemovalTimeoutMs) do
+  begin
+    Sleep(OldAppRemovalPollMs);
+    WaitedMs := WaitedMs + OldAppRemovalPollMs;
+  end;
+
+  Result := not RegKeyExists(HKCU, OldAppUninstallKey);
+end;
+
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+begin
+  Result := '';
+
+  if not RemoveOldApp then
+    Result := CustomMessage('OldVersionNotRemoved');
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);

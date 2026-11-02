@@ -9,11 +9,11 @@ export const CURRENT_VERSION = '0.1.0';
 
 export const OLDER_VERSION = '0.0.9';
 
-export const CURRENT_RELEASE_URL = 'https://github.com/tjnk24/obs-stats-widget/releases/tag/v0.1.0';
+export const CURRENT_RELEASE_URL = 'https://github.com/tjnk24/streamoscope/releases/tag/v0.1.0';
 
 export const RELEASE: ReleaseDto = {
     version: '0.2.0',
-    url: 'https://github.com/tjnk24/obs-stats-widget/releases/tag/v0.2.0',
+    url: 'https://github.com/tjnk24/streamoscope/releases/tag/v0.2.0',
     notes: '',
     publishedAt: null,
     compatibility: null,

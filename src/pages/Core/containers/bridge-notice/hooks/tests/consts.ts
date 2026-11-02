@@ -1,9 +1,9 @@
 import {BaseStore} from '__reducers';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 
-export const DOCK_HREF = 'file:///C:/Users/Streamer/AppData/Local/Programs/obs-stats-widget/dock/index.html';
+export const DOCK_HREF = 'file:///C:/Users/Streamer/AppData/Local/Programs/streamoscope/dock/index.html';
 
-export const SCRIPT_PATH = 'C:\\Users\\Streamer\\AppData\\Local\\Programs\\obs-stats-widget\\obs-stats-bridge.lua';
+export const SCRIPT_PATH = 'C:\\Users\\Streamer\\AppData\\Local\\Programs\\streamoscope\\streamoscope-bridge.lua';
 
 export const SCENE_COLLECTION = 'Main scenes';
 

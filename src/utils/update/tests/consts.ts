@@ -29,7 +29,7 @@ export const RELEASE_NOTES = 'New things.\n\n---\n\nНовое.';
 
 export const GITHUB_RELEASE: GithubReleaseDto = {
     tag_name: 'v0.2.0',
-    html_url: 'https://github.com/tjnk24/obs-stats-widget/releases/tag/v0.2.0',
+    html_url: 'https://github.com/tjnk24/streamoscope/releases/tag/v0.2.0',
     body: `${RELEASE_NOTES}\n\n<!-- compatibility: ${JSON.stringify(COMPATIBILITY)} -->\n`,
     published_at: '2026-11-01T10:00:00Z',
     draft: false,

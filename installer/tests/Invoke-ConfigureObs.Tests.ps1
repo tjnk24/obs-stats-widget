@@ -26,7 +26,7 @@ BeforeAll {
             Write-TextFile -Path $globalIni -Text $file.Text.Replace('__ROOT__', $root.Replace('\', '\\')) -HasBom $file.HasBom
         }
 
-        $install = Join-Path $root "$script:cyrillicFolder and spaces\obs-stats-widget"
+        $install = Join-Path $root "$script:cyrillicFolder and spaces\streamoscope"
         New-Item -ItemType Directory -Path $install -Force | Out-Null
 
         return [pscustomobject]@{
@@ -35,7 +35,7 @@ BeforeAll {
             Install = $install
             Data = Join-Path $root 'data'
             DockUrl = ConvertTo-FileUrl -Path (Join-Path $install 'dock\index.html')
-            BridgePath = (Join-Path $install 'obs-stats-bridge.lua').Replace('\', '/')
+            BridgePath = (Join-Path $install 'streamoscope-bridge.lua').Replace('\', '/')
         }
     }
 
@@ -145,7 +145,7 @@ Describe 'Invoke-ConfigureObs' {
 
             $docks.Count | Should -Be 2
             $docks[0].title | Should -Be 'Chat'
-            $docks[1].title | Should -Be 'obs-stats-widget'
+            $docks[1].title | Should -Be 'StreamoScope'
             $docks[1].uuid | Should -Match '^[0-9a-f]{32}$'
         }
 
@@ -196,7 +196,7 @@ Describe 'Invoke-ConfigureObs' {
             $docks = @(Get-Docks -Path (Join-Path $script:fixture.Config 'user.ini'))
 
             $docks.Count | Should -Be 3
-            $docks[2].title | Should -Be 'obs-stats-widget (2)'
+            $docks[2].title | Should -Be 'StreamoScope (2)'
             $docks[2].url | Should -Be $script:fixture.DockUrl
             (Get-FileHash -LiteralPath (Join-Path $script:fixture.Config 'global.ini')).Hash | Should -Be $script:globalHash
         }

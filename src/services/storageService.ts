@@ -3,12 +3,17 @@ import type {Nullable} from 'infrastructure/common';
 import {SettingsDto} from '__types/app/SettingsDto';
 import {
     DISCARDED_SETTINGS_STORAGE_KEY,
+    LEGACY_STORAGE_KEYS,
     PASSWORD_STORAGE_KEY,
     SETTINGS_STORAGE_KEY,
 } from '__utils/consts';
 import {migrateSettings} from '__utils/settings/migrateSettings';
 
 class StorageService {
+    constructor() {
+        this.moveLegacyItems();
+    }
+
     loadPassword = () => this.getItem(PASSWORD_STORAGE_KEY);
 
     savePassword = (password: Nullable<string>) => (
@@ -41,6 +46,19 @@ class StorageService {
     };
 
     saveSettings = (settings: SettingsDto) => this.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+
+    private moveLegacyItems() {
+        Object.entries(LEGACY_STORAGE_KEYS).forEach(([key, legacyKey]) => {
+            const legacyValue = this.getItem(legacyKey);
+
+            if (legacyValue === null) {
+                return;
+            }
+
+            this.getItem(key) === null && this.setItem(key, legacyValue);
+            this.removeItem(legacyKey);
+        });
+    }
 
     private getItem = (key: string): Nullable<string> => {
         try {

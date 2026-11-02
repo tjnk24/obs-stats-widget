@@ -1,7 +1,7 @@
-local consts = require('obs-stats-bridge.consts')
-local environment = require('obs-stats-bridge.utils.environment')
-local process = require('obs-stats-bridge.utils.process')
-local profile_parameter = require('obs-stats-bridge.utils.profile_parameter')
+local consts = require('streamoscope-bridge.consts')
+local environment = require('streamoscope-bridge.utils.environment')
+local process = require('streamoscope-bridge.utils.process')
+local profile_parameter = require('streamoscope-bridge.utils.profile_parameter')
 
 local release_links = {}
 

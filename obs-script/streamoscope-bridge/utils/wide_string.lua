@@ -1,6 +1,6 @@
 local ffi = require('ffi')
 
-local consts = require('obs-stats-bridge.consts')
+local consts = require('streamoscope-bridge.consts')
 
 local wide_string = {}
 
