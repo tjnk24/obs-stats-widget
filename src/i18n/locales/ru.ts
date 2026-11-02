@@ -76,7 +76,7 @@ export const ru: TranslationDto = {
         statuses: {
             ok: 'В эфире',
             warn: 'Есть потери',
-            bad: 'Теряет кадры',
+            bad: 'Сбоит',
             off: 'Не в эфире',
             reconnecting: 'Переподключение',
         },

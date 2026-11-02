@@ -74,7 +74,7 @@ export const en = {
         statuses: {
             ok: 'Live',
             warn: 'Losing some',
-            bad: 'Dropping frames',
+            bad: 'Unstable',
             off: 'Offline',
             reconnecting: 'Reconnecting',
         },

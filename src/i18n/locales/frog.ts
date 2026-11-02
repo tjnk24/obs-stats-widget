@@ -33,7 +33,7 @@ export const frog: DeepPartial<TranslationDto> = {
         statuses: {
             ok: 'Квакает',
             warn: 'Упускает мух',
-            bad: 'Теряет мух',
+            bad: 'Булькает',
             off: 'Молчит',
             reconnecting: 'Перепрыгивает',
         },

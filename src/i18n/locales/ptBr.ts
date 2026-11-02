@@ -76,7 +76,7 @@ export const ptBr: TranslationDto = {
         statuses: {
             ok: 'Ao vivo',
             warn: 'Com perdas',
-            bad: 'Perdendo quadros',
+            bad: 'Instável',
             off: 'Fora do ar',
             reconnecting: 'Reconectando',
         },

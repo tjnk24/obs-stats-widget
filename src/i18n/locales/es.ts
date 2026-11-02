@@ -76,7 +76,7 @@ export const es: TranslationDto = {
         statuses: {
             ok: 'En directo',
             warn: 'Con pérdidas',
-            bad: 'Perdiendo fotogramas',
+            bad: 'Inestable',
             off: 'Sin emitir',
             reconnecting: 'Reconectando',
         },

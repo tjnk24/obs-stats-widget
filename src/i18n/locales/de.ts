@@ -76,7 +76,7 @@ export const de: TranslationDto = {
         statuses: {
             ok: 'Live',
             warn: 'Mit Verlusten',
-            bad: 'Verliert Frames',
+            bad: 'Instabil',
             off: 'Offline',
             reconnecting: 'Verbindet neu',
         },
