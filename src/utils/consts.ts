@@ -35,11 +35,6 @@ export const DEV_OBS_CONNECTION_URL = '/dev/obs-connection';
 export const PASSWORD_STORAGE_KEY = 'streamoscope.password';
 export const SETTINGS_STORAGE_KEY = 'streamoscope.settings';
 export const DISCARDED_SETTINGS_STORAGE_KEY = 'streamoscope.settings.discarded';
-export const LEGACY_STORAGE_KEYS: Record<string, string> = {
-    [PASSWORD_STORAGE_KEY]: 'obs-stats-dock.password',
-    [SETTINGS_STORAGE_KEY]: 'obs-stats-dock.settings',
-    [DISCARDED_SETTINGS_STORAGE_KEY]: 'obs-stats-dock.settings.discarded',
-};
 export const SETTINGS_VERSION = 1;
 
 export const DEFAULT_SETTINGS: SettingsDto = {

@@ -20,7 +20,6 @@
 
 #define AppName "StreamoScope"
 #define AppSlug "streamoscope"
-#define OldAppUninstallKey "Software\Microsoft\Windows\CurrentVersion\Uninstall\{6F3A2C1E-8B4D-4E7A-9C2F-1D5B8E3A7C40}_is1"
 #define AppUrl "https://github.com/tjnk24/streamoscope"
 
 [Setup]
@@ -87,7 +86,6 @@ en.FinishedHowTo=Start OBS and open Docks → StreamoScope. On first start the d
 en.UninstallObsRunning=OBS is running. Close OBS and try again, so that the dock and the script are removed from OBS too.
 en.UninstallFilesOnly=Delete only the files and leave the dock and the script in the OBS settings?
 en.UninstallFailed=The dock and the script could not be removed from OBS automatically. Remove the dock in Docks and the script in Tools → Scripts.
-en.OldVersionNotRemoved=The previous version (obs-stats-widget) could not be removed. Close OBS and run this setup again, or first uninstall obs-stats-widget in Settings → Apps.
 en.Details=Details:
 
 ru.ConfiguringObs=Настройка OBS...
@@ -100,7 +98,6 @@ ru.FinishedHowTo=Запустите OBS и откройте Док-панели 
 ru.UninstallObsRunning=OBS запущен. Закройте OBS и повторите попытку, чтобы панель и скрипт убрались и из OBS.
 ru.UninstallFilesOnly=Удалить только файлы, а панель и скрипт оставить в настройках OBS?
 ru.UninstallFailed=Не удалось убрать панель и скрипт из OBS автоматически. Удалите панель в меню Док-панели, а скрипт — в Сервис → Скрипты.
-ru.OldVersionNotRemoved=Не удалось удалить прежнюю версию (obs-stats-widget). Закройте OBS и запустите установку ещё раз или сначала удалите obs-stats-widget в Параметры → Приложения.
 ru.Details=Подробности:
 
 es.ConfiguringObs=Configurando OBS...
@@ -113,7 +110,6 @@ es.FinishedHowTo=Abra OBS y elija Paneles → StreamoScope. La primera vez el pa
 es.UninstallObsRunning=OBS está abierto. Cierre OBS y vuelva a intentarlo para quitar también el panel y el script de OBS.
 es.UninstallFilesOnly=¿Eliminar solo los archivos y dejar el panel y el script en la configuración de OBS?
 es.UninstallFailed=No se pudieron quitar el panel y el script de OBS automáticamente. Quite el panel en Paneles y el script en Herramientas → Scripts.
-es.OldVersionNotRemoved=No se pudo quitar la versión anterior (obs-stats-widget). Cierre OBS y vuelva a ejecutar el instalador, o desinstale primero obs-stats-widget en Configuración → Aplicaciones.
 es.Details=Detalles:
 
 de.ConfiguringObs=OBS wird eingerichtet...
@@ -126,7 +122,6 @@ de.FinishedHowTo=Starten Sie OBS und öffnen Sie Docks → StreamoScope. Beim er
 de.UninstallObsRunning=OBS ist geöffnet. Schließen Sie OBS und versuchen Sie es erneut, damit Dock und Skript auch aus OBS entfernt werden.
 de.UninstallFilesOnly=Nur die Dateien löschen und Dock und Skript in den OBS-Einstellungen lassen?
 de.UninstallFailed=Dock und Skript konnten nicht automatisch aus OBS entfernt werden. Entfernen Sie das Dock unter Docks und das Skript unter Werkzeuge → Skripte.
-de.OldVersionNotRemoved=Die vorherige Version (obs-stats-widget) konnte nicht entfernt werden. Schließen Sie OBS und starten Sie das Setup erneut, oder deinstallieren Sie zuerst obs-stats-widget unter Einstellungen → Apps.
 de.Details=Details:
 
 ptbr.ConfiguringObs=Configurando o OBS...
@@ -139,7 +134,6 @@ ptbr.FinishedHowTo=Abra o OBS e escolha Painéis → StreamoScope. Na primeira v
 ptbr.UninstallObsRunning=O OBS está aberto. Feche o OBS e tente novamente para remover também o painel e o script do OBS.
 ptbr.UninstallFilesOnly=Excluir apenas os arquivos e deixar o painel e o script nas configurações do OBS?
 ptbr.UninstallFailed=Não foi possível remover o painel e o script do OBS automaticamente. Remova o painel em Painéis e o script em Ferramentas → Scripts.
-ptbr.OldVersionNotRemoved=Não foi possível remover a versão anterior (obs-stats-widget). Feche o OBS e execute o instalador novamente, ou desinstale primeiro o obs-stats-widget em Configurações → Aplicativos.
 ptbr.Details=Detalhes:
 
 [Code]
@@ -150,9 +144,6 @@ const
   ResultObsConfigNotFound = 3;
   ResultSuccessWithoutWebSocket = 10;
   GuideUrl = '{#AppUrl}#readme';
-  OldAppUninstallKey = '{#OldAppUninstallKey}';
-  OldAppRemovalTimeoutMs = 60000;
-  OldAppRemovalPollMs = 500;
 
 var
   ObsSetupNote: String;
@@ -204,44 +195,6 @@ begin
   end;
 
   Log('configure-obs.ps1 exit code: ' + IntToStr(Code));
-end;
-
-function RemoveOldApp: Boolean;
-var
-  UninstallString: String;
-  ResultCode: Integer;
-  WaitedMs: Integer;
-begin
-  Result := True;
-
-  if not RegQueryStringValue(HKCU, OldAppUninstallKey, 'UninstallString', UninstallString) then
-    Exit;
-
-  Log('Removing the previous version: ' + UninstallString);
-
-  if not Exec(RemoveQuotes(UninstallString), '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
-  begin
-    Result := False;
-    Exit;
-  end;
-
-  WaitedMs := 0;
-
-  while RegKeyExists(HKCU, OldAppUninstallKey) and (WaitedMs < OldAppRemovalTimeoutMs) do
-  begin
-    Sleep(OldAppRemovalPollMs);
-    WaitedMs := WaitedMs + OldAppRemovalPollMs;
-  end;
-
-  Result := not RegKeyExists(HKCU, OldAppUninstallKey);
-end;
-
-function PrepareToInstall(var NeedsRestart: Boolean): String;
-begin
-  Result := '';
-
-  if not RemoveOldApp then
-    Result := CustomMessage('OldVersionNotRemoved');
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);

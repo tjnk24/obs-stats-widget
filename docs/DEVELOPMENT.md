@@ -1,8 +1,5 @@
 # StreamoScope — development and release notes
 
-**Froghead Works · Engineering Workshop**  
-*Where the paperwork becomes executable.*
-
 This document covers the build system, tests, installer and updater. If you just want to install StreamoScope, the [main README](../README.md) is less alarming.
 
 ## Requirements and local development
@@ -32,11 +29,17 @@ The development server uses `http://localhost:3062` by default. Set `PORT` in `.
 
 The development server clears `build/`. Re-run `npm run build:prod` before using that folder in OBS.
 
-The project uses React 19, antd 6, Redux Toolkit, React Router 8, i18next, CSS modules, webpack and swc. Development conventions are in [`CLAUDE.md`](../CLAUDE.md).
+The project uses React 19, antd 6, Redux Toolkit, React Router 8, i18next, CSS modules, webpack and swc. Development conventions are in [`CLAUDE.md`](../CLAUDE.md) (in Russian).
 
 ## Releases and signed updates
 
-A `v*` tag triggers the GitHub Actions release workflow: build, test, sign and publish. Published release assets:
+To release a version:
+
+1. Write `docs/release-notes/<version>.md`: English first, then `---` and Russian. The workflow fails without it.
+2. Run `npm version <major|minor|patch>` to bump `package.json`, commit and create the `v<version>` tag.
+3. Run `git push --follow-tags`.
+
+The `v*` tag triggers the GitHub Actions release workflow: build, test, sign and publish. Published release assets:
 
 | Asset | Purpose |
 | --- | --- |
@@ -46,11 +49,11 @@ A `v*` tag triggers the GitHub Actions release workflow: build, test, sign and p
 | `.minisig` files | Signatures for released assets |
 | `SHA256SUMS.txt` | Checksums for the installer and archive |
 
-Release notes contain a machine-readable `<!-- compatibility: {...} -->` comment that the dock uses to evaluate whether an update is compatible. **Don't remove or rewrite this block as marketing copy.**
+The workflow appends a machine-readable `<!-- compatibility: {...} -->` comment to the published release notes; the dock reads it to decide whether an update is compatible. **Don't remove or rewrite it when editing the release on GitHub.**
 
 Version numbers follow [Semantic Versioning](https://semver.org/). During the `0.x` series, minor versions may also change settings or installation steps; document those changes in the release notes.
 
-CI runs checks and build tests on pushes and pull requests. Manual workflow runs test the release process without publishing. A Husky pre-commit hook lints changed files and checks types.
+CI runs checks and build tests on pushes to `main` and on pull requests. Manual workflow runs test the release process without publishing. A Husky pre-commit hook lints changed files and checks types.
 
 ## Testing the updater without publishing a release
 
@@ -72,8 +75,6 @@ Use the `--broken-signature` option when you want to verify that the updater rej
 ## Installer and removal behavior
 
 The installer puts application files in `%LOCALAPPDATA%\Programs\streamoscope`, adds the OBS dock and Lua bridge, and attempts to configure the local WebSocket server. It keeps backups under `%LOCALAPPDATA%\streamoscope\backups` and writes `%LOCALAPPDATA%\streamoscope\configure-obs.log`.
-
-Before copying files, the installer looks for an obs-stats-widget installation (versions 0.1.0–0.2.0) and runs its uninstaller silently, so OBS doesn't end up with two docks and two bridges. If that fails, usually because OBS is open, setup stops and asks to close OBS.
 
 Close OBS before installation or removal. Uninstallation leaves OBS WebSocket enabled because another application might rely on it.
 
