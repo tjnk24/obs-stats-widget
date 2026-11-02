@@ -28,4 +28,4 @@ Things worth reporting include:
 - The bridge script opens in the browser only this repository's GitHub pages and local `http://127.0.0.1:` addresses
   (used to test updates), through the Windows URL handler; the only other program it starts is the bundled updater.
 
-To check a download yourself, see [Releases in the README](README.md#releases).
+To check a download yourself, see [Verify downloads in the README](README.md#-verify-downloads).
