@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/froghead-works-banner.png" width="650" alt="Froghead Works — independent software workshop">
+  <img src="docs/images/froghead-works-banner.png" width="650" alt="Froghead Works — Unofficial Software Division">
 </p>
 
 <h1 align="center">StreamoScope</h1>
@@ -26,7 +26,7 @@ Running multiple streams from one OBS instance? You shouldn't have to open a sep
 
 **StreamoScope shows the live statistics of all running streams in a single OBS dock.** Whether an output comes from **OBS itself**, **obs-multi-rtmp**, or **another output plugin**, StreamoScope doesn't need to know your streaming setup in advance. It monitors the running outputs OBS exposes, not a fixed list of supported streaming plugins.
 
-**One place. Every live stream. No plugin loyalty.**
+**No plugin loyalty.**
 
 <p align="center">
   <img src="docs/images/stats-wide.png" width="700" alt="StreamoScope wide dock: four simultaneous streams with live bitrate and dropped-frame statistics">
@@ -37,8 +37,8 @@ Running multiple streams from one OBS instance? You shouldn't have to open a sep
 
 - **All your streams, side by side.** See native OBS and third-party streaming outputs together, even when different plugins started them.
 - **Live stats per output.** Check bitrate, recent bitrate history, dropped network frames, connection status, uptime and congestion without switching panels.
-- **No plugin-specific setup.** StreamoScope is a monitor, not another multistream manager. It doesn't launch, encode or configure your streams.
-- **Built into OBS.** A dock that stays where you work, with a compact or wide layout.
+- **No plugin-specific setup.** StreamoScope is a monitor, not another multistream manager.
+- **Built into OBS.** A dock that stays where you work and adapts from a narrow column to a wide panel.
 - **Bonus: OBS and PC health.** Keep an eye on performance problems beyond your network connection.
 
 The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else entirely. **How a stream was started isn't the point. Whether it's running — and how it's doing — is.**
@@ -73,7 +73,7 @@ The interface supports **English, Russian, Spanish, German and Brazilian Portugu
 1. Download the latest `streamoscope-setup-<version>.exe` from [Releases](https://github.com/tjnk24/streamoscope/releases).
 2. **Close OBS**, then run the installer (no administrator privileges required).
 3. Open OBS. If the dock isn't visible, go to **Docks → StreamoScope**.
-4. If prompted, enter the OBS WebSocket connection details from **Tools → WebSocket Server Settings → Show Connect Info** (port `4455` by default).
+4. On first launch, enter the OBS WebSocket port and password from **Tools → WebSocket Server Settings → Show Connect Info** (port `4455` by default).
 
 **Done.** Start your streams however you normally do. StreamoScope watches the ones it can see through OBS — no need to select a separate integration for each output plugin.
 
@@ -113,9 +113,8 @@ For platform detection, the bridge uses protocol and hostname information, not s
 - **OBS must expose the output.** Plugin-independent does not mean API-independent: if an output plugin doesn't make an output or its statistics available to OBS, StreamoScope cannot invent the missing numbers.
 - **Output identity may be ambiguous.** If a plugin reports several streams using indistinguishable output identifiers, OBS might not provide separate statistics for each one. StreamoScope displays what can be reliably distinguished.
 - **Labels are best-effort.** Unrecognized services can appear as **Plugin** rather than a platform name.
-- **Without the bridge, only the basics.** Bitrate, dropped frames and OBS statistics still work, but plugin outputs lose their platform names, hardware readings disappear and updates have to be installed by hand.
-- **Windows-only extra hardware stats.** GPU, encoder, VRAM and system-memory readings depend on Windows and the Lua bridge.
-- **Manual installs update manually.** The integrated installer/updater workflow depends on the installed bridge.
+- **Without the bridge, only the basics.** Bitrate, dropped frames and OBS statistics still work, but plugin outputs lose their platform names, hardware readings (Windows only) disappear and updates have to be installed by hand.
+- **Manual installs update manually.** The ZIP doesn't include the updater: replace the files yourself.
 
 ## Settings, privacy and troubleshooting
 
@@ -134,8 +133,6 @@ Use the dock's **gear icon** to change language, show or hide OBS statistics, tr
 | Some platform names are generic | Check the Lua bridge is loaded in the active scene collection |
 | GPU stats are missing | Check the Lua bridge on Windows |
 | Installer didn't configure OBS | See `%LOCALAPPDATA%\streamoscope\configure-obs.log`; rerun with OBS closed |
-| Development build looks stale | Run `npm run build:prod`, then refresh the dock |
-
 Still stuck? [Open an issue](https://github.com/tjnk24/streamoscope/issues), preferably with **Settings → Diagnostics → Copy diagnostics**. Please don't attach passwords or stream keys.
 
 ## Build from source
