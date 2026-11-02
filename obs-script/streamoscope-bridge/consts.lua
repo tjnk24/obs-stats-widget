@@ -3,6 +3,7 @@ local ffi = require('ffi')
 return {
     BRIDGE_VERSION = 3,
     PARAMETER_SECTION = 'StreamoScope',
+    DESCRIPTION_ICON_HTML = '<p><img src="file:///%sstreamoscope-bridge/icon.png" width="64" height="64"></p>',
     PARAMETER_NAME = 'PluginOutputs',
     UPDATE_COMMAND_NAME = 'UpdateCommand',
     UPDATE_SCRIPT_PATH = 'updater/Update-Widget.ps1',

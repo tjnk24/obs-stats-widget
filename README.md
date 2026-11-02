@@ -2,6 +2,10 @@
   <img src="docs/images/froghead-works-banner.png" width="650" alt="Froghead Works — Unofficial Software Division">
 </p>
 
+<p align="center">
+  <img src="docs/images/streamoscope-icon-512.png" width="128" alt="StreamoScope icon">
+</p>
+
 <h1 align="center">StreamoScope</h1>
 
 <p align="center">

@@ -42,6 +42,10 @@ OutputBaseFilename={#AppSlug}-setup-{#AppVersion}
 Compression=lzma2/max
 SolidCompression=yes
 WizardStyle=modern
+SetupIconFile=images\streamoscope.ico
+WizardImageFile=images\wizard-164.png,images\wizard-246.png,images\wizard-328.png
+WizardSmallImageFile=images\wizard-small-55.png,images\wizard-small-83.png,images\wizard-small-110.png
+UninstallDisplayIcon={app}\streamoscope.ico
 CloseApplications=no
 UninstallDisplayName={#AppName}
 VersionInfoVersion={#AppVersion}
@@ -63,6 +67,7 @@ Type: filesandordirs; Name: "{app}\updater"
 [Files]
 Source: "{#PackageDir}\*"; DestDir: "{app}"; Excludes: "README.txt"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "configure-obs.ps1"; DestDir: "{app}"; Flags: ignoreversion
+Source: "images\streamoscope.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ConfigureObs\*.ps1"; DestDir: "{app}\ConfigureObs"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#UpdaterDir}\*.ps1"; DestDir: "{app}\updater"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MinisignPath}"; DestDir: "{app}\updater"; Flags: ignoreversion

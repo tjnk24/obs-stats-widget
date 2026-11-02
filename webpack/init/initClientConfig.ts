@@ -34,6 +34,7 @@ export const initClientConfig = ({entry}: InitClientConfigOptions) => (webpackCo
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: './src/index.html',
+            favicon: './src/images/streamoscope-icon.png',
         }),
     );
 
