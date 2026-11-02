@@ -78,19 +78,3 @@ Before copying files, the installer looks for an obs-stats-widget installation (
 Close OBS before installation or removal. Uninstallation leaves OBS WebSocket enabled because another application might rely on it.
 
 The Windows executable does **not** currently have an Authenticode signature. Release assets are protected separately with minisign signatures, and the README explains how to verify manual downloads.
-
-## Renaming
-
-Version 0.3.0 renamed obs-stats-widget to StreamoScope everywhere: repository, release files, install folders, OBS dock, Lua bridge, profile parameters and saved settings (the dock moves the old `obs-stats-dock.*` keys to `streamoscope.*` on first start). Older installations can't update across the rename, because their updater looks for the old file names; the new installer removes them instead.
-
-If a technical name ever has to change again, these components need a migration:
-
-- GitHub release endpoint and updater URLs;
-- OBS dock name, configuration keys and existing saved dock layout;
-- Lua script filename, scripts configuration and scene-collection references;
-- installed directories, backup paths and uninstall registry entries;
-- browser local-storage keys or saved WebSocket credentials;
-- `compatibility.json`, asset names and signature verification;
-- migration of existing installations and updates from older releases.
-
-Plan the migration, keep compatibility where you can and test **old installed release → new release** before shipping. A new coat of paint shouldn't brick the old machine.
