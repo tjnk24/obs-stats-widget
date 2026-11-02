@@ -53,7 +53,7 @@ The destination might be YouTube, Twitch, Kick, VK Video Live or somewhere else 
 | Uptime and network congestion | GPU usage, encoder load, VRAM and system RAM¹ |
 | Detected platform and output source, when available | Diagnostics, mock mode and update checks |
 
-¹ Additional hardware readings require the optional Lua bridge on Windows.
+¹ Hardware readings come from the StreamoScope Lua bridge and are available on Windows.
 
 The interface supports **English, Russian, Spanish, German and Brazilian Portuguese**.
 
@@ -62,7 +62,7 @@ The interface supports **English, Russian, Spanish, German and Brazilian Portugu
 </p>
 
 > [!NOTE]
-> StreamoScope monitors existing streams. It does **not** start streams, replace multistream plugins or fix your ISP. We're still waiting for the ISP to return our calls.
+> StreamoScope monitors existing streams. It does **not** start streams, replace multistream plugins or fix your ISP.
 
 ## Installation
 
@@ -77,14 +77,13 @@ The interface supports **English, Russian, Spanish, German and Brazilian Portugu
 
 **Done.** Start your streams however you normally do. StreamoScope watches the ones it can see through OBS — no need to select a separate integration for each output plugin.
 
-> [!IMPORTANT]
-> **Coming from obs-stats-widget 0.x?** StreamoScope 0.3.0 is the same dock under its new name, and older versions can't update to it by themselves. Close OBS and run the new installer once: it removes obs-stats-widget first, and your saved password and settings come along.
-
 The installer places files in `%LOCALAPPDATA%\Programs\streamoscope`, configures the dock and Lua bridge, keeps backups in `%LOCALAPPDATA%\streamoscope\backups`, and writes a setup log to `%LOCALAPPDATA%\streamoscope\configure-obs.log`.
 
 If OBS has never been launched on your PC, open it once, close it, then rerun the installer. You might need to enable its WebSocket server manually.
 
-**Updates:** the dock can check for new releases and offers signature-verified updates; it won't start an installation while OBS is streaming or recording. **Uninstall:** close OBS and remove **StreamoScope** via **Windows Settings → Apps**.
+**Updates:** the dock can check for new releases and offers signature-verified updates; it won't start an installation while OBS is streaming or recording.
+
+**Uninstall:** close OBS and remove **StreamoScope** via **Windows Settings → Apps**.
 
 ### Manual / portable installation
 
@@ -96,16 +95,16 @@ If OBS has never been launched on your PC, open it once, close it, then rerun th
    file:///C:/path/to/streamoscope/dock/index.html
    ```
 
-4. **Recommended:** under **Tools → Scripts**, add `streamoscope-bridge.lua`, keeping its `streamoscope-bridge` support folder alongside it. Add the script to each OBS scene collection you use.
+4. Under **Tools → Scripts**, add `streamoscope-bridge.lua`, keeping its `streamoscope-bridge` support folder alongside it. OBS keeps scripts per scene collection, so add it to each collection you stream from.
 5. Connect the dock using your OBS WebSocket port and password.
 
 To update a manual installation, replace the files and refresh the dock with **Ctrl+R**.
 
 ## How it finds streams
 
-StreamoScope uses OBS's built-in WebSocket server together with an optional **Lua bridge** to monitor active outputs and enrich the available information. It isn't tied to one particular multistream plugin or a preapproved list of destinations.
+StreamoScope has two parts: the dock, which reads output statistics through OBS's built-in WebSocket server, and the **Lua bridge**, a small OBS script that supplies what WebSocket doesn't. It isn't tied to one particular multistream plugin or a preapproved list of destinations.
 
-The bridge can add output labels, platform identification and Windows hardware metrics that WebSocket alone may not supply. Missing metadata doesn't necessarily mean a stream isn't being monitored: some outputs may simply be labeled **Plugin**.
+The bridge tells the dock where plugin outputs are streaming, reads Windows hardware metrics and runs signed updates. The installer sets it up for you; the dock shows a notice whenever the bridge isn't loaded in the current scene collection. Missing metadata doesn't necessarily mean a stream isn't being monitored: some outputs may simply be labeled **Plugin**.
 
 For platform detection, the bridge uses protocol and hostname information, not stream keys or URL paths.
 
@@ -114,6 +113,7 @@ For platform detection, the bridge uses protocol and hostname information, not s
 - **OBS must expose the output.** Plugin-independent does not mean API-independent: if an output plugin doesn't make an output or its statistics available to OBS, StreamoScope cannot invent the missing numbers.
 - **Output identity may be ambiguous.** If a plugin reports several streams using indistinguishable output identifiers, OBS might not provide separate statistics for each one. StreamoScope displays what can be reliably distinguished.
 - **Labels are best-effort.** Unrecognized services can appear as **Plugin** rather than a platform name.
+- **Without the bridge, only the basics.** Bitrate, dropped frames and OBS statistics still work, but plugin outputs lose their platform names, hardware readings disappear and updates have to be installed by hand.
 - **Windows-only extra hardware stats.** GPU, encoder, VRAM and system-memory readings depend on Windows and the Lua bridge.
 - **Manual installs update manually.** The integrated installer/updater workflow depends on the installed bridge.
 
