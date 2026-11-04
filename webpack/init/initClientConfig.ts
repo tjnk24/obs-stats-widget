@@ -1,8 +1,8 @@
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
-import {CleanWebpackPlugin} from 'clean-webpack-plugin';
 import EslintWebpackPlugin from 'eslint-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MinimizerPlugin from 'minimizer-webpack-plugin';
 import path from 'node:path';
 import webpack, {type Configuration} from 'webpack';
 
@@ -26,12 +26,15 @@ export const initClientConfig = ({entry}: InitClientConfigOptions) => (webpackCo
             path: path.resolve(webpackConfig.context ?? '', 'build'),
             publicPath: '',
             pathinfo: false,
+            clean: true,
+        },
+        optimization: {
+            minimizer: [new MinimizerPlugin({minify: MinimizerPlugin.swcMinify, extractComments: true})],
         },
     });
 
     webpackConfig.plugins?.push(
         new webpack.DefinePlugin(defineGlobals()),
-        new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: './src/index.html',
             favicon: './src/images/streamoscope-icon.png',
