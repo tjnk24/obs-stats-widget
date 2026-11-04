@@ -1,4 +1,4 @@
-import {HealthLevelEnum} from '__types/stats/views/HealthLevelEnum';
+import {HealthLevelEnum} from '__types/stats/views';
 
 import {HealthTagDto, PlatformMarkDto} from './types';
 

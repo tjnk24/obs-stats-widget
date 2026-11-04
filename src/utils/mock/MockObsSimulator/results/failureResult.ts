@@ -1,4 +1,4 @@
-import {ObsRequestResultDto} from '__types/obs/requests/ObsRequestResultDto';
+import {ObsRequestResultDto} from '__types/obs/requests';
 
 export const failureResult = (requestType: string, code: number): ObsRequestResultDto => ({
     requestType,

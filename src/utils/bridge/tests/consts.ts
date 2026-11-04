@@ -1,6 +1,5 @@
-import {ObsProfileParameterDto} from '__types/obs/responses/ObsProfileParameterDto';
-import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
-import {UpdateStatusDto} from '__types/update/bridge/UpdateStatusDto';
+import {ObsProfileParameterDto} from '__types/obs/responses';
+import {UpdateStageEnum, UpdateStatusDto} from '__types/update/bridgeUpdate';
 
 export const UPDATE_STATUS: UpdateStatusDto = {
     version: '0.2.0',

@@ -4,8 +4,7 @@ import {
     it,
 } from 'vitest';
 
-import {CompatibilityProblemEnum} from '__types/update/compatibility/CompatibilityProblemEnum';
-import {CompatibilityWarningEnum} from '__types/update/compatibility/CompatibilityWarningEnum';
+import {CompatibilityProblemEnum, CompatibilityWarningEnum} from '__types/update/compatibility';
 
 import {checkCompatibility} from '../checkCompatibility';
 

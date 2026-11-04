@@ -1,13 +1,13 @@
-import {MigratedSettingsDto} from '__types/app/MigratedSettingsDto';
-import {SettingsDto} from '__types/app/SettingsDto';
-import {SettingsMigrationDto} from '__types/app/SettingsMigrationDto';
-import {LanguageEnum} from '__types/i18n/LanguageEnum';
-import {ObsLanguagePrefixDto} from '__types/i18n/ObsLanguagePrefixDto';
-import {ProfileParameterKeyDto} from '__types/obs/requests/ProfileParameterKeyDto';
-import {HealthLevelEnum} from '__types/stats/views/HealthLevelEnum';
-import {OutputViewDto} from '__types/stats/views/OutputViewDto';
-import {PlatformRuleDto} from '__types/targets/PlatformRuleDto';
-import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
+import {
+    MigratedSettingsDto,
+    SettingsDto,
+    SettingsMigrationDto,
+} from '__types/app/settings';
+import {LanguageEnum, ObsLanguagePrefixDto} from '__types/i18n/language';
+import {ProfileParameterKeyDto} from '__types/obs/requests';
+import {HealthLevelEnum, OutputViewDto} from '__types/stats/views';
+import {PlatformRuleDto} from '__types/targets';
+import {UpdateStageEnum} from '__types/update/bridgeUpdate';
 
 const {Ru, Es, De, PtBr} = LanguageEnum;
 

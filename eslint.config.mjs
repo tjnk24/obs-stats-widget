@@ -20,6 +20,31 @@ const compat = new FlatCompat({
     allConfig: js.configs.all
 });
 
+const importColumnRule = {
+    meta: {type: 'layout', fixable: 'whitespace', schema: []},
+    create: context => ({
+        ImportDeclaration: node => {
+            const specifiers = node.specifiers.filter(specifier => specifier.type === 'ImportSpecifier');
+
+            if (specifiers.length < 3) {
+                return;
+            }
+
+            specifiers.slice(1).forEach((specifier, index) => {
+                const previous = specifiers[index];
+
+                if (previous.loc.end.line === specifier.loc.start.line) {
+                    context.report({
+                        node: specifier,
+                        message: 'Put each of 3 or more imported names on its own line',
+                        fix: fixer => fixer.replaceTextRange([previous.range[1] + 1, specifier.range[0]], '\n    '),
+                    });
+                }
+            });
+        },
+    }),
+};
+
 export default [
     ...compat.extends(
         "eslint:recommended",
@@ -46,6 +71,7 @@ export default [
             react,
             "react-hooks": fixupPluginRules(reactHooks),
             '@stylistic': stylistic,
+            streamoscope: {rules: {'import-column': importColumnRule}},
         },
 
         languageOptions: {
@@ -192,6 +218,7 @@ export default [
                 },
             }],
 
+            "streamoscope/import-column": "error",
             eqeqeq: "error",
             "@typescript-eslint/no-angle-bracket-type-assertion": 0,
             "@typescript-eslint/camelcase": 0,

@@ -1,0 +1,26 @@
+import type {Nullable} from 'infrastructure/common';
+
+import {LanguageEnum} from '../i18n/language';
+
+export type StoredSettingsDto = Record<string, unknown>;
+
+export type SettingsDto = {
+    settingsVersion: number;
+    port: number;
+    isShowGeneralCard: boolean;
+    language: Nullable<LanguageEnum>;
+    isMockEnabled: boolean;
+    isAutoUpdateEnabled: boolean;
+    lastUpdateCheckAt: Nullable<number>;
+};
+
+export type MigratedSettingsDto = {
+    settings: SettingsDto;
+    isDiscarded: boolean;
+    isChanged: boolean;
+};
+
+export type SettingsMigrationDto = {
+    fromVersion: number;
+    migrate: (settings: StoredSettingsDto) => StoredSettingsDto;
+};

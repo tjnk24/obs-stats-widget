@@ -1,8 +1,10 @@
 import {BaseStore} from '__reducers';
-import {BridgeUpdateStateDto} from '__types/update/bridge/BridgeUpdateStateDto';
-import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
-import {UpdateStatusDto} from '__types/update/bridge/UpdateStatusDto';
-import {ReleaseDto} from '__types/update/ReleaseDto';
+import {
+    BridgeUpdateStateDto,
+    UpdateStageEnum,
+    UpdateStatusDto,
+} from '__types/update/bridgeUpdate';
+import {ReleaseDto} from '__types/update/release';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
 
 export const NOW = 1_800_000_000_000;

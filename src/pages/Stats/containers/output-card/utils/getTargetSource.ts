@@ -1,7 +1,6 @@
 import {t} from 'i18next';
 
-import {OutputOriginEnum} from '__types/targets/OutputOriginEnum';
-import {StreamTargetDto} from '__types/targets/StreamTargetDto';
+import {OutputOriginEnum, StreamTargetDto} from '__types/targets';
 
 import {TargetSourceDto} from '../types';
 

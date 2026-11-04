@@ -1,7 +1,7 @@
 import type {Nullable} from 'infrastructure/common';
 
-import {UpdateStatusDto} from '__types/update/bridge/UpdateStatusDto';
-import {UpdateRequestDto} from '__types/update/UpdateRequestDto';
+import {UpdateStatusDto} from '__types/update/bridgeUpdate';
+import {UpdateRequestDto} from '__types/update/install';
 
 import {UPDATE_STATUS_CLOCK_SLACK_MS} from '../consts';
 

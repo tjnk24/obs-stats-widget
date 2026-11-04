@@ -1,7 +1,9 @@
 import {spawnSync} from 'node:child_process';
 
 import {
-    FIND_STAND_PROCESSES_SCRIPT, POWERSHELL_ARGUMENTS, STAND_DIRECTORY,
+    FIND_STAND_PROCESSES_SCRIPT,
+    POWERSHELL_ARGUMENTS,
+    STAND_DIRECTORY,
 } from '../consts.ts';
 import type {StandProcessDto} from '../types/StandProcessDto.ts';
 

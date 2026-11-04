@@ -1,7 +1,7 @@
 import type {Nullable} from 'infrastructure/common';
 import isPlainObject from 'lodash/isPlainObject';
 
-import {CompatibilityDto} from '__types/update/compatibility/CompatibilityDto';
+import {CompatibilityDto} from '__types/update/compatibility';
 
 import {parseVersion} from './parseVersion';
 

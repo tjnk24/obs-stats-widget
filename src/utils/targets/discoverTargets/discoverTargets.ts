@@ -1,14 +1,18 @@
 import {t} from 'i18next';
 import countBy from 'lodash/countBy';
 
-import {ObsRequestTypeEnum} from '__types/obs/requests/ObsRequestTypeEnum';
-import {RequestResultPairDto} from '__types/obs/requests/RequestResultPairDto';
-import {ObsProfileParameterDto} from '__types/obs/responses/ObsProfileParameterDto';
-import {ObsStreamServiceDto} from '__types/obs/responses/ObsStreamServiceDto';
-import {ObsOutputListDto} from '__types/obs/responses/outputs/ObsOutputListDto';
-import {NoteDto} from '__types/targets/NoteDto';
-import {OutputOriginEnum} from '__types/targets/OutputOriginEnum';
-import {StreamTargetDto} from '__types/targets/StreamTargetDto';
+import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
+import {RequestResultPairDto} from '__types/obs/requests';
+import {
+    ObsOutputListDto,
+    ObsProfileParameterDto,
+    ObsStreamServiceDto,
+} from '__types/obs/responses';
+import {
+    NoteDto,
+    OutputOriginEnum,
+    StreamTargetDto,
+} from '__types/targets';
 import {parseBridgeData} from '__utils/bridge/parseBridgeData';
 import {
     MAIN_OUTPUT_NAMES,

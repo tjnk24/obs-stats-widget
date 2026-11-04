@@ -6,7 +6,7 @@ import {
     OBS_REQUEST_RESPONSE_OP,
     OBS_RPC_VERSION,
 } from '../consts.ts';
-import type {ObsMessageDto} from '../types/obs/ObsMessageDto.ts';
+import type {ObsMessageDto} from '../types/obs.ts';
 
 import {buildAuthentication} from './buildAuthentication.ts';
 import {readWebSocketConfig} from './readWebSocketConfig.ts';

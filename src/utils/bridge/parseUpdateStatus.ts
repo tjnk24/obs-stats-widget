@@ -1,8 +1,7 @@
 import type {Nullable} from 'infrastructure/common';
 import isPlainObject from 'lodash/isPlainObject';
 
-import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
-import {UpdateStatusDto} from '__types/update/bridge/UpdateStatusDto';
+import {UpdateStageEnum, UpdateStatusDto} from '__types/update/bridgeUpdate';
 import {UPDATE_STAGES} from '__utils/consts';
 
 export const parseUpdateStatus = (raw: Nullable<string>): Nullable<UpdateStatusDto> => {

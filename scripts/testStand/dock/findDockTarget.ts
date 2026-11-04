@@ -1,5 +1,5 @@
 import {STAND_DEBUG_PORT} from '../consts.ts';
-import type {DockTargetDto} from '../types/dock/DockTargetDto.ts';
+import type {DockTargetDto} from '../types/dock.ts';
 
 export const findDockTarget = async () => {
     const response = await fetch(`http://127.0.0.1:${STAND_DEBUG_PORT}/json/list`);

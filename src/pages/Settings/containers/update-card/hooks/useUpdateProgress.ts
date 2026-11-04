@@ -1,8 +1,7 @@
 import {useSelector} from 'react-redux';
 
 import {updateSelector} from '__selectors/updateSelectors';
-import {UpdateErrorEnum} from '__types/update/bridge/UpdateErrorEnum';
-import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
+import {UpdateErrorEnum, UpdateStageEnum} from '__types/update/bridgeUpdate';
 import {UPDATE_STATUS_STALE_SEC} from '__utils/consts';
 import {compareVersions} from '__utils/update/compareVersions';
 

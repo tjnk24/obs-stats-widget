@@ -5,13 +5,14 @@ import {connectionSelector} from '__selectors/connectionSelectors';
 import {settingsSelector} from '__selectors/settingsSelectors';
 import {updateSelector} from '__selectors/updateSelectors';
 import store, {getStore} from '__store';
-import {ObsRequestTypeEnum} from '__types/obs/requests/ObsRequestTypeEnum';
-import {CompatibilityResultDto} from '__types/update/compatibility/CompatibilityResultDto';
-import {GithubReleaseDto} from '__types/update/GithubReleaseDto';
+import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
+import {CompatibilityResultDto} from '__types/update/compatibility';
+import {UpdateInstallBlockerEnum} from '__types/update/install';
+import {GithubReleaseDto} from '__types/update/release';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
-import {UpdateInstallBlockerEnum} from '__types/update/UpdateInstallBlockerEnum';
 import {
     HEALTH_REPORT_DELAY_MS,
+    HTTP_NOT_FOUND,
     LATEST_RELEASE_URL,
     OPEN_URL_COMMAND_PARAMETER,
     OPEN_URL_MIN_BRIDGE_VERSION,
@@ -19,7 +20,6 @@ import {
     UPDATE_CHECK_TIMER_MS,
     UPDATE_COMMAND_PARAMETER,
 } from '__utils/consts';
-import {HTTP_NOT_FOUND} from '__utils/consts';
 import {checkCompatibility} from '__utils/update/checkCompatibility';
 import {compareVersions} from '__utils/update/compareVersions';
 import {getChromiumVersion} from '__utils/update/getChromiumVersion';

@@ -1,6 +1,8 @@
-import type {DockCommandDto} from '../types/dock/DockCommandDto.ts';
-import type {DockResponseDto} from '../types/dock/DockResponseDto.ts';
-import type {DockResponseResultDto} from '../types/dock/DockResponseResultDto.ts';
+import type {
+    DockCommandDto,
+    DockResponseDto,
+    DockResponseResultDto,
+} from '../types/dock.ts';
 
 import {findDockTarget} from './findDockTarget.ts';
 

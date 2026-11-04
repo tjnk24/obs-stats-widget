@@ -1,6 +1,5 @@
-import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
-import {UpdateStatusDto} from '__types/update/bridge/UpdateStatusDto';
-import {UpdateRequestDto} from '__types/update/UpdateRequestDto';
+import {UpdateStageEnum, UpdateStatusDto} from '__types/update/bridgeUpdate';
+import {UpdateRequestDto} from '__types/update/install';
 
 export const REQUESTED_AT = 1_800_000_000_000;
 

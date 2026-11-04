@@ -1,6 +1,6 @@
-import {ObsRequestDto} from '__types/obs/requests/ObsRequestDto';
-import {ObsRequestTypeEnum} from '__types/obs/requests/ObsRequestTypeEnum';
-import {StreamTargetDto} from '__types/targets/StreamTargetDto';
+import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
+import {ObsRequestDto} from '__types/obs/requests';
+import {StreamTargetDto} from '__types/targets';
 import {BRIDGE_PARAMETER} from '__utils/consts';
 
 const {

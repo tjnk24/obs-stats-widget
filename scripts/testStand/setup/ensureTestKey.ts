@@ -3,7 +3,9 @@ import fs from 'node:fs';
 
 import {ensureMinisign} from '../../buildInstaller/ensureMinisign.ts';
 import {
-    TEST_KEY_DIRECTORY, TEST_PUBLIC_KEY_PATH, TEST_SECRET_KEY_PATH,
+    TEST_KEY_DIRECTORY,
+    TEST_PUBLIC_KEY_PATH,
+    TEST_SECRET_KEY_PATH,
 } from '../consts.ts';
 
 export const ensureTestKey = async () => {

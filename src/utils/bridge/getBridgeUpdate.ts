@@ -1,9 +1,9 @@
 import type {Nullable} from 'infrastructure/common';
 
-import {ObsRequestTypeEnum} from '__types/obs/requests/ObsRequestTypeEnum';
-import {RequestResultPairDto} from '__types/obs/requests/RequestResultPairDto';
-import {ObsProfileParameterDto} from '__types/obs/responses/ObsProfileParameterDto';
-import {BridgeUpdateStateDto} from '__types/update/bridge/BridgeUpdateStateDto';
+import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
+import {RequestResultPairDto} from '__types/obs/requests';
+import {ObsProfileParameterDto} from '__types/obs/responses';
+import {BridgeUpdateStateDto} from '__types/update/bridgeUpdate';
 import {FIRST_BRIDGE_VERSION} from '__utils/consts';
 import {findResultData} from '__utils/requests/findResultData';
 import {isRequestOfType} from '__utils/requests/isRequestOfType';

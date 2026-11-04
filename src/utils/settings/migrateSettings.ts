@@ -1,14 +1,17 @@
 import isPlainObject from 'lodash/isPlainObject';
 
-import {MigratedSettingsDto} from '__types/app/MigratedSettingsDto';
-import {SettingsDto} from '__types/app/SettingsDto';
-import {SettingsMigrationDto} from '__types/app/SettingsMigrationDto';
-import {StoredSettingsDto} from '__types/app/StoredSettingsDto';
-import {DEFAULT_SETTINGS, SETTINGS_VERSION} from '__utils/consts';
 import {
+    MigratedSettingsDto,
+    SettingsDto,
+    SettingsMigrationDto,
+    StoredSettingsDto,
+} from '__types/app/settings';
+import {
+    DEFAULT_SETTINGS,
     DISCARDED_SETTINGS,
     FIRST_SETTINGS_VERSION,
     SETTINGS_MIGRATIONS,
+    SETTINGS_VERSION,
 } from '__utils/consts';
 
 export const migrateSettings = (

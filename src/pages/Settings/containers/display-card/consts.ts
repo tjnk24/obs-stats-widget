@@ -1,6 +1,6 @@
 import {SelectProps} from 'antd';
 
-import {LanguageEnum} from '__types/i18n/LanguageEnum';
+import {LanguageEnum} from '__types/i18n/language';
 
 const {
     En,

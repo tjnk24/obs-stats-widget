@@ -1,9 +1,9 @@
 import type {Nullable} from 'infrastructure/common';
 
-import {HardwareDto} from '__types/bridge/HardwareDto';
-import {ObsRequestTypeEnum} from '__types/obs/requests/ObsRequestTypeEnum';
-import {RequestResultPairDto} from '__types/obs/requests/RequestResultPairDto';
-import {ObsProfileParameterDto} from '__types/obs/responses/ObsProfileParameterDto';
+import {HardwareDto} from '__types/bridge';
+import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
+import {RequestResultPairDto} from '__types/obs/requests';
+import {ObsProfileParameterDto} from '__types/obs/responses';
 import {findResultData} from '__utils/requests/findResultData';
 import {isRequestOfType} from '__utils/requests/isRequestOfType';
 

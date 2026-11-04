@@ -1,8 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {HardwareDto} from '__types/bridge/HardwareDto';
-import {StatsViewDto} from '__types/stats/views/StatsViewDto';
-import {StreamTargetDto} from '__types/targets/StreamTargetDto';
+import {HardwareDto} from '__types/bridge';
+import {StatsViewDto} from '__types/stats/views';
+import {StreamTargetDto} from '__types/targets';
 
 export type StatsReducer = {
     targets: StreamTargetDto[];

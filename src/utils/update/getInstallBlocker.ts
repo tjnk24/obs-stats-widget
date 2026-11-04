@@ -1,9 +1,7 @@
 import type {Nullable} from 'infrastructure/common';
 
-import {UpdateInstallBlockerEnum} from '__types/update/UpdateInstallBlockerEnum';
-import {UpdateInstallContextDto} from '__types/update/UpdateInstallContextDto';
-import {UPDATE_STATUS_STALE_SEC} from '__utils/consts';
-import {RUNNING_UPDATE_STAGES} from '__utils/consts';
+import {UpdateInstallBlockerEnum, UpdateInstallContextDto} from '__types/update/install';
+import {RUNNING_UPDATE_STAGES, UPDATE_STATUS_STALE_SEC} from '__utils/consts';
 
 import {compareVersions} from './compareVersions';
 

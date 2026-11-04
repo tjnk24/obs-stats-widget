@@ -1,11 +1,11 @@
-import {BridgeUpdateStateDto} from '__types/update/bridge/BridgeUpdateStateDto';
-import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
-import {UpdateStatusDto} from '__types/update/bridge/UpdateStatusDto';
-import {CompatibilityDto} from '__types/update/compatibility/CompatibilityDto';
-import {UpdateEnvironmentDto} from '__types/update/compatibility/UpdateEnvironmentDto';
-import {GithubReleaseDto} from '__types/update/GithubReleaseDto';
-import {ReleaseDto} from '__types/update/ReleaseDto';
-import {UpdateInstallContextDto} from '__types/update/UpdateInstallContextDto';
+import {
+    BridgeUpdateStateDto,
+    UpdateStageEnum,
+    UpdateStatusDto,
+} from '__types/update/bridgeUpdate';
+import {CompatibilityDto, UpdateEnvironmentDto} from '__types/update/compatibility';
+import {UpdateInstallContextDto} from '__types/update/install';
+import {GithubReleaseDto, ReleaseDto} from '__types/update/release';
 
 export const COMPATIBILITY: CompatibilityDto = {
     version: '0.2.0',

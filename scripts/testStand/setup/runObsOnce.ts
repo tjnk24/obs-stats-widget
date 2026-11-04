@@ -2,7 +2,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import {
-    DOCK_WAIT_MS, OBS_LOADED_LOG_TEXT, OBS_LOGS_DIRECTORY,
+    DOCK_WAIT_MS,
+    OBS_LOADED_LOG_TEXT,
+    OBS_LOGS_DIRECTORY,
 } from '../consts.ts';
 import {spawnObs} from '../processes/spawnObs.ts';
 import {stopStand} from '../processes/stopStand.ts';

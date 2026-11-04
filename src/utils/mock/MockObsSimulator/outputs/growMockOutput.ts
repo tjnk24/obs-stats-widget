@@ -1,4 +1,4 @@
-import {MockOutputStateDto} from '__types/mock/MockOutputStateDto';
+import {MockOutputStateDto} from '__types/mock';
 
 import {MOCK_FPS} from '../consts';
 

@@ -2,9 +2,8 @@ import path from 'node:path';
 import {TsconfigPathsPlugin} from 'tsconfig-paths-webpack-plugin';
 import type {Configuration} from 'webpack';
 
-import {IS_DEVELOPMENT} from '../consts.ts';
-import {RESOLVE_EXTENSIONS} from '../consts.ts';
-import type {InitBaseConfigOptions} from '../types/InitBaseConfigOptions.ts';
+import {IS_DEVELOPMENT, RESOLVE_EXTENSIONS} from '../consts.ts';
+import type {InitBaseConfigOptions} from '../types.ts';
 
 export const initBaseConfig = ({context}: InitBaseConfigOptions) => (webpackConfig: Configuration): Configuration => Object.assign(webpackConfig, {
     context,

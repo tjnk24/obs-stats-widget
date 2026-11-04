@@ -1,4 +1,4 @@
-import {SettingsMigrationDto} from '__types/app/SettingsMigrationDto';
+import {SettingsMigrationDto} from '__types/app/settings';
 
 export const MIGRATIONS: SettingsMigrationDto[] = [
     {

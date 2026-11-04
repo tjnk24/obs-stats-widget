@@ -1,10 +1,9 @@
 import type {Nullable} from 'infrastructure/common';
 
-import {BridgeDataDto} from '__types/bridge/BridgeDataDto';
-import {MockOutputStateDto} from '__types/mock/MockOutputStateDto';
-import {ObsRequestDto} from '__types/obs/requests/ObsRequestDto';
-import {ObsRequestResultDto} from '__types/obs/requests/ObsRequestResultDto';
-import {ObsRequestTypeEnum} from '__types/obs/requests/ObsRequestTypeEnum';
+import {BridgeDataDto} from '__types/bridge';
+import {MockOutputStateDto} from '__types/mock';
+import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
+import {ObsRequestDto, ObsRequestResultDto} from '__types/obs/requests';
 import {OBS_RPC_VERSION} from '__utils/consts';
 
 import {

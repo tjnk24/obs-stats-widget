@@ -4,8 +4,7 @@ import type {Nullable} from 'infrastructure/common';
 import {connectionSelector} from '__selectors/connectionSelectors';
 import {statsSelector} from '__selectors/statsSelectors';
 import {getStore} from '__store';
-import {OutputOriginEnum} from '__types/targets/OutputOriginEnum';
-import {StreamTargetDto} from '__types/targets/StreamTargetDto';
+import {OutputOriginEnum, StreamTargetDto} from '__types/targets';
 import {BYTES_IN_GIGABYTE} from '__utils/consts';
 
 class ReportService {

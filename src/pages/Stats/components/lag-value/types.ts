@@ -1,4 +1,4 @@
-import {LagViewDto} from '__types/stats/views/LagViewDto';
+import {LagViewDto} from '__types/stats/views';
 
 interface OwnProps {
     lag: LagViewDto;

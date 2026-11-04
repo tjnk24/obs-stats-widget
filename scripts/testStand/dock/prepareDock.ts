@@ -1,5 +1,7 @@
 import {
-    PASSWORD_STORAGE_KEY, SETTINGS_STORAGE_KEY, STAND_WEBSOCKET_PORT,
+    PASSWORD_STORAGE_KEY,
+    SETTINGS_STORAGE_KEY,
+    STAND_WEBSOCKET_PORT,
 } from '../consts.ts';
 import {readWebSocketConfig} from '../obs/readWebSocketConfig.ts';
 

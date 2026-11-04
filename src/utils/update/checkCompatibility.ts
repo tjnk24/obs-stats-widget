@@ -1,8 +1,10 @@
-import {CompatibilityDto} from '__types/update/compatibility/CompatibilityDto';
-import {CompatibilityProblemEnum} from '__types/update/compatibility/CompatibilityProblemEnum';
-import {CompatibilityResultDto} from '__types/update/compatibility/CompatibilityResultDto';
-import {CompatibilityWarningEnum} from '__types/update/compatibility/CompatibilityWarningEnum';
-import {UpdateEnvironmentDto} from '__types/update/compatibility/UpdateEnvironmentDto';
+import {
+    CompatibilityDto,
+    CompatibilityProblemEnum,
+    CompatibilityResultDto,
+    CompatibilityWarningEnum,
+    UpdateEnvironmentDto,
+} from '__types/update/compatibility';
 
 import {compareVersions} from './compareVersions';
 import {parseVersion} from './parseVersion';

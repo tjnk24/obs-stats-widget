@@ -5,7 +5,9 @@ import path from 'node:path';
 import {stageTestUpdater} from '../../buildInstaller/stageTestUpdater.ts';
 import {TEST_RELEASE_HOST, TEST_RELEASE_PORT} from '../../serveTestRelease/consts.ts';
 import {
-    REGISTRY_KEY_PATTERN, STAND_REGISTRY_KEY_LINE, TEST_PUBLIC_KEY_PATH,
+    REGISTRY_KEY_PATTERN,
+    STAND_REGISTRY_KEY_LINE,
+    TEST_PUBLIC_KEY_PATH,
 } from '../consts.ts';
 
 export const packageTestRelease = (projectDirectory: string, version: string) => {

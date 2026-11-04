@@ -3,8 +3,8 @@ import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
 import {statsViewSelector} from '__selectors/statsSelectors';
-import {HealthLevelEnum} from '__types/stats/views/HealthLevelEnum';
-import {StreamTargetDto} from '__types/targets/StreamTargetDto';
+import {HealthLevelEnum} from '__types/stats/views';
+import {StreamTargetDto} from '__types/targets';
 import {OFF_OUTPUT_VIEW, RECENT_WINDOW_SEC} from '__utils/consts';
 
 import CongestionProgress from '../../../components/congestion-progress';

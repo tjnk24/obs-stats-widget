@@ -1,6 +1,6 @@
 import {ComponentType, useLayoutEffect} from 'react';
 
-import {PreloadDto} from '__types/app/PreloadDto';
+import {PreloadDto} from '__types/app/routing';
 
 export default function preload<P extends object>({onLoad, onDispose}: PreloadDto) {
     return (Component: ComponentType<P>) => {

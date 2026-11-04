@@ -1,6 +1,6 @@
 import type {Nullable} from 'infrastructure/common';
 
-import {VersionDto} from '__types/update/VersionDto';
+import {VersionDto} from '__types/update/release';
 import {VERSION_PATTERN} from '__utils/consts';
 
 export const parseVersion = (version: string): Nullable<VersionDto> => {

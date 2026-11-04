@@ -1,7 +1,6 @@
 import type {Nullable} from 'infrastructure/common';
 
-import {GithubReleaseDto} from '__types/update/GithubReleaseDto';
-import {ReleaseDto} from '__types/update/ReleaseDto';
+import {GithubReleaseDto, ReleaseDto} from '__types/update/release';
 import {COMPATIBILITY_PATTERN, TAG_PATTERN} from '__utils/consts';
 
 import {parseCompatibility} from './parseCompatibility';

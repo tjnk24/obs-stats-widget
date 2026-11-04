@@ -4,9 +4,9 @@ import {
     it,
 } from 'vitest';
 
-import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
-import {CompatibilityProblemEnum} from '__types/update/compatibility/CompatibilityProblemEnum';
-import {UpdateInstallBlockerEnum} from '__types/update/UpdateInstallBlockerEnum';
+import {UpdateStageEnum} from '__types/update/bridgeUpdate';
+import {CompatibilityProblemEnum} from '__types/update/compatibility';
+import {UpdateInstallBlockerEnum} from '__types/update/install';
 
 import {getInstallBlocker} from '../getInstallBlocker';
 

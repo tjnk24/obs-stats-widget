@@ -1,4 +1,4 @@
-import {PasswordChangeResultEnum} from '__types/connection/PasswordChangeResultEnum';
+import {PasswordChangeResultEnum} from '__types/connection/passwordChange';
 
 import {ResultAlertDto} from './types';
 

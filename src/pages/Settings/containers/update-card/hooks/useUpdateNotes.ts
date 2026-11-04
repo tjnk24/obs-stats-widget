@@ -3,7 +3,7 @@ import {useSelector} from 'react-redux';
 
 import {updateSelector} from '__selectors/updateSelectors';
 import {updateService} from '__services/updateService';
-import {UpdateInstallBlockerEnum} from '__types/update/UpdateInstallBlockerEnum';
+import {UpdateInstallBlockerEnum} from '__types/update/install';
 import {BRIDGE_SCRIPT_NAME} from '__utils/consts';
 
 import {COMPATIBILITY_PROBLEM_TEXTS, COMPATIBILITY_WARNING_TEXTS} from '../consts';

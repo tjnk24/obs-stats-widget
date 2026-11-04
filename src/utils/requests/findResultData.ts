@@ -1,5 +1,4 @@
-import {ObsRequestDto} from '__types/obs/requests/ObsRequestDto';
-import {RequestResultPairDto} from '__types/obs/requests/RequestResultPairDto';
+import {ObsRequestDto, RequestResultPairDto} from '__types/obs/requests';
 
 export const findResultData = <T>(pairs: RequestResultPairDto[], predicate: (request: ObsRequestDto) => boolean) => {
     const pair = pairs.find(({request}) => predicate(request));

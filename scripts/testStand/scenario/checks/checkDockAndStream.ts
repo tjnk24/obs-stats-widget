@@ -12,7 +12,7 @@ import {findDockTarget} from '../../dock/findDockTarget.ts';
 import {getDockText} from '../../dock/getDockText.ts';
 import {sendObsRequest} from '../../obs/sendObsRequest.ts';
 import {waitFor} from '../../processes/waitFor.ts';
-import type {RtmpPathsDto} from '../../types/RtmpPathsDto.ts';
+import type {RtmpPathsDto} from '../../types/rtmp.ts';
 import {readStandFile} from '../readStandFile.ts';
 
 import {checkStep} from './checkStep.ts';

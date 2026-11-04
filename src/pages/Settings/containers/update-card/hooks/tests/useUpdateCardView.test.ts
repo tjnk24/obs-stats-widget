@@ -10,10 +10,10 @@ import {
 
 import {BaseStore} from '__reducers';
 import {updateService} from '__services/updateService';
-import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
-import {CompatibilityProblemEnum} from '__types/update/compatibility/CompatibilityProblemEnum';
+import {UpdateStageEnum} from '__types/update/bridgeUpdate';
+import {CompatibilityProblemEnum} from '__types/update/compatibility';
+import {UpdateInstallBlockerEnum} from '__types/update/install';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
-import {UpdateInstallBlockerEnum} from '__types/update/UpdateInstallBlockerEnum';
 
 import {useUpdateCardView} from '../useUpdateCardView';
 

@@ -1,6 +1,6 @@
 import {GetProp, Typography} from 'antd';
 
-import {HealthLevelEnum} from '__types/stats/views/HealthLevelEnum';
+import {HealthLevelEnum} from '__types/stats/views';
 
 const {Ok, Warn, Bad, Off} = HealthLevelEnum;
 

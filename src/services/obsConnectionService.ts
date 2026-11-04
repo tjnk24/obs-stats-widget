@@ -7,17 +7,20 @@ import {settingsSelector} from '__selectors/settingsSelectors';
 import {statsSelector} from '__selectors/statsSelectors';
 import {getStore} from '__store';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
-import {PasswordChangeDto} from '__types/connection/PasswordChangeDto';
-import {PasswordChangeResultEnum} from '__types/connection/PasswordChangeResultEnum';
-import {InFlightBatchDto} from '__types/obs/messages/InFlightBatchDto';
-import {ObsEventTypeEnum} from '__types/obs/messages/ObsEventTypeEnum';
-import {ObsMessageDto} from '__types/obs/messages/ObsMessageDto';
-import {ObsOpCodeEnum} from '__types/obs/messages/ObsOpCodeEnum';
-import {ObsSceneCollectionEventDto} from '__types/obs/messages/ObsSceneCollectionEventDto';
-import {ObsRequestDto} from '__types/obs/requests/ObsRequestDto';
-import {ObsRequestResultDto} from '__types/obs/requests/ObsRequestResultDto';
-import {ObsRequestTypeEnum} from '__types/obs/requests/ObsRequestTypeEnum';
-import {RequestResultPairDto} from '__types/obs/requests/RequestResultPairDto';
+import {PasswordChangeDto, PasswordChangeResultEnum} from '__types/connection/passwordChange';
+import {
+    InFlightBatchDto,
+    ObsEventTypeEnum,
+    ObsMessageDto,
+    ObsOpCodeEnum,
+    ObsSceneCollectionEventDto,
+} from '__types/obs/messages';
+import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
+import {
+    ObsRequestDto,
+    ObsRequestResultDto,
+    RequestResultPairDto,
+} from '__types/obs/requests';
 import {getAuthString} from '__utils/auth/getAuthString';
 import {getBridgeUpdate} from '__utils/bridge/getBridgeUpdate';
 import {getHardware} from '__utils/bridge/getHardware';

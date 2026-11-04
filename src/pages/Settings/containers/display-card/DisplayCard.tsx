@@ -13,7 +13,7 @@ import {commonActions} from '__actions';
 import {settingsSelector} from '__selectors/settingsSelectors';
 import {languageService} from '__services/languageService';
 import {obsConnectionService} from '__services/obsConnectionService';
-import {LanguageEnum} from '__types/i18n/LanguageEnum';
+import {LanguageEnum} from '__types/i18n/language';
 
 import {LANGUAGE_OPTIONS} from './consts';
 

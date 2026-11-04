@@ -2,9 +2,8 @@ import {StatisticProps, TagProps} from 'antd';
 import type {ParseKeys} from 'i18next';
 import type {Nullable} from 'infrastructure/common';
 
-import {GraphPointDto} from '__types/stats/views/GraphPointDto';
-import {NoteDto} from '__types/targets/NoteDto';
-import {StreamTargetDto} from '__types/targets/StreamTargetDto';
+import {GraphPointDto} from '__types/stats/views';
+import {NoteDto, StreamTargetDto} from '__types/targets';
 
 import {StatItemDto} from '../../components/stat-list';
 

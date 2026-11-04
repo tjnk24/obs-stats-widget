@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import type {Nullable} from 'infrastructure/common';
 
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
-import {ObsVersionDto} from '__types/obs/responses/ObsVersionDto';
+import {ObsVersionDto} from '__types/obs/responses';
 
 export type ConnectionReducer = {
     status: ConnectionStatusEnum;

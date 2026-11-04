@@ -1,10 +1,10 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import type {Nullable} from 'infrastructure/common';
 
-import {BridgeUpdateStateDto} from '__types/update/bridge/BridgeUpdateStateDto';
-import {ReleaseDto} from '__types/update/ReleaseDto';
+import {BridgeUpdateStateDto} from '__types/update/bridgeUpdate';
+import {UpdateRequestDto} from '__types/update/install';
+import {ReleaseDto} from '__types/update/release';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
-import {UpdateRequestDto} from '__types/update/UpdateRequestDto';
 
 export type UpdateReducer = {
     checkStatus: UpdateCheckStatusEnum;

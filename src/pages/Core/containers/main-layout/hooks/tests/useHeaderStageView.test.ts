@@ -1,6 +1,9 @@
 import {useSelector} from 'react-redux';
 import {
-    describe, expect, it, vi,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import {BaseStore} from '__reducers';

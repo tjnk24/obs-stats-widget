@@ -1,10 +1,8 @@
 import type {ParseKeys} from 'i18next';
 import type {Nullable} from 'infrastructure/common';
 
-import {UpdateErrorEnum} from '__types/update/bridge/UpdateErrorEnum';
-import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
-import {CompatibilityProblemEnum} from '__types/update/compatibility/CompatibilityProblemEnum';
-import {CompatibilityWarningEnum} from '__types/update/compatibility/CompatibilityWarningEnum';
+import {UpdateErrorEnum, UpdateStageEnum} from '__types/update/bridgeUpdate';
+import {CompatibilityProblemEnum, CompatibilityWarningEnum} from '__types/update/compatibility';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
 
 import {UpdateProgressDto} from './types';

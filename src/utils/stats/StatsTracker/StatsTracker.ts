@@ -1,12 +1,13 @@
-import {ObsRequestTypeEnum} from '__types/obs/requests/ObsRequestTypeEnum';
-import {RequestResultPairDto} from '__types/obs/requests/RequestResultPairDto';
-import {ObsStatsDto} from '__types/obs/responses/ObsStatsDto';
-import {ObsOutputStatusDto} from '__types/obs/responses/outputs/ObsOutputStatusDto';
-import {OutputStateDto} from '__types/stats/tracking/OutputStateDto';
-import {GeneralViewDto} from '__types/stats/views/GeneralViewDto';
-import {OutputViewDto} from '__types/stats/views/OutputViewDto';
-import {StatsViewDto} from '__types/stats/views/StatsViewDto';
-import {StreamTargetDto} from '__types/targets/StreamTargetDto';
+import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
+import {RequestResultPairDto} from '__types/obs/requests';
+import {ObsOutputStatusDto, ObsStatsDto} from '__types/obs/responses';
+import {OutputStateDto} from '__types/stats/tracking';
+import {
+    GeneralViewDto,
+    OutputViewDto,
+    StatsViewDto,
+} from '__types/stats/views';
+import {StreamTargetDto} from '__types/targets';
 import {
     GRAPH_SPAN_SEC,
     OFF_OUTPUT_VIEW,

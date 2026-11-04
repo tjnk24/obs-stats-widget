@@ -11,7 +11,7 @@ import {
     IS_DEV_SERVER,
     IS_DEVELOPMENT,
 } from '../consts.ts';
-import type {InitClientConfigOptions} from '../types/InitClientConfigOptions.ts';
+import type {InitClientConfigOptions} from '../types.ts';
 
 import {defineGlobals} from './defineGlobals.ts';
 
