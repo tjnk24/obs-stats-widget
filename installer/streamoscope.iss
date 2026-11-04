@@ -62,10 +62,17 @@ Type: filesandordirs; Name: "{app}\ConfigureObs"
 Type: filesandordirs; Name: "{app}\updater"
 Type: files; Name: "{app}\compatibility.json"
 Type: files; Name: "{app}\LICENSE"
+Type: files; Name: "{app}\update-trial.txt"
+Type: files; Name: "{app}\rolled-back-version.txt"
+Type: files; Name: "{localappdata}\streamoscope\update-status.json"
+Type: files; Name: "{localappdata}\streamoscope\update-check.stamp"
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\versions"
 Type: files; Name: "{app}\current-version.js"
+Type: files; Name: "{app}\update-trial.txt"
+Type: files; Name: "{app}\healthy-version.txt"
+Type: files; Name: "{app}\rolled-back-version.txt"
 
 [Files]
 Source: "{#PackageDir}\*"; DestDir: "{app}\versions\{#AppVersion}"; Excludes: "README.txt"; Flags: ignoreversion recursesubdirs createallsubdirs

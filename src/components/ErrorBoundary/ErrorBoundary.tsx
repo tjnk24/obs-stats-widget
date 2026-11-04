@@ -14,6 +14,7 @@ import {
 
 import EnhancedButton from '__components/EnhancedButton';
 import {reportService} from '__services/reportService';
+import {updateService} from '__services/updateService';
 import {CopyResultEnum} from '__types/CopyResultEnum';
 
 import {Props, State} from './types';
@@ -36,6 +37,7 @@ class ErrorBoundary extends Component<Props, State> {
     }
 
     public override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+        updateService.reportRenderError();
         this.setState({report: reportService.buildErrorReport(error, errorInfo.componentStack)});
     }
 

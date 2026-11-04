@@ -144,6 +144,37 @@ describe('useUpdateCardView', () => {
         });
     });
 
+    it('says the new version was rolled back and offers to try it again', () => {
+        const status = {...RUNNING_STATUS, stage: UpdateStageEnum.Done, percent: 100};
+        const state = {...STATE, update: {...STATE.update, bridge: {...BRIDGE, status, rolledBackVersion: RELEASE.version}}};
+
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
+
+        expect(useUpdateCardView()).toMatchObject({
+            statusText: null,
+            errorText: 'update.errors.rolledBack',
+            isUpdateShown: true,
+            updateText: 'update.retry',
+        });
+    });
+
+    it('shows the progress of a new attempt instead of the rollback', () => {
+        const request = {version: RELEASE.version, requestedAt: NOW - 1000};
+        const state = {...STATE, update: {...STATE.update, request, bridge: {...BRIDGE, status: RUNNING_STATUS, rolledBackVersion: RELEASE.version}}};
+
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
+
+        expect(useUpdateCardView()).toMatchObject({statusText: 'update.stages.downloading', errorText: null});
+    });
+
+    it('ignores a rollback of a version that is not newer than the running one', () => {
+        const state = {...STATE, update: {...STATE.update, bridge: {...BRIDGE, rolledBackVersion: CURRENT_VERSION}}};
+
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
+
+        expect(useUpdateCardView().errorText).toBeNull();
+    });
+
     it('falls back to a general text for an unknown error', () => {
         const status = {...RUNNING_STATUS, stage: UpdateStageEnum.Failed, error: 'strange'};
         const state = {...STATE, update: {...STATE.update, bridge: {...BRIDGE, status}}};

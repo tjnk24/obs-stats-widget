@@ -23,5 +23,6 @@ export const getBridgeUpdate = (pairs: RequestResultPairDto[], sceneCollection: 
         isAvailable: bridgeData.update?.available === true,
         bridgeVersion: bridgeData.bridgeVersion ?? FIRST_BRIDGE_VERSION,
         status: parseUpdateStatus(bridgeData.update?.status ?? null),
+        rolledBackVersion: bridgeData.update?.rolledBackVersion ?? null,
     };
 };

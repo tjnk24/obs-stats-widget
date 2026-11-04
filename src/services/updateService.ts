@@ -11,6 +11,7 @@ import {GithubReleaseDto} from '__types/update/GithubReleaseDto';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
 import {UpdateInstallBlockerEnum} from '__types/update/UpdateInstallBlockerEnum';
 import {
+    HEALTH_REPORT_DELAY_MS,
     LATEST_RELEASE_URL,
     OPEN_URL_COMMAND_PARAMETER,
     OPEN_URL_MIN_BRIDGE_VERSION,
@@ -36,7 +37,11 @@ class UpdateService {
 
     private unsubscribe: Nullable<() => void> = null;
 
+    private healthReportTimer: Nullable<number> = null;
+
     private hasUpdater = false;
+
+    private hasRenderError = false;
 
     start = () => {
         this.stop();
@@ -55,6 +60,7 @@ class UpdateService {
         this.unsubscribe?.();
         this.unsubscribe = null;
         this.hasUpdater = false;
+        this.cancelHealthReport();
     };
 
     checkForUpdates = async (): Promise<UpdateCheckStatusEnum> => {
@@ -140,6 +146,33 @@ class UpdateService {
         isEnabled && this.checkIfDue();
     };
 
+    reportRenderError = () => {
+        this.hasRenderError = true;
+        this.cancelHealthReport();
+    };
+
+    private cancelHealthReport = () => {
+        this.healthReportTimer !== null && window.clearTimeout(this.healthReportTimer);
+        this.healthReportTimer = null;
+    };
+
+    private scheduleHealthReport = () => {
+        this.cancelHealthReport();
+
+        if (this.hasRenderError || process.env.IS_DEV_SERVER) {
+            return;
+        }
+
+        this.healthReportTimer = window.setTimeout(this.sendHealthReport, HEALTH_REPORT_DELAY_MS);
+    };
+
+    private sendHealthReport = () => {
+        obsConnectionService.sendRequest({
+            requestType: SetProfileParameter,
+            requestData: {...UPDATE_COMMAND_PARAMETER, parameterValue: `healthy:${process.env.APP_VERSION}`},
+        });
+    };
+
     private sendAutoUpdate = () => {
         const {isAutoUpdateEnabled} = settingsSelector(getStore());
 
@@ -190,6 +223,7 @@ class UpdateService {
 
         if (this.hasUpdater && !hadUpdater) {
             this.sendAutoUpdate();
+            this.scheduleHealthReport();
         }
     };
 }

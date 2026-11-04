@@ -111,12 +111,14 @@ function Invoke-UpdateWidget {
 
         try {
             Expand-UpdatePackage -PackagePath $packagePath -VersionsDirectory $versionsDirectory -Version $Version
+            Write-UpdateTrial -InstallDirectory $InstallDirectory -Version $Version -PreviousVersion $installedVersion
             Set-CurrentVersion -InstallDirectory $InstallDirectory -Version $Version
         } catch {
             return & $fail 'install'
         }
 
-        Remove-OldVersions -VersionsDirectory $versionsDirectory
+        Remove-Item -LiteralPath (Join-Path $InstallDirectory $script:RolledBackVersionFileName) -Force -ErrorAction SilentlyContinue
+        Remove-OldVersions -VersionsDirectory $versionsDirectory -ProtectedVersions @($Version, $installedVersion)
         Set-UninstallDisplayVersion -Version $Version
 
         & $report 'done' 100

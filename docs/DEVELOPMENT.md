@@ -81,15 +81,27 @@ Updates work the way Chrome does them: the new version lands next to the old one
   dock\index.html             loader, redirects to the current version
   streamoscope-bridge.lua     loader, runs the bridge of the current version
   current-version.js          which version is current
+  update-trial.txt            the new version is on trial, see below
   versions\<version>\         dock, bridge and updater scripts of that version
   updater\minisign.exe        checks signatures, comes only with the installer
 ```
 
 OBS keeps the paths of the two loaders in its configuration, so they never move and rarely change.
 
-About a minute after OBS starts and then once a day, the bridge starts `Update-Widget.ps1 -Auto`. It asks GitHub for the latest release at most once an hour, skips releases younger than 48 hours and major versions, then verifies and unpacks the archive. The last step is one atomic rewrite of `current-version.js`: a failure before it leaves the current version alone. The three newest versions stay on disk. The **Update** button runs the same steps through `-Version X.Y.Z`, without the wait.
+About a minute after OBS starts and then once a day, the bridge starts `Update-Widget.ps1 -Auto`. It asks GitHub for the latest release at most once an hour, skips releases younger than 48 hours and major versions, then verifies and unpacks the archive. The last step is one atomic rewrite of `current-version.js`: a failure before it leaves the current version alone. The three newest versions and the one to roll back to stay on disk. The **Update** button runs the same steps through `-Version X.Y.Z`, without the wait.
 
 The switch **Update automatically** is stored by the bridge in `%LOCALAPPDATA%\streamoscope\auto-update.txt`, so the background check works even when the dock is closed or broken.
+
+### Automatic rollback
+
+A freshly switched version is on trial, and `update-trial.txt` names it and the previous version. Only the bridge loader judges it, because it's the one piece of code that doesn't change with the version.
+
+- The bridge fails to load: back to the previous version at once, in the same session.
+- The dock is healthy: a second after it finds the bridge, a dock that hasn't hit a render error sends `healthy:X.Y.Z`. The bridge records it in `healthy-version.txt` and ends the trial.
+- No report 5 seconds after OBS says it finished loading (`OBS_FRONTEND_EVENT_FINISHED_LOADING`): back to the previous version right there, so the next launch is already fine. A dock that was merely slow can still report later, and that undoes the rollback.
+- OBS crashes or keeps being closed before any of this: the third launch rolls back before the bridge even loads. Scene collection switches reload the script but don't count, because a launch is one OBS process.
+
+If the previous version never reported health, for example because the dock has never connected, silence proves nothing, so the trial doesn't watch the dock (`panel=0`). The rolled back version goes to `rolled-back-version.txt`: the background check skips it and anything older, and the settings card says what happened and offers to try it again with the button. A successful update clears the file.
 
 A new bridge can meet an old dock: switching the scene collection reloads the scripts, while the open dock stays on its version. Bridge data therefore only gains fields.
 

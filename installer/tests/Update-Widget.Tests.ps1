@@ -144,6 +144,7 @@ Describe 'Compare-SemanticVersion' {
 Describe 'Invoke-UpdateWidget' {
     BeforeEach {
         Mock Get-ObsVersion { '33.0.1' }
+        Mock Get-ObsProcessId { 123 }
         Mock Set-UninstallDisplayVersion { }
     }
 
@@ -158,6 +159,7 @@ Describe 'Invoke-UpdateWidget' {
         Test-Path -LiteralPath (Join-Path $release.Install 'versions\0.1.0') | Should -BeTrue
         Test-Path -LiteralPath (Join-Path $release.Install 'versions\staging-0.2.0') | Should -BeFalse
         Should -Invoke Set-UninstallDisplayVersion -Times 1 -ParameterFilter { $Version -eq '0.2.0' }
+        Get-Content -LiteralPath (Join-Path $release.Install 'update-trial.txt') | Should -Be @('version=0.2.0', 'previous=0.1.0', 'panel=0', 'process=123', 'launches=0')
         Test-Path -LiteralPath (Join-Path ([System.IO.Path]::GetTempPath()) 'streamoscope-update-0.2.0') | Should -BeFalse
     }
 
@@ -190,6 +192,37 @@ Describe 'Invoke-UpdateWidget' {
         Invoke-TestUpdate -Release $release -Version $Version | Should -Be $Expected
         (Get-TestStatus -Release $release).error | Should -Be $Expected
         Get-InstalledVersion -InstallDirectory $release.Install | Should -Be '0.1.0'
+    }
+
+    It 'checks the panel of the new version only if the panel of the old one reported health' {
+        $release = New-TestRelease
+        Set-Content -LiteralPath (Join-Path $release.Install 'healthy-version.txt') -Value '0.1.0'
+
+        Invoke-TestUpdate -Release $release | Should -Be 'done'
+        Get-Content -LiteralPath (Join-Path $release.Install 'update-trial.txt') | Should -Contain 'panel=1'
+    }
+
+    It 'does not check the panel when the health report is about another version' {
+        $release = New-TestRelease
+        Set-Content -LiteralPath (Join-Path $release.Install 'healthy-version.txt') -Value '0.0.9'
+
+        Invoke-TestUpdate -Release $release | Should -Be 'done'
+        Get-Content -LiteralPath (Join-Path $release.Install 'update-trial.txt') | Should -Contain 'panel=0'
+    }
+
+    It 'lets a person install a rolled back version again and forgets the rollback' {
+        $release = New-TestRelease
+        Set-Content -LiteralPath (Join-Path $release.Install 'rolled-back-version.txt') -Value '0.2.0'
+
+        Invoke-TestUpdate -Release $release | Should -Be 'done'
+        Test-Path -LiteralPath (Join-Path $release.Install 'rolled-back-version.txt') | Should -BeFalse
+    }
+
+    It 'leaves no trial when the package is incomplete' {
+        $release = New-TestRelease -WithoutBridge
+
+        Invoke-TestUpdate -Release $release | Should -Be 'install'
+        Test-Path -LiteralPath (Join-Path $release.Install 'update-trial.txt') | Should -BeFalse
     }
 
     It 'counts the version that is already switched to as done' {
@@ -267,19 +300,22 @@ Describe 'Invoke-UpdateWidget' {
 }
 
 Describe 'Get-AutoUpdateAction' {
-    It 'answers <Expected> for <Version> over <Installed>, published <AgeHours> hours ago' -TestCases @(
-        @{Version = '0.2.0'; Installed = '0.1.0'; AgeHours = 49; Expected = 'install'},
-        @{Version = '0.2.0'; Installed = '0.1.0'; AgeHours = 47; Expected = 'tooFresh'},
-        @{Version = '0.2.0'; Installed = '0.2.0'; AgeHours = 49; Expected = 'upToDate'},
-        @{Version = '0.1.0'; Installed = '0.2.0'; AgeHours = 49; Expected = 'upToDate'},
-        @{Version = '1.0.0'; Installed = '0.9.0'; AgeHours = 49; Expected = 'manualOnly'}
+    It 'answers <Expected> for <Version> over <Installed>, published <AgeHours> hours ago, rolled back <RolledBack>' -TestCases @(
+        @{Version = '0.2.0'; Installed = '0.1.0'; AgeHours = 49; RolledBack = $null; Expected = 'install'},
+        @{Version = '0.2.0'; Installed = '0.1.0'; AgeHours = 47; RolledBack = $null; Expected = 'tooFresh'},
+        @{Version = '0.2.0'; Installed = '0.2.0'; AgeHours = 49; RolledBack = $null; Expected = 'upToDate'},
+        @{Version = '0.1.0'; Installed = '0.2.0'; AgeHours = 49; RolledBack = $null; Expected = 'upToDate'},
+        @{Version = '1.0.0'; Installed = '0.9.0'; AgeHours = 49; RolledBack = $null; Expected = 'manualOnly'},
+        @{Version = '0.2.0'; Installed = '0.1.0'; AgeHours = 49; RolledBack = '0.2.0'; Expected = 'rolledBack'},
+        @{Version = '0.2.0'; Installed = '0.1.0'; AgeHours = 49; RolledBack = '0.3.0'; Expected = 'rolledBack'},
+        @{Version = '0.2.1'; Installed = '0.1.0'; AgeHours = 49; RolledBack = '0.2.0'; Expected = 'install'}
     ) {
-        param($Version, $Installed, $AgeHours, $Expected)
+        param($Version, $Installed, $AgeHours, $RolledBack, $Expected)
 
         $now = [DateTimeOffset]::UtcNow
         $release = [pscustomobject]@{Version = $Version; PublishedAt = $now.AddHours(-$AgeHours)}
 
-        Get-AutoUpdateAction -Release $release -InstalledVersion $Installed -Now $now | Should -Be $Expected
+        Get-AutoUpdateAction -Release $release -InstalledVersion $Installed -RolledBackVersion $RolledBack -Now $now | Should -Be $Expected
     }
 }
 
@@ -294,6 +330,14 @@ Describe 'Invoke-AutoUpdate' {
 
         Invoke-TestAutoUpdate -Release $release | Should -Be 'done'
         Get-InstalledVersion -InstallDirectory $release.Install | Should -Be '0.2.0'
+    }
+
+    It 'does not install a rolled back version by itself' {
+        $release = New-TestRelease
+        Set-Content -LiteralPath (Join-Path $release.Install 'rolled-back-version.txt') -Value '0.2.0'
+
+        Invoke-TestAutoUpdate -Release $release | Should -Be 'rolledBack'
+        Get-InstalledVersion -InstallDirectory $release.Install | Should -Be '0.1.0'
     }
 
     It 'waits with a fresh release and leaves no status' {
@@ -336,9 +380,21 @@ Describe 'Remove-OldVersions' {
             New-Item -ItemType Directory -Path (Join-Path $versions $name) -Force | Out-Null
         }
 
-        Remove-OldVersions -VersionsDirectory $versions
+        Remove-OldVersions -VersionsDirectory $versions -ProtectedVersions @('1.0.0')
 
         (Get-ChildItem -LiteralPath $versions -Directory).Name | Sort-Object | Should -Be @('0.10.1', '0.11.0', '1.0.0', 'keep-me')
+    }
+
+    It 'keeps the version to roll back to, however old it is' {
+        $versions = Join-Path $TestDrive 'protected-versions'
+
+        foreach ($name in @('0.5.0', '0.6.0', '0.6.1', '0.6.2', '0.6.3')) {
+            New-Item -ItemType Directory -Path (Join-Path $versions $name) -Force | Out-Null
+        }
+
+        Remove-OldVersions -VersionsDirectory $versions -ProtectedVersions @('0.6.3', '0.5.0')
+
+        (Get-ChildItem -LiteralPath $versions -Directory).Name | Sort-Object | Should -Be @('0.5.0', '0.6.1', '0.6.2', '0.6.3')
     }
 }
 

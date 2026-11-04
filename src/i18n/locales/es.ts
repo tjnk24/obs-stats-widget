@@ -148,6 +148,7 @@ export const es: TranslationDto = {
             install: 'No se pudo descomprimir la actualización. Reintenta o instala la versión nueva manualmente.',
             unexpected: 'Algo salió mal durante la actualización.',
             noResponse: 'El script {{script}} no inició la actualización. Recarga los scripts en $t(obs.tools) → $t(obs.scripts) y reintenta.',
+            rolledBack: 'La versión {{version}} no se inició, así que ha vuelto la anterior. No se instalará sola; el botón la prueba de nuevo.',
         },
         problems: {
             obsTooOld: 'Esta versión necesita OBS {{obsVersion}} o posterior.',

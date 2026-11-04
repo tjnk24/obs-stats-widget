@@ -148,6 +148,7 @@ export const de: TranslationDto = {
             install: 'Das Update konnte nicht entpackt werden. Versuche es erneut oder installiere die neue Version manuell.',
             unexpected: 'Beim Update ist etwas schiefgelaufen.',
             noResponse: 'Das Skript {{script}} hat das Update nicht gestartet. Lade die Skripte unter $t(obs.tools) → $t(obs.scripts) neu und versuche es erneut.',
+            rolledBack: 'Version {{version}} ließ sich nicht starten, deshalb läuft wieder die vorherige. Sie wird nicht von selbst installiert; der Knopf versucht es erneut.',
         },
         problems: {
             obsTooOld: 'Diese Version braucht OBS {{obsVersion}} oder neuer.',

@@ -17,6 +17,7 @@ local function describe_update(updater)
     return {
         available = updater:is_available(),
         status = updater:read_status() or json.null,
+        rolledBackVersion = updater:read_rolled_back_version(),
     }
 end
 

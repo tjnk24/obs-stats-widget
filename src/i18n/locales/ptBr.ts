@@ -148,6 +148,7 @@ export const ptBr: TranslationDto = {
             install: 'Não foi possível descompactar a atualização. Tente de novo ou instale a versão nova manualmente.',
             unexpected: 'Algo deu errado durante a atualização.',
             noResponse: 'O script {{script}} não iniciou a atualização. Recarregue os scripts em $t(obs.tools) → $t(obs.scripts) e tente de novo.',
+            rolledBack: 'A versão {{version}} não iniciou, então a anterior voltou. Ela não será instalada sozinha; o botão tenta de novo.',
         },
         problems: {
             obsTooOld: 'Esta versão precisa do OBS {{obsVersion}} ou mais recente.',

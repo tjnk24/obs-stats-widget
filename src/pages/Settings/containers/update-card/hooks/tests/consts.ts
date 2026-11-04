@@ -29,6 +29,7 @@ export const BRIDGE: BridgeUpdateStateDto = {
     isAvailable: true,
     bridgeVersion: 4,
     status: null,
+    rolledBackVersion: null,
 };
 
 export const STATE = {

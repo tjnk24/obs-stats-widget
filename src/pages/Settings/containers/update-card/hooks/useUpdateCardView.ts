@@ -47,7 +47,14 @@ export const useUpdateCardView = (): UpdateCardViewDto => {
 
     const status = bridge?.status ?? null;
 
+    const rolledBackVersion = bridge?.rolledBackVersion ?? null;
+
+    const isRolledBack = rolledBackVersion !== null
+        && request === null
+        && (compareVersions(rolledBackVersion, currentVersion) ?? 0) > 0;
+
     const isStatusShown = status !== null
+        && !isRolledBack
         && (compareVersions(status.version, currentVersion) ?? 0) > 0
         && (request === null || isRequestedStatus(status, request));
 
@@ -73,11 +80,13 @@ export const useUpdateCardView = (): UpdateCardViewDto => {
         ? t(UPDATE_STAGE_TEXTS[shownStatus?.stage ?? Preparing], statusValues)
         : null;
 
-    const errorKey = isNoResponse
-        ? 'update.errors.noResponse'
-        : UPDATE_ERROR_TEXTS[shownStatus?.error as UpdateErrorEnum] ?? 'update.errors.unexpected';
+    const errorKey = isRolledBack
+        ? 'update.errors.rolledBack'
+        : isNoResponse
+            ? 'update.errors.noResponse'
+            : UPDATE_ERROR_TEXTS[shownStatus?.error as UpdateErrorEnum] ?? 'update.errors.unexpected';
 
-    const isErrorShown = isNoResponse || isUpdateFailed;
+    const isErrorShown = isRolledBack || isNoResponse || isUpdateFailed;
 
     const isNewer = latest !== null && (compareVersions(latest.version, currentVersion) ?? 0) > 0;
 
@@ -111,7 +120,7 @@ export const useUpdateCardView = (): UpdateCardViewDto => {
         isCheckFailed: checkStatus === Failed,
         statusText,
         isStatusRunning: isRunning || isRequestPending,
-        errorText: isErrorShown ? t(errorKey, {script: BRIDGE_SCRIPT_NAME}) : null,
+        errorText: isErrorShown ? t(errorKey, {script: BRIDGE_SCRIPT_NAME, version: rolledBackVersion}) : null,
         notes: isUpdateShown ? noteKeys.map(noteKey => t(noteKey, noteValues)) : [],
         isUpdateShown,
         isManual: blocker === NoUpdater || blocker === Incompatible,

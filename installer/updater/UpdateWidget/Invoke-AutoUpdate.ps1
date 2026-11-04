@@ -19,7 +19,7 @@ function Invoke-AutoUpdate {
     New-Item -ItemType Directory -Path (Split-Path -Parent $StatusPath) -Force | Out-Null
     [System.IO.File]::WriteAllText($stampPath, '')
 
-    $action = Get-AutoUpdateAction -Release $release -InstalledVersion (Get-InstalledVersion -InstallDirectory $InstallDirectory) -Now ([DateTimeOffset]::UtcNow)
+    $action = Get-AutoUpdateAction -Release $release -InstalledVersion (Get-InstalledVersion -InstallDirectory $InstallDirectory) -RolledBackVersion (Get-RolledBackVersion -InstallDirectory $InstallDirectory) -Now ([DateTimeOffset]::UtcNow)
 
     if ($action -ne 'install') {
         return $action

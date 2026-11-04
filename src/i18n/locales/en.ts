@@ -146,6 +146,7 @@ export const en = {
             install: 'Could not unpack the update. Try again or install the new version manually.',
             unexpected: 'Something went wrong during the update.',
             noResponse: 'The {{script}} script did not start the update. Reload scripts in $t(obs.tools) → $t(obs.scripts) and try again.',
+            rolledBack: 'Version {{version}} failed to start, so the previous one is back. It won\'t install by itself; the button tries it again.',
         },
         problems: {
             obsTooOld: 'This version needs OBS {{obsVersion}} or newer.',

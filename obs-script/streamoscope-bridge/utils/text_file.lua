@@ -14,6 +14,8 @@ pcall(ffi.cdef, [[
 pcall(ffi.cdef, 'int CloseHandle(void *handle);')
 pcall(ffi.cdef, 'int WriteFile(void *file, const void *buffer, uint32_t bytesToWrite, uint32_t *bytesWritten, void *overlapped);')
 pcall(ffi.cdef, 'int CreateDirectoryW(const uint16_t *path, void *security);')
+pcall(ffi.cdef, 'int DeleteFileW(const uint16_t *path);')
+pcall(ffi.cdef, 'int MoveFileExW(const uint16_t *source, const uint16_t *target, uint32_t flags);')
 
 function text_file.exists(path)
     local attributes = ffi.C.GetFileAttributesW(wide_string.from_text(path))
@@ -54,6 +56,18 @@ function text_file.write(path, text)
     ffi.C.CloseHandle(file)
 
     return succeeded ~= 0
+end
+
+function text_file.replace(path, text)
+    local temporary_path = path .. '.tmp'
+
+    if text_file.write(temporary_path, text) then
+        ffi.C.MoveFileExW(wide_string.from_text(temporary_path), wide_string.from_text(path), consts.MOVEFILE_REPLACE_EXISTING)
+    end
+end
+
+function text_file.remove(path)
+    ffi.C.DeleteFileW(wide_string.from_text(path))
 end
 
 function text_file.ensure_directory(path)

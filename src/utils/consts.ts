@@ -84,6 +84,7 @@ const GITHUB_LATEST_RELEASE_URL = 'https://api.github.com/repos/tjnk24/streamosc
 export const LATEST_RELEASE_URL = process.env.TEST_UPDATE_SERVER ? `${process.env.TEST_UPDATE_SERVER}/latest` : GITHUB_LATEST_RELEASE_URL;
 export const UPDATE_CHECK_PERIOD_MS = 24 * 60 * 60 * 1000;
 export const UPDATE_CHECK_TIMER_MS = 60 * 60 * 1000;
+export const HEALTH_REPORT_DELAY_MS = 1000;
 
 export const UNKNOWN_PLATFORM_COLOR = '#9aa0ae';
 

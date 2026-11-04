@@ -19,6 +19,19 @@ local function save_auto_update(self, value)
     text_file.write(self.auto_update_path, value)
 end
 
+local function confirm_version(self, version)
+    text_file.write(self.healthy_version_path, version)
+
+    if string.match(text_file.read(self.trial_path) or '', consts.TRIAL_VERSION_PATTERN) == version then
+        text_file.remove(self.trial_path)
+    end
+
+    if self:read_rolled_back_version() == version then
+        text_file.replace(self.current_version_path, string.format(consts.CURRENT_VERSION_TEMPLATE, version))
+        text_file.remove(self.rolled_back_version_path)
+    end
+end
+
 function Updater.new()
     local local_app_data = environment.get('LOCALAPPDATA')
     local data_directory = local_app_data ~= nil and (local_app_data .. '\\' .. consts.UPDATE_DATA_DIRECTORY) or nil
@@ -26,6 +39,10 @@ function Updater.new()
     return setmetatable({
         script_path = string.gsub(script_path() .. '/' .. consts.UPDATE_SCRIPT_PATH, '/', '\\'),
         signature_tool_path = string.gsub(script_path() .. '/' .. consts.UPDATE_SIGNATURE_TOOL_PATH, '/', '\\'),
+        trial_path = string.gsub(script_path() .. '/' .. consts.TRIAL_FILE_PATH, '/', '\\'),
+        healthy_version_path = string.gsub(script_path() .. '/' .. consts.HEALTHY_VERSION_FILE_PATH, '/', '\\'),
+        rolled_back_version_path = string.gsub(script_path() .. '/' .. consts.ROLLED_BACK_VERSION_FILE_PATH, '/', '\\'),
+        current_version_path = string.gsub(script_path() .. '/' .. consts.CURRENT_VERSION_FILE_PATH, '/', '\\'),
         data_directory = data_directory,
         status_path = data_directory ~= nil and (data_directory .. '\\' .. consts.UPDATE_STATUS_FILE) or nil,
         auto_update_path = data_directory ~= nil and (data_directory .. '\\' .. consts.AUTO_UPDATE_FILE) or nil,
@@ -56,6 +73,14 @@ function Updater:handle_command()
 
     if auto_update ~= nil then
         save_auto_update(self, auto_update)
+
+        return
+    end
+
+    local healthy_version = string.match(command, consts.HEALTHY_COMMAND_PATTERN)
+
+    if healthy_version ~= nil then
+        confirm_version(self, healthy_version)
     end
 end
 
@@ -79,6 +104,10 @@ function Updater:read_status()
     end
 
     return text_file.read(self.status_path)
+end
+
+function Updater:read_rolled_back_version()
+    return string.match(text_file.read(self.rolled_back_version_path) or '', consts.ROLLED_BACK_VERSION_PATTERN)
 end
 
 function Updater:close()

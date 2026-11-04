@@ -6,4 +6,5 @@ export type BridgeUpdateStateDto = {
     isAvailable: boolean;
     bridgeVersion: number;
     status: Nullable<UpdateStatusDto>;
+    rolledBackVersion: Nullable<string>;
 };
