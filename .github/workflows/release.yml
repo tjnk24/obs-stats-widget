@@ -70,6 +70,7 @@ jobs:
     needs: build
     if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
+    environment: release
     env:
       VERSION: ${{ needs.build.outputs.version }}
     steps:

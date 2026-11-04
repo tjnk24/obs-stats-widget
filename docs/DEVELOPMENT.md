@@ -38,8 +38,9 @@ To release a version:
 1. Write `docs/release-notes/<version>.md`: English first, then `---` and Russian. The workflow fails without it.
 2. Run `npm version <major|minor|patch>` to bump `package.json`, commit and create the `v<version>` tag.
 3. Run `git push --follow-tags`.
+4. When the build is done, approve the `publish` job on the page of the workflow run. Updates reach people without a click on their side, so this click is the last human check.
 
-The `v*` tag triggers the GitHub Actions release workflow: build, test, sign and publish. Published release assets:
+The `v*` tag triggers the GitHub Actions release workflow: build, test, sign and publish. The `publish` job runs in the `release` environment, which needs that approval and accepts only `v*` tags. Published release assets:
 
 | Asset | Purpose |
 | --- | --- |
@@ -89,6 +90,8 @@ Updates work the way Chrome does them: the new version lands next to the old one
 OBS keeps the paths of the two loaders in its configuration, so they never move and rarely change.
 
 About a minute after OBS starts and then once a day, the bridge starts `Update-Widget.ps1 -Auto`. It asks GitHub for the latest release at most once an hour, skips releases younger than 48 hours and major versions, then verifies and unpacks the archive. The last step is one atomic rewrite of `current-version.js`: a failure before it leaves the current version alone. The three newest versions and the one to roll back to stay on disk. The **Update** button runs the same steps through `-Version X.Y.Z`, without the wait.
+
+The check also puts the running version back into the Windows Apps list if a rollback left it behind.
 
 The switch **Update automatically** is stored by the bridge in `%LOCALAPPDATA%\streamoscope\auto-update.txt`, so the background check works even when the dock is closed or broken.
 

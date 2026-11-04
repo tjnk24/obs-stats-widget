@@ -14,12 +14,16 @@ function Invoke-AutoUpdate {
         return 'notDue'
     }
 
+    $installedVersion = Get-InstalledVersion -InstallDirectory $InstallDirectory
+
+    Set-UninstallDisplayVersion -Version $installedVersion
+
     $release = Get-LatestRelease -Url $LatestReleaseUrl
 
     New-Item -ItemType Directory -Path (Split-Path -Parent $StatusPath) -Force | Out-Null
     [System.IO.File]::WriteAllText($stampPath, '')
 
-    $action = Get-AutoUpdateAction -Release $release -InstalledVersion (Get-InstalledVersion -InstallDirectory $InstallDirectory) -RolledBackVersion (Get-RolledBackVersion -InstallDirectory $InstallDirectory) -Now ([DateTimeOffset]::UtcNow)
+    $action = Get-AutoUpdateAction -Release $release -InstalledVersion $installedVersion -RolledBackVersion (Get-RolledBackVersion -InstallDirectory $InstallDirectory) -Now ([DateTimeOffset]::UtcNow)
 
     if ($action -ne 'install') {
         return $action

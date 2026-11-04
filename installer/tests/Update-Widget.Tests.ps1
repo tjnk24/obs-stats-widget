@@ -332,6 +332,13 @@ Describe 'Invoke-AutoUpdate' {
         Get-InstalledVersion -InstallDirectory $release.Install | Should -Be '0.2.0'
     }
 
+    It 'puts the running version back into Windows Apps after a rollback' {
+        $release = New-TestRelease -InstalledVersion '0.2.0'
+
+        Invoke-TestAutoUpdate -Release $release | Should -Be 'upToDate'
+        Should -Invoke Set-UninstallDisplayVersion -Times 1 -ParameterFilter { $Version -eq '0.2.0' }
+    }
+
     It 'does not install a rolled back version by itself' {
         $release = New-TestRelease
         Set-Content -LiteralPath (Join-Path $release.Install 'rolled-back-version.txt') -Value '0.2.0'
