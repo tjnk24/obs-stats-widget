@@ -12,6 +12,8 @@ pcall(ffi.cdef, [[
 ]])
 
 pcall(ffi.cdef, 'int CloseHandle(void *handle);')
+pcall(ffi.cdef, 'int WriteFile(void *file, const void *buffer, uint32_t bytesToWrite, uint32_t *bytesWritten, void *overlapped);')
+pcall(ffi.cdef, 'int CreateDirectoryW(const uint16_t *path, void *security);')
 
 function text_file.exists(path)
     local attributes = ffi.C.GetFileAttributesW(wide_string.from_text(path))
@@ -37,6 +39,25 @@ function text_file.read(path)
     end
 
     return ffi.string(buffer, bytes_read[0])
+end
+
+function text_file.write(path, text)
+    local file = ffi.C.CreateFileW(wide_string.from_text(path), consts.GENERIC_WRITE, consts.FILE_SHARE_READ_WRITE_DELETE, nil, consts.CREATE_ALWAYS, 0, nil)
+
+    if file == consts.INVALID_HANDLE_VALUE then
+        return false
+    end
+
+    local bytes_written = ffi.new('uint32_t[1]')
+    local succeeded = ffi.C.WriteFile(file, text, #text, bytes_written, nil)
+
+    ffi.C.CloseHandle(file)
+
+    return succeeded ~= 0
+end
+
+function text_file.ensure_directory(path)
+    ffi.C.CreateDirectoryW(wide_string.from_text(path), nil)
 end
 
 return text_file

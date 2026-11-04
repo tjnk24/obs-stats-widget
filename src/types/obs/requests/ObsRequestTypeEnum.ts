@@ -6,7 +6,6 @@ export enum ObsRequestTypeEnum {
     GetOutputList = 'GetOutputList',
     GetProfileParameter = 'GetProfileParameter',
     GetVersion = 'GetVersion',
-    GetRecordStatus = 'GetRecordStatus',
     SetProfileParameter = 'SetProfileParameter',
     GetSceneCollectionList = 'GetSceneCollectionList',
 }

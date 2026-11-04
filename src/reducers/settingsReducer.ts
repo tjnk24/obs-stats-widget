@@ -1,5 +1,4 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import type {Nullable} from 'infrastructure/common';
 
 import {storageService} from '__services/storageService';
 import {SettingsDto} from '__types/app/SettingsDto';
@@ -25,20 +24,11 @@ const slice = createSlice({
         setIsMockEnabled: (state, {payload}: PayloadAction<boolean>) => {
             state.isMockEnabled = payload;
         },
-        setIsAutoUpdateCheckEnabled: (state, {payload}: PayloadAction<boolean>) => {
-            state.isAutoUpdateCheckEnabled = payload;
+        setIsAutoUpdateEnabled: (state, {payload}: PayloadAction<boolean>) => {
+            state.isAutoUpdateEnabled = payload;
         },
         setLastUpdateCheckAt: (state, {payload}: PayloadAction<number>) => {
             state.lastUpdateCheckAt = payload;
-        },
-        setSkippedUpdateVersion: (state, {payload}: PayloadAction<Nullable<string>>) => {
-            state.skippedUpdateVersion = payload;
-        },
-        setUpdateRemindAt: (state, {payload}: PayloadAction<Nullable<number>>) => {
-            state.updateRemindAt = payload;
-        },
-        setLastSeenVersion: (state, {payload}: PayloadAction<string>) => {
-            state.lastSeenVersion = payload;
         },
     },
 });

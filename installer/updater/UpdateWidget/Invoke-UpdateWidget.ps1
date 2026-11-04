@@ -33,6 +33,7 @@ function Invoke-UpdateWidget {
     }
 
     $workDirectory = Join-Path ([System.IO.Path]::GetTempPath()) "streamoscope-update-$Version"
+    $versionsDirectory = Join-Path $InstallDirectory $script:VersionsDirectoryName
 
     try {
         & $report 'preparing'
@@ -41,10 +42,18 @@ function Invoke-UpdateWidget {
             return & $fail 'invalidVersion'
         }
 
-        $installedVersion = (Get-Content -LiteralPath (Join-Path $InstallDirectory 'compatibility.json') -Raw -Encoding UTF8 | ConvertFrom-Json).version
+        $installedVersion = Get-InstalledVersion -InstallDirectory $InstallDirectory
 
-        if ((Compare-SemanticVersion -First $Version -Second $installedVersion) -le 0) {
+        $versionOrder = Compare-SemanticVersion -First $Version -Second $installedVersion
+
+        if ($versionOrder -lt 0) {
             return & $fail 'notNewer'
+        }
+
+        if ($versionOrder -eq 0) {
+            & $report 'done' 100
+
+            return 'done'
         }
 
         if (Test-Path -LiteralPath $workDirectory) {
@@ -55,8 +64,8 @@ function Invoke-UpdateWidget {
 
         $releaseUrl = "$($ReleaseBaseUrl.TrimEnd('/'))/v$Version"
         $compatibilityPath = Join-Path $workDirectory 'compatibility.json'
-        $setupName = "streamoscope-setup-$Version.exe"
-        $setupPath = Join-Path $workDirectory $setupName
+        $packageName = "streamoscope-$Version.zip"
+        $packagePath = Join-Path $workDirectory $packageName
 
         try {
             Get-UpdateFile -Url "$releaseUrl/compatibility.json" -Path $compatibilityPath
@@ -86,23 +95,29 @@ function Invoke-UpdateWidget {
         & $report 'downloading'
 
         try {
-            Get-UpdateFile -Url "$releaseUrl/$setupName" -Path $setupPath -OnProgress { param([int]$Percent) & $report 'downloading' $Percent }
-            Get-UpdateFile -Url "$releaseUrl/$setupName.minisig" -Path "$setupPath.minisig"
+            Get-UpdateFile -Url "$releaseUrl/$packageName" -Path $packagePath -OnProgress { param([int]$Percent) & $report 'downloading' $Percent }
+            Get-UpdateFile -Url "$releaseUrl/$packageName.minisig" -Path "$packagePath.minisig"
         } catch {
             return & $fail 'network'
         }
 
         & $report 'verifying' 100
 
-        if (-not (Test-UpdateSignature -MinisignPath $MinisignPath -FilePath $setupPath -PublicKey $PublicKey)) {
+        if (-not (Test-UpdateSignature -MinisignPath $MinisignPath -FilePath $packagePath -PublicKey $PublicKey)) {
             return & $fail 'signature'
         }
 
         & $report 'installing' 100
 
-        if ((Invoke-Installer -SetupPath $setupPath) -ne 0) {
+        try {
+            Expand-UpdatePackage -PackagePath $packagePath -VersionsDirectory $versionsDirectory -Version $Version
+            Set-CurrentVersion -InstallDirectory $InstallDirectory -Version $Version
+        } catch {
             return & $fail 'install'
         }
+
+        Remove-OldVersions -VersionsDirectory $versionsDirectory
+        Set-UninstallDisplayVersion -Version $Version
 
         & $report 'done' 100
 

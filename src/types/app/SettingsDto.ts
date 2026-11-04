@@ -8,9 +8,6 @@ export type SettingsDto = {
     isShowGeneralCard: boolean;
     language: Nullable<LanguageEnum>;
     isMockEnabled: boolean;
-    isAutoUpdateCheckEnabled: boolean;
+    isAutoUpdateEnabled: boolean;
     lastUpdateCheckAt: Nullable<number>;
-    skippedUpdateVersion: Nullable<string>;
-    updateRemindAt: Nullable<number>;
-    lastSeenVersion: Nullable<string>;
 };

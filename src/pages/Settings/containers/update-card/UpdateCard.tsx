@@ -2,14 +2,13 @@ import {SyncOutlined} from '@ant-design/icons';
 import {
     Card,
     Flex,
+    Spin,
     Switch,
     Typography,
 } from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import DownloadButton from '__components/DownloadButton';
 import EnhancedButton from '__components/EnhancedButton';
-import InstallButton from '__components/InstallButton';
 import {updateService} from '__services/updateService';
 
 import {useUpdateCardView} from './hooks/useUpdateCardView';
@@ -21,13 +20,17 @@ const UpdateCard = () => {
         lastCheckText,
         checkText,
         isCheckFailed,
-        hiddenUpdateText,
+        statusText,
+        isStatusRunning,
+        errorText,
+        notes,
         isUpdateShown,
         isManual,
-        isAutoUpdateCheckEnabled,
+        updateText,
+        currentReleaseUrl,
+        latestReleaseUrl,
+        isAutoUpdateEnabled,
     } = useUpdateCardView();
-
-    const scrollToTop = () => window.requestAnimationFrame(() => window.scrollTo({top: 0, behavior: 'smooth'}));
 
     return (
         <Card
@@ -39,9 +42,26 @@ const UpdateCard = () => {
                 vertical
             >
                 <Flex vertical>
-                    <Typography.Text>
-                        {t('settings.currentVersion', {version: process.env.APP_VERSION})}
-                    </Typography.Text>
+                    <Flex
+                        align="center"
+                        gap={14}
+                        wrap
+                    >
+                        <Typography.Text>
+                            {t('settings.currentVersion', {version: process.env.APP_VERSION})}
+                        </Typography.Text>
+
+                        <EnhancedButton
+                            buttonProps={{
+                                type: 'link',
+                                size: 'small',
+                                onClick: () => updateService.openReleasePage(currentReleaseUrl),
+                            }}
+                            withSpinner={false}
+                        >
+                            {t('update.whatsNew')}
+                        </EnhancedButton>
+                    </Flex>
 
                     <Typography.Text type="secondary">
                         {lastCheckText}
@@ -68,37 +88,77 @@ const UpdateCard = () => {
                         </Typography.Text>
                     )}
 
-                    {isUpdateShown && (isManual
-                        ? <DownloadButton type="primary"/>
-                        : (
-                            <InstallButton onStart={scrollToTop}>
-                                {t('update.install')}
-                            </InstallButton>
-                        ))}
+                    {isUpdateShown && latestReleaseUrl !== null && (
+                        <>
+                            {isManual
+                                ? (
+                                    <EnhancedButton
+                                        buttonProps={{
+                                            type: 'primary',
+                                            size: 'small',
+                                            onClick: () => updateService.openReleasePage(latestReleaseUrl),
+                                        }}
+                                        withSpinner={false}
+                                    >
+                                        {t('update.download')}
+                                    </EnhancedButton>
+                                )
+                                : (
+                                    <EnhancedButton
+                                        buttonProps={{
+                                            type: 'primary',
+                                            size: 'small',
+                                            onClick: updateService.install,
+                                        }}
+                                        withSpinner={false}
+                                    >
+                                        {updateText}
+                                    </EnhancedButton>
+                                )}
+
+                            {!isManual && (
+                                <EnhancedButton
+                                    buttonProps={{
+                                        type: 'link',
+                                        size: 'small',
+                                        onClick: () => updateService.openReleasePage(latestReleaseUrl),
+                                    }}
+                                    withSpinner={false}
+                                >
+                                    {t('update.whatsNew')}
+                                </EnhancedButton>
+                            )}
+                        </>
+                    )}
                 </Flex>
 
-                {hiddenUpdateText && (
+                {statusText && (
                     <Flex
                         align="center"
-                        justify="space-between"
-                        gap="small"
-                        wrap
+                        gap={14}
                     >
-                        <Typography.Text>
-                            {hiddenUpdateText}
-                        </Typography.Text>
+                        {isStatusRunning && <Spin size="small"/>}
 
-                        <EnhancedButton
-                            buttonProps={{
-                                type: 'primary',
-                                onClick: updateService.showHiddenUpdate,
-                            }}
-                            withSpinner={false}
-                        >
-                            {t('settings.updateAnyway')}
-                        </EnhancedButton>
+                        <Typography.Text type="secondary">
+                            {statusText}
+                        </Typography.Text>
                     </Flex>
                 )}
+
+                {errorText && (
+                    <Typography.Text type="danger">
+                        {errorText}
+                    </Typography.Text>
+                )}
+
+                {notes.map(note => (
+                    <Typography.Text
+                        key={note}
+                        type="secondary"
+                    >
+                        {note}
+                    </Typography.Text>
+                ))}
 
                 <Flex
                     align="center"
@@ -107,17 +167,17 @@ const UpdateCard = () => {
                 >
                     <Flex vertical>
                         <Typography.Text>
-                            {t('settings.autoUpdateCheck')}
+                            {t('settings.autoUpdate')}
                         </Typography.Text>
 
                         <Typography.Text type="secondary">
-                            {t('settings.autoUpdateCheckHint')}
+                            {t('settings.autoUpdateHint')}
                         </Typography.Text>
                     </Flex>
 
                     <Switch
-                        checked={isAutoUpdateCheckEnabled}
-                        onChange={updateService.setAutoCheckEnabled}
+                        checked={isAutoUpdateEnabled}
+                        onChange={updateService.setAutoUpdateEnabled}
                     />
                 </Flex>
             </Flex>

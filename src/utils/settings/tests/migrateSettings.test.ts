@@ -18,9 +18,31 @@ describe('migrateSettings', () => {
     it('treats settings without a version as version 1 and adds the version', () => {
         const result = migrateSettings({port: 4460, isShowGeneralCard: false});
 
-        expect(result.settings).toEqual({...DEFAULT_SETTINGS, port: 4460, isShowGeneralCard: false, settingsVersion: 1});
+        expect(result.settings).toEqual({...DEFAULT_SETTINGS, port: 4460, isShowGeneralCard: false});
         expect(result.isChanged).toBe(true);
         expect(result.isDiscarded).toBe(false);
+    });
+
+    it('carries the choice about update checks over to automatic updates and drops the old reminders', () => {
+        const stored = {
+            settingsVersion: 1,
+            isAutoUpdateCheckEnabled: false,
+            skippedUpdateVersion: '0.2.0',
+            updateRemindAt: 1000,
+            lastSeenVersion: '0.1.0',
+        };
+
+        const {settings} = migrateSettings(stored);
+
+        expect(settings).toEqual({...DEFAULT_SETTINGS, isAutoUpdateEnabled: false});
+        expect(settings).not.toHaveProperty('isAutoUpdateCheckEnabled');
+        expect(settings).not.toHaveProperty('skippedUpdateVersion');
+        expect(settings).not.toHaveProperty('updateRemindAt');
+        expect(settings).not.toHaveProperty('lastSeenVersion');
+    });
+
+    it('turns automatic updates on when version 1 has no choice stored', () => {
+        expect(migrateSettings({settingsVersion: 1}).settings.isAutoUpdateEnabled).toBe(true);
     });
 
     it('keeps current settings as they are', () => {

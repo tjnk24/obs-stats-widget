@@ -11,9 +11,7 @@ export type UpdateReducer = {
     latest: Nullable<ReleaseDto>;
     bridge: Nullable<BridgeUpdateStateDto>;
     bridgeMissingChecks: number;
-    isObsBusy: boolean;
     request: Nullable<UpdateRequestDto>;
-    deferredVersion: Nullable<string>;
 };
 
 const initialState: UpdateReducer = {
@@ -21,9 +19,7 @@ const initialState: UpdateReducer = {
     latest: null,
     bridge: null,
     bridgeMissingChecks: 0,
-    isObsBusy: false,
     request: null,
-    deferredVersion: null,
 };
 
 const slice = createSlice({
@@ -44,14 +40,8 @@ const slice = createSlice({
             state.bridge = null;
             state.bridgeMissingChecks = 0;
         },
-        setIsObsBusy: (state, {payload}: PayloadAction<boolean>) => {
-            state.isObsBusy = payload;
-        },
         setRequest: (state, {payload}: PayloadAction<Nullable<UpdateRequestDto>>) => {
             state.request = payload;
-        },
-        setDeferredVersion: (state, {payload}: PayloadAction<Nullable<string>>) => {
-            state.deferredVersion = payload;
         },
     },
 });

@@ -1,30 +1,23 @@
 import fs from 'node:fs';
-import path from 'node:path';
 
 import {
+    LATEST_RELEASE_URL_PATTERN,
     PUBLIC_KEY_PATTERN,
     RELEASE_BASE_URL_PATTERN,
-    TEST_UPDATER_DIRECTORY,
-    UPDATER_ENTRY_NAME,
-    UPDATER_SOURCE_DIRECTORY,
+    UPDATER_ENTRY_PATH,
 } from './consts.ts';
 
 export const stageTestUpdater = (server: string, publicKey: string) => {
-    fs.rmSync(TEST_UPDATER_DIRECTORY, {recursive: true, force: true});
-    fs.cpSync(UPDATER_SOURCE_DIRECTORY, TEST_UPDATER_DIRECTORY, {recursive: true});
+    const source = fs.readFileSync(UPDATER_ENTRY_PATH, 'utf8');
 
-    const entryPath = path.join(TEST_UPDATER_DIRECTORY, UPDATER_ENTRY_NAME);
-    const source = fs.readFileSync(entryPath, 'utf8');
-
-    if (!RELEASE_BASE_URL_PATTERN.test(source) || !PUBLIC_KEY_PATTERN.test(source)) {
-        throw new Error(`${UPDATER_ENTRY_NAME} no longer has the ReleaseBaseUrl and PublicKey defaults the test build replaces`);
+    if (!RELEASE_BASE_URL_PATTERN.test(source) || !LATEST_RELEASE_URL_PATTERN.test(source) || !PUBLIC_KEY_PATTERN.test(source)) {
+        throw new Error(`${UPDATER_ENTRY_PATH} no longer has the defaults the test build replaces`);
     }
 
     const patched = source
         .replace(RELEASE_BASE_URL_PATTERN, (_match, start: string, end: string) => `${start}${server}/download${end}`)
+        .replace(LATEST_RELEASE_URL_PATTERN, (_match, start: string, end: string) => `${start}${server}/latest${end}`)
         .replace(PUBLIC_KEY_PATTERN, (_match, start: string, end: string) => `${start}${publicKey}${end}`);
 
-    fs.writeFileSync(entryPath, patched);
-
-    return TEST_UPDATER_DIRECTORY;
+    fs.writeFileSync(UPDATER_ENTRY_PATH, patched);
 };

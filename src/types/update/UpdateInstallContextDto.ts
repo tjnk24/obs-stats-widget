@@ -9,6 +9,5 @@ export type UpdateInstallContextDto = {
     currentVersion: string;
     bridge: Nullable<BridgeUpdateStateDto>;
     compatibility: Nullable<CompatibilityResultDto>;
-    isObsBusy: boolean;
     now: number;
 };

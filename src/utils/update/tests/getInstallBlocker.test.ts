@@ -17,7 +17,7 @@ import {
 } from './consts';
 
 describe('getInstallBlocker', () => {
-    it('lets a newer compatible release install while OBS is idle', () => {
+    it('lets a newer compatible release install', () => {
         expect(getInstallBlocker(INSTALL_CONTEXT)).toBeNull();
     });
 
@@ -28,7 +28,6 @@ describe('getInstallBlocker', () => {
         ['the bridge is missing', {bridge: null}, UpdateInstallBlockerEnum.NoUpdater],
         ['the bridge has no updater', {bridge: {...BRIDGE_UPDATE_STATE, isAvailable: false}}, UpdateInstallBlockerEnum.NoUpdater],
         ['the release does not fit OBS', {compatibility: {problems: [CompatibilityProblemEnum.ObsTooOld], warnings: []}}, UpdateInstallBlockerEnum.Incompatible],
-        ['OBS streams or records', {isObsBusy: true}, UpdateInstallBlockerEnum.ObsBusy],
         ['an update is running', {bridge: {...BRIDGE_UPDATE_STATE, status: RUNNING_UPDATE_STATUS}}, UpdateInstallBlockerEnum.InProgress],
     ])('refuses when %s', (_name, context, blocker) => {
         expect(getInstallBlocker({...INSTALL_CONTEXT, ...context})).toBe(blocker);

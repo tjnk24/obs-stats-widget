@@ -30,7 +30,7 @@ describe('checkCompatibility', () => {
     });
 
     it('skips checks it has no data for', () => {
-        const unknown = {...ENVIRONMENT, obsVersion: null, rpcVersion: null, availableRequests: null, chromiumVersion: null, bridgeVersion: null};
+        const unknown = {...ENVIRONMENT, obsVersion: null, rpcVersion: null, availableRequests: null, chromiumVersion: null};
 
         expect(checkCompatibility(COMPATIBILITY, unknown)).toEqual({problems: [], warnings: []});
     });
@@ -38,9 +38,5 @@ describe('checkCompatibility', () => {
     it('warns about a major update', () => {
         expect(checkCompatibility({...COMPATIBILITY, version: '1.0.0'}, ENVIRONMENT).warnings).toEqual([CompatibilityWarningEnum.MajorUpdate]);
         expect(checkCompatibility({...COMPATIBILITY, version: '20.1.0'}, ENVIRONMENT).warnings).toEqual([CompatibilityWarningEnum.MajorUpdate]);
-    });
-
-    it('warns that OBS must be restarted for an older bridge', () => {
-        expect(checkCompatibility(COMPATIBILITY, {...ENVIRONMENT, bridgeVersion: 1}).warnings).toEqual([CompatibilityWarningEnum.BridgeRestart]);
     });
 });

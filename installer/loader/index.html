@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <title>StreamoScope</title>
+        <style>
+            html {
+                background: #1d1f26;
+            }
+        </style>
+    </head>
+
+    <body>
+        <script>
+            var versionScript = document.createElement('script');
+
+            versionScript.src = '../current-version.js?' + Date.now();
+
+            versionScript.onload = function () {
+                location.replace('../versions/' + window.STREAMOSCOPE_VERSION + '/dock/index.html' + location.hash);
+            };
+
+            document.head.appendChild(versionScript);
+        </script>
+    </body>
+</html>

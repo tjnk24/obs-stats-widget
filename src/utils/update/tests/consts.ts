@@ -22,7 +22,6 @@ export const ENVIRONMENT: UpdateEnvironmentDto = {
     rpcVersion: 1,
     availableRequests: ['GetStats', 'GetVersion', 'GetStreamStatus'],
     chromiumVersion: 127,
-    bridgeVersion: 2,
 };
 
 export const RELEASE_NOTES = 'New things.\n\n---\n\nНовое.';
@@ -69,6 +68,5 @@ export const INSTALL_CONTEXT: UpdateInstallContextDto = {
     currentVersion: '0.1.0',
     bridge: BRIDGE_UPDATE_STATE,
     compatibility: {problems: [], warnings: []},
-    isObsBusy: false,
     now: NOW_MS,
 };

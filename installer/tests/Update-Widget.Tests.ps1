@@ -1,8 +1,10 @@
 BeforeAll {
     $updaterDirectory = Join-Path $PSScriptRoot '..\updater'
 
-    Get-ChildItem -LiteralPath (Join-Path $updaterDirectory 'UpdateWidget') -Filter '*.ps1' | ForEach-Object { . $_.FullName }
+    Get-ChildItem -LiteralPath (Join-Path $updaterDirectory 'UpdateWidget') -Filter '*.ps1' -Recurse | ForEach-Object { . $_.FullName }
     . (Join-Path $PSScriptRoot '..\ConfigureObs\paths\Find-ObsDirectory.ps1')
+
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
 
     $script:minisign = $env:OBS_STATS_WIDGET_MINISIGN
 
@@ -32,39 +34,71 @@ BeforeAll {
     $script:releaseKey = New-TestKey -Name 'release'
     $script:otherKey = New-TestKey -Name 'other'
 
+    function New-TestPackage {
+        param(
+            [string]$Version,
+            [string]$Destination,
+            [switch]$WithoutBridge
+        )
+
+        $source = Join-Path $TestDrive ([guid]::NewGuid().ToString('N'))
+        $package = Join-Path $source "streamoscope-$Version"
+        $randomBytes = New-Object byte[] 300000
+
+        (New-Object System.Random).NextBytes($randomBytes)
+
+        New-Item -ItemType Directory -Path (Join-Path $package 'dock'), (Join-Path $package 'updater'), (Join-Path $package 'streamoscope-bridge') -Force | Out-Null
+        [System.IO.File]::WriteAllBytes((Join-Path $package 'dock\index.html'), $randomBytes)
+        Set-Content -LiteralPath (Join-Path $package 'updater\Update-Widget.ps1') -Value 'exit 0'
+        Set-Content -LiteralPath (Join-Path $package 'compatibility.json') -Value ("{`"version`": `"$Version`"}")
+
+        if (-not $WithoutBridge) {
+            Set-Content -LiteralPath (Join-Path $package 'streamoscope-bridge\main.lua') -Value 'return {}'
+        }
+
+        [System.IO.Compression.ZipFile]::CreateFromDirectory($package, $Destination, [System.IO.Compression.CompressionLevel]::Optimal, $true)
+    }
+
     function New-TestRelease {
         param(
             [string]$Version = '0.2.0',
             [string]$CompatibilityVersion = $Version,
             [string]$MinObsVersion = '28.0.0',
+            [string]$InstalledVersion = '0.1.0',
+            [DateTimeOffset]$PublishedAt = [DateTimeOffset]::UtcNow.AddDays(-7),
             $Key = $script:releaseKey,
-            [switch]$TamperSetup,
-            [switch]$SkipSetup
+            [switch]$TamperPackage,
+            [switch]$SkipPackage,
+            [switch]$WithoutBridge
         )
 
         $root = Join-Path $TestDrive ([guid]::NewGuid().ToString('N'))
         $release = Join-Path $root "release\v$Version"
         $install = Join-Path $root 'install'
 
-        New-Item -ItemType Directory -Path $release, $install -Force | Out-Null
-        Set-Content -LiteralPath (Join-Path $install 'compatibility.json') -Value '{"version": "0.1.0"}'
+        New-Item -ItemType Directory -Path $release, (Join-Path $install "versions\$InstalledVersion") -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path $install 'current-version.js') -Value "window.STREAMOSCOPE_VERSION = '$InstalledVersion';"
 
         $compatibility = Join-Path $release 'compatibility.json'
         Set-Content -LiteralPath $compatibility -Value ("{`"version`": `"$CompatibilityVersion`", `"minObsVersion`": `"$MinObsVersion`"}")
         Add-TestSignature -Path $compatibility -Key $Key
 
-        if (-not $SkipSetup) {
-            $setup = Join-Path $release "streamoscope-setup-$Version.exe"
-            [System.IO.File]::WriteAllBytes($setup, [byte[]]::new(300000))
-            Add-TestSignature -Path $setup -Key $Key
+        if (-not $SkipPackage) {
+            $package = Join-Path $release "streamoscope-$Version.zip"
+            New-TestPackage -Version $Version -Destination $package -WithoutBridge:$WithoutBridge
+            Add-TestSignature -Path $package -Key $Key
 
-            if ($TamperSetup) {
-                [System.IO.File]::AppendAllText($setup, 'tampered')
+            if ($TamperPackage) {
+                [System.IO.File]::AppendAllText($package, 'tampered')
             }
         }
 
+        $latest = Join-Path $root 'latest.json'
+        Set-Content -LiteralPath $latest -Value ("{`"tag_name`": `"v$Version`", `"published_at`": `"$($PublishedAt.ToString('yyyy-MM-ddTHH:mm:ssZ'))`"}")
+
         return [pscustomobject]@{
             BaseUrl = [System.Uri]::new((Join-Path $root 'release')).AbsoluteUri
+            LatestUrl = [System.Uri]::new($latest).AbsoluteUri
             Install = $install
             Status = Join-Path $root 'data\update-status.json'
         }
@@ -74,6 +108,12 @@ BeforeAll {
         param($Release, [string]$Version = '0.2.0')
 
         return Invoke-UpdateWidget -Version $Version -InstallDirectory $Release.Install -StatusPath $Release.Status -ReleaseBaseUrl $Release.BaseUrl -PublicKey $script:releaseKey.Public -MinisignPath $script:minisign
+    }
+
+    function Invoke-TestAutoUpdate {
+        param($Release)
+
+        return Invoke-AutoUpdate -InstallDirectory $Release.Install -StatusPath $Release.Status -ReleaseBaseUrl $Release.BaseUrl -LatestReleaseUrl $Release.LatestUrl -PublicKey $script:releaseKey.Public -MinisignPath $script:minisign
     }
 
     function Get-TestStatus {
@@ -103,17 +143,21 @@ Describe 'Compare-SemanticVersion' {
 
 Describe 'Invoke-UpdateWidget' {
     BeforeEach {
-        Mock Invoke-Installer { 0 }
         Mock Get-ObsVersion { '33.0.1' }
+        Mock Set-UninstallDisplayVersion { }
     }
 
-    It 'downloads, verifies and installs a newer signed release' {
+    It 'unpacks a newer signed release next to the old one and switches to it' {
         $release = New-TestRelease
 
         Invoke-TestUpdate -Release $release | Should -Be 'done'
         (Get-TestStatus -Release $release).stage | Should -Be 'done'
         (Get-TestStatus -Release $release).version | Should -Be '0.2.0'
-        Should -Invoke Invoke-Installer -Times 1 -ParameterFilter { $SetupPath -like '*streamoscope-setup-0.2.0.exe' }
+        Get-InstalledVersion -InstallDirectory $release.Install | Should -Be '0.2.0'
+        Test-Path -LiteralPath (Join-Path $release.Install 'versions\0.2.0\streamoscope-bridge\main.lua') | Should -BeTrue
+        Test-Path -LiteralPath (Join-Path $release.Install 'versions\0.1.0') | Should -BeTrue
+        Test-Path -LiteralPath (Join-Path $release.Install 'versions\staging-0.2.0') | Should -BeFalse
+        Should -Invoke Set-UninstallDisplayVersion -Times 1 -ParameterFilter { $Version -eq '0.2.0' }
         Test-Path -LiteralPath (Join-Path ([System.IO.Path]::GetTempPath()) 'streamoscope-update-0.2.0') | Should -BeFalse
     }
 
@@ -135,7 +179,6 @@ Describe 'Invoke-UpdateWidget' {
     }
 
     It 'refuses <Version> as <Expected>' -TestCases @(
-        @{Version = '0.1.0'; Expected = 'notNewer'},
         @{Version = '0.0.9'; Expected = 'notNewer'},
         @{Version = '0.2'; Expected = 'invalidVersion'},
         @{Version = '0.2.0; calc'; Expected = 'invalidVersion'}
@@ -146,28 +189,37 @@ Describe 'Invoke-UpdateWidget' {
 
         Invoke-TestUpdate -Release $release -Version $Version | Should -Be $Expected
         (Get-TestStatus -Release $release).error | Should -Be $Expected
-        Should -Invoke Invoke-Installer -Times 0
+        Get-InstalledVersion -InstallDirectory $release.Install | Should -Be '0.1.0'
+    }
+
+    It 'counts the version that is already switched to as done' {
+        $release = New-TestRelease -InstalledVersion '0.2.0'
+
+        Invoke-TestUpdate -Release $release | Should -Be 'done'
+        (Get-TestStatus -Release $release).stage | Should -Be 'done'
+        Should -Invoke Set-UninstallDisplayVersion -Times 0
     }
 
     It 'reports a network error when the release is missing' {
-        $release = New-TestRelease -SkipSetup
+        $release = New-TestRelease -SkipPackage
 
         Invoke-TestUpdate -Release $release | Should -Be 'network'
-        Should -Invoke Invoke-Installer -Times 0
+        Get-InstalledVersion -InstallDirectory $release.Install | Should -Be '0.1.0'
     }
 
-    It 'never installs a setup that was changed after signing' {
-        $release = New-TestRelease -TamperSetup
+    It 'never unpacks a package that was changed after signing' {
+        $release = New-TestRelease -TamperPackage
 
         Invoke-TestUpdate -Release $release | Should -Be 'signature'
-        Should -Invoke Invoke-Installer -Times 0
+        Get-InstalledVersion -InstallDirectory $release.Install | Should -Be '0.1.0'
+        Test-Path -LiteralPath (Join-Path $release.Install 'versions\0.2.0') | Should -BeFalse
     }
 
-    It 'never installs a release signed with another key' {
+    It 'never unpacks a release signed with another key' {
         $release = New-TestRelease -Key $script:otherKey
 
         Invoke-TestUpdate -Release $release | Should -Be 'signature'
-        Should -Invoke Invoke-Installer -Times 0
+        Test-Path -LiteralPath (Join-Path $release.Install 'versions\0.2.0') | Should -BeFalse
     }
 
     It 'rejects compatibility data of another version' {
@@ -181,7 +233,7 @@ Describe 'Invoke-UpdateWidget' {
         $release = New-TestRelease -MinObsVersion '28.0.0'
 
         Invoke-TestUpdate -Release $release | Should -Be 'incompatible'
-        Should -Invoke Invoke-Installer -Times 0
+        Get-InstalledVersion -InstallDirectory $release.Install | Should -Be '0.1.0'
     }
 
     It 'goes on when the OBS version is unknown' {
@@ -190,10 +242,13 @@ Describe 'Invoke-UpdateWidget' {
         Invoke-TestUpdate -Release (New-TestRelease) | Should -Be 'done'
     }
 
-    It 'reports a failed setup' {
-        Mock Invoke-Installer { 1 }
+    It 'keeps the current version when the package is incomplete' {
+        $release = New-TestRelease -WithoutBridge
 
-        Invoke-TestUpdate -Release (New-TestRelease) | Should -Be 'install'
+        Invoke-TestUpdate -Release $release | Should -Be 'install'
+        Get-InstalledVersion -InstallDirectory $release.Install | Should -Be '0.1.0'
+        Test-Path -LiteralPath (Join-Path $release.Install 'versions\0.2.0') | Should -BeFalse
+        Test-Path -LiteralPath (Join-Path $release.Install 'versions\staging-0.2.0') | Should -BeFalse
     }
 
     It 'does not start a second update while one is running' {
@@ -211,9 +266,119 @@ Describe 'Invoke-UpdateWidget' {
     }
 }
 
+Describe 'Get-AutoUpdateAction' {
+    It 'answers <Expected> for <Version> over <Installed>, published <AgeHours> hours ago' -TestCases @(
+        @{Version = '0.2.0'; Installed = '0.1.0'; AgeHours = 49; Expected = 'install'},
+        @{Version = '0.2.0'; Installed = '0.1.0'; AgeHours = 47; Expected = 'tooFresh'},
+        @{Version = '0.2.0'; Installed = '0.2.0'; AgeHours = 49; Expected = 'upToDate'},
+        @{Version = '0.1.0'; Installed = '0.2.0'; AgeHours = 49; Expected = 'upToDate'},
+        @{Version = '1.0.0'; Installed = '0.9.0'; AgeHours = 49; Expected = 'manualOnly'}
+    ) {
+        param($Version, $Installed, $AgeHours, $Expected)
+
+        $now = [DateTimeOffset]::UtcNow
+        $release = [pscustomobject]@{Version = $Version; PublishedAt = $now.AddHours(-$AgeHours)}
+
+        Get-AutoUpdateAction -Release $release -InstalledVersion $Installed -Now $now | Should -Be $Expected
+    }
+}
+
+Describe 'Invoke-AutoUpdate' {
+    BeforeEach {
+        Mock Get-ObsVersion { '33.0.1' }
+        Mock Set-UninstallDisplayVersion { }
+    }
+
+    It 'installs a release that has been out long enough' {
+        $release = New-TestRelease
+
+        Invoke-TestAutoUpdate -Release $release | Should -Be 'done'
+        Get-InstalledVersion -InstallDirectory $release.Install | Should -Be '0.2.0'
+    }
+
+    It 'waits with a fresh release and leaves no status' {
+        $release = New-TestRelease -PublishedAt ([DateTimeOffset]::UtcNow.AddHours(-1))
+
+        Invoke-TestAutoUpdate -Release $release | Should -Be 'tooFresh'
+        Get-InstalledVersion -InstallDirectory $release.Install | Should -Be '0.1.0'
+        Test-Path -LiteralPath $release.Status | Should -BeFalse
+    }
+
+    It 'does not ask GitHub again within the hour' {
+        $release = New-TestRelease -InstalledVersion '0.2.0'
+
+        Invoke-TestAutoUpdate -Release $release | Should -Be 'upToDate'
+        Invoke-TestAutoUpdate -Release $release | Should -Be 'notDue'
+    }
+
+    It 'asks again after the hour' {
+        $release = New-TestRelease -InstalledVersion '0.2.0'
+
+        Invoke-TestAutoUpdate -Release $release | Should -Be 'upToDate'
+        (Get-Item -LiteralPath (Join-Path (Split-Path -Parent $release.Status) 'update-check.stamp')).LastWriteTimeUtc = [DateTime]::UtcNow.AddHours(-2)
+        Invoke-TestAutoUpdate -Release $release | Should -Be 'upToDate'
+    }
+
+    It 'does not count a failed request as a check' {
+        $release = New-TestRelease
+        $release.LatestUrl = [System.Uri]::new((Join-Path $TestDrive 'missing.json')).AbsoluteUri
+
+        { Invoke-TestAutoUpdate -Release $release } | Should -Throw
+        Test-Path -LiteralPath (Join-Path (Split-Path -Parent $release.Status) 'update-check.stamp') | Should -BeFalse
+    }
+}
+
+Describe 'Remove-OldVersions' {
+    It 'keeps the three newest versions and nothing else is touched' {
+        $versions = Join-Path $TestDrive 'old-versions'
+
+        foreach ($name in @('0.9.0', '0.10.0', '0.10.1', '0.11.0', '1.0.0', 'keep-me')) {
+            New-Item -ItemType Directory -Path (Join-Path $versions $name) -Force | Out-Null
+        }
+
+        Remove-OldVersions -VersionsDirectory $versions
+
+        (Get-ChildItem -LiteralPath $versions -Directory).Name | Sort-Object | Should -Be @('0.10.1', '0.11.0', '1.0.0', 'keep-me')
+    }
+}
+
+Describe 'Set-CurrentVersion' {
+    It 'replaces the version and leaves no temporary file' {
+        $install = Join-Path $TestDrive 'switch'
+        New-Item -ItemType Directory -Path $install -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path $install 'current-version.js') -Value "window.STREAMOSCOPE_VERSION = '0.1.0';"
+
+        Set-CurrentVersion -InstallDirectory $install -Version '0.2.0'
+
+        Get-InstalledVersion -InstallDirectory $install | Should -Be '0.2.0'
+        (Get-ChildItem -LiteralPath $install).Name | Should -Be 'current-version.js'
+    }
+}
+
+Describe 'Set-UninstallDisplayVersion' {
+    It 'writes to the uninstall entry the installer creates' {
+        $appId = [regex]::Match((Get-Content -LiteralPath (Join-Path $PSScriptRoot '..\streamoscope.iss') -Raw), 'AppId=\{\{([0-9A-F-]+)\}').Groups[1].Value
+
+        $script:UninstallRegistryKey | Should -BeLike "*\{$appId}_is1"
+    }
+}
+
 Describe 'Update-Widget.ps1' {
+    BeforeAll {
+        $entry = Join-Path $updaterDirectory 'Update-Widget.ps1'
+        $installerDirectory = Join-Path $PSScriptRoot '..'
+
+        function Invoke-TestEntry {
+            param([string[]]$EntryArguments)
+
+            $arguments = @('-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', "`"$entry`"") + $EntryArguments
+
+            return (Start-Process powershell.exe -ArgumentList $arguments -Wait -PassThru -WindowStyle Hidden).ExitCode
+        }
+    }
+
     It 'checks updates with the public key from minisign.pub' {
-        $script = Get-Content -LiteralPath (Join-Path $updaterDirectory 'Update-Widget.ps1') -Raw
+        $script = Get-Content -LiteralPath $entry -Raw
         $publicKey = (Get-Content -LiteralPath (Join-Path $PSScriptRoot '..\..\minisign.pub'))[1]
 
         $script | Should -Match ([regex]::Escape("[string]`$PublicKey = '$publicKey'"))
@@ -221,9 +386,24 @@ Describe 'Update-Widget.ps1' {
 
     It 'exits with 1 and writes a failed status for a bad version' {
         $status = Join-Path $TestDrive 'entry\update-status.json'
-        $process = Start-Process powershell.exe -ArgumentList @('-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', "`"$(Join-Path $updaterDirectory 'Update-Widget.ps1')`"", '-Version', 'bad', '-InstallDirectory', "`"$(Join-Path $PSScriptRoot '..')`"", '-StatusPath', "`"$status`"") -Wait -PassThru -WindowStyle Hidden
 
-        $process.ExitCode | Should -Be 1
+        Invoke-TestEntry -EntryArguments @('-Version', 'bad', '-InstallDirectory', "`"$installerDirectory`"", '-StatusPath', "`"$status`"") | Should -Be 1
         (Get-Content -LiteralPath $status -Raw | ConvertFrom-Json).error | Should -Be 'invalidVersion'
+    }
+
+    It 'exits with 1 and writes nothing when the background check fails' {
+        $status = Join-Path $TestDrive 'entry-auto\update-status.json'
+        $missing = [System.Uri]::new((Join-Path $TestDrive 'missing.json')).AbsoluteUri
+
+        Invoke-TestEntry -EntryArguments @('-Auto', '-InstallDirectory', "`"$installerDirectory`"", '-StatusPath', "`"$status`"", '-LatestReleaseUrl', $missing) | Should -Be 1
+        Test-Path -LiteralPath $status | Should -BeFalse
+    }
+
+    It 'exits with 0 when the background check is not due yet' {
+        $status = Join-Path $TestDrive 'entry-due\update-status.json'
+        New-Item -ItemType Directory -Path (Split-Path -Parent $status) -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path (Split-Path -Parent $status) 'update-check.stamp') -Value ''
+
+        Invoke-TestEntry -EntryArguments @('-Auto', '-InstallDirectory', "`"$installerDirectory`"", '-StatusPath', "`"$status`"") | Should -Be 0
     }
 }

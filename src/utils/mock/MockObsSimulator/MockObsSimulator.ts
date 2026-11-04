@@ -35,7 +35,6 @@ const {
     GetStreamServiceSettings,
     GetOutputList,
     GetProfileParameter,
-    GetRecordStatus,
     SetProfileParameter,
     GetVersion,
     GetSceneCollectionList,
@@ -154,9 +153,6 @@ export class MockObsSimulator {
 
             case GetProfileParameter:
                 return successResult(requestType, {parameterValue: JSON.stringify(this.buildBridgeData())});
-
-            case GetRecordStatus:
-                return successResult(requestType, {outputActive: false});
 
             case GetSceneCollectionList:
                 return successResult(requestType, {currentSceneCollectionName: MOCK_SCENE_COLLECTION, sceneCollections: [MOCK_SCENE_COLLECTION]});

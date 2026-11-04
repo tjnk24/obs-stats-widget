@@ -9,8 +9,6 @@ import {parseVersion} from './parseVersion';
 
 const {ObsTooOld, RpcMismatch, RequestsMissing, ChromiumTooOld} = CompatibilityProblemEnum;
 
-const {MajorUpdate, BridgeRestart} = CompatibilityWarningEnum;
-
 export const checkCompatibility = (compatibility: CompatibilityDto, environment: UpdateEnvironmentDto): CompatibilityResultDto => {
     const problems: CompatibilityProblemEnum[] = [];
     const warnings: CompatibilityWarningEnum[] = [];
@@ -19,7 +17,6 @@ export const checkCompatibility = (compatibility: CompatibilityDto, environment:
         rpcVersion,
         availableRequests,
         chromiumVersion,
-        bridgeVersion,
         currentVersion,
     } = environment;
 
@@ -43,11 +40,7 @@ export const checkCompatibility = (compatibility: CompatibilityDto, environment:
     const currentMajor = parseVersion(currentVersion)?.major ?? 0;
 
     if (newMajor > currentMajor) {
-        warnings.push(MajorUpdate);
-    }
-
-    if (bridgeVersion !== null && bridgeVersion < compatibility.minBridgeVersion) {
-        warnings.push(BridgeRestart);
+        warnings.push(CompatibilityWarningEnum.MajorUpdate);
     }
 
     return {problems, warnings};

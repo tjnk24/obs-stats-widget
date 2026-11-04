@@ -44,7 +44,7 @@ The `v*` tag triggers the GitHub Actions release workflow: build, test, sign and
 | Asset | Purpose |
 | --- | --- |
 | `streamoscope-setup-<version>.exe` | Windows installer |
-| `streamoscope-<version>.zip` | Dock, Lua bridge and supporting installation files |
+| `streamoscope-<version>.zip` | Dock, Lua bridge and updater scripts. Manual installs unpack it; the installed dock updates itself from it |
 | `compatibility.json` | OBS, WebSocket, Chromium and bridge compatibility information |
 | `.minisig` files | Signatures for released assets |
 | `SHA256SUMS.txt` | Checksums for the installer and archive |
@@ -65,16 +65,37 @@ This flow uses a **separate test signing key and local update server**. Never co
    minisign -G -W -p test.pub -s test.key
    ```
 
-2. Build a test installer with `TEST_UPDATE_SERVER=http://127.0.0.1:3063` and `TEST_UPDATE_PUBLIC_KEY=<public key string>` set. These values affect the test build only.
-3. Build a newer test version. Put its installer and `compatibility.json` in the folder to serve, and sign both with `minisign -S -s test.key -m <file>`.
-4. Run `npm run serve:test-release -- <folder>`, install the older test build and trigger its update from the dock.
-5. Restore a production build afterward.
+2. Build a test installer with `TEST_UPDATE_SERVER=http://127.0.0.1:3063` and `TEST_UPDATE_PUBLIC_KEY=<public key string>` set: `npm run package:installer`. These values affect the test build only.
+3. Build a newer test version the same way, in a copy of the project with a raised `version`. Zip `release/streamoscope-<version>` so that this folder is the top level of the archive, put the zip and `compatibility.json` in the folder to serve, and sign both with `minisign -S -s test.key -m <file>`.
+4. Run `npm run serve:test-release -- <folder>`, install the older test build and open OBS. About a minute later the bridge downloads the newer version by itself; **Check for updates** and **Update** in the settings do it at once. The test server reports an old publication date, so the two-day wait doesn't get in the way.
+5. Restart OBS and check the version in the settings. Restore a production build afterward.
 
-Use the `--broken-signature` option when you want to verify that the updater rejects tampered release assets. The workshop considers this a desirable failure.
+Use the `--broken-signature` option when you want to verify that the updater rejects a tampered package. The workshop considers this a desirable failure.
+
+## How updates work
+
+Updates work the way Chrome does them: the new version lands next to the old one and starts with the next launch of OBS.
+
+```text
+%LOCALAPPDATA%\Programs\streamoscope
+  dock\index.html             loader, redirects to the current version
+  streamoscope-bridge.lua     loader, runs the bridge of the current version
+  current-version.js          which version is current
+  versions\<version>\         dock, bridge and updater scripts of that version
+  updater\minisign.exe        checks signatures, comes only with the installer
+```
+
+OBS keeps the paths of the two loaders in its configuration, so they never move and rarely change.
+
+About a minute after OBS starts and then once a day, the bridge starts `Update-Widget.ps1 -Auto`. It asks GitHub for the latest release at most once an hour, skips releases younger than 48 hours and major versions, then verifies and unpacks the archive. The last step is one atomic rewrite of `current-version.js`: a failure before it leaves the current version alone. The three newest versions stay on disk. The **Update** button runs the same steps through `-Version X.Y.Z`, without the wait.
+
+The switch **Update automatically** is stored by the bridge in `%LOCALAPPDATA%\streamoscope\auto-update.txt`, so the background check works even when the dock is closed or broken.
+
+A new bridge can meet an old dock: switching the scene collection reloads the scripts, while the open dock stays on its version. Bridge data therefore only gains fields.
 
 ## Installer and removal behavior
 
-The installer puts application files in `%LOCALAPPDATA%\Programs\streamoscope`, adds the OBS dock and Lua bridge, and attempts to configure the local WebSocket server. It keeps backups under `%LOCALAPPDATA%\streamoscope\backups` and writes `%LOCALAPPDATA%\streamoscope\configure-obs.log`.
+The installer puts application files in `%LOCALAPPDATA%\Programs\streamoscope` in the layout above, adds the OBS dock and Lua bridge, and attempts to configure the local WebSocket server. It keeps backups under `%LOCALAPPDATA%\streamoscope\backups` and writes `%LOCALAPPDATA%\streamoscope\configure-obs.log`.
 
 Close OBS before installation or removal. Uninstallation leaves OBS WebSocket enabled because another application might rely on it.
 

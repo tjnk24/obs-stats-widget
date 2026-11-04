@@ -3,6 +3,5 @@ export enum UpdateInstallBlockerEnum {
     NotNewer = 'notNewer',
     NoUpdater = 'noUpdater',
     Incompatible = 'incompatible',
-    ObsBusy = 'obsBusy',
     InProgress = 'inProgress',
 }

@@ -14,10 +14,6 @@
   #define OutputDir "..\release"
 #endif
 
-#ifndef UpdaterDir
-  #define UpdaterDir "updater"
-#endif
-
 #define AppName "StreamoScope"
 #define AppSlug "streamoscope"
 #define AppUrl "https://github.com/tjnk24/streamoscope"
@@ -60,16 +56,24 @@ Name: "ptbr"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 
 [InstallDelete]
 Type: filesandordirs; Name: "{app}\dock"
+Type: filesandordirs; Name: "{app}\versions"
 Type: filesandordirs; Name: "{app}\streamoscope-bridge"
 Type: filesandordirs; Name: "{app}\ConfigureObs"
 Type: filesandordirs; Name: "{app}\updater"
+Type: files; Name: "{app}\compatibility.json"
+Type: files; Name: "{app}\LICENSE"
+
+[UninstallDelete]
+Type: filesandordirs; Name: "{app}\versions"
+Type: files; Name: "{app}\current-version.js"
 
 [Files]
-Source: "{#PackageDir}\*"; DestDir: "{app}"; Excludes: "README.txt"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#PackageDir}\*"; DestDir: "{app}\versions\{#AppVersion}"; Excludes: "README.txt"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#PackageDir}\streamoscope-bridge.lua"; DestDir: "{app}"; Flags: ignoreversion
+Source: "loader\index.html"; DestDir: "{app}\dock"; Flags: ignoreversion
 Source: "configure-obs.ps1"; DestDir: "{app}"; Flags: ignoreversion
 Source: "images\streamoscope.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "ConfigureObs\*.ps1"; DestDir: "{app}\ConfigureObs"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#UpdaterDir}\*.ps1"; DestDir: "{app}\updater"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MinisignPath}"; DestDir: "{app}\updater"; Flags: ignoreversion
 Source: "third-party\minisign-LICENSE.txt"; DestDir: "{app}\updater"; Flags: ignoreversion
 
@@ -202,10 +206,18 @@ begin
   Log('configure-obs.ps1 exit code: ' + IntToStr(Code));
 end;
 
+procedure WriteCurrentVersion;
+begin
+  SaveStringToFile(ExpandConstant('{app}\current-version.js'), 'window.STREAMOSCOPE_VERSION = ''{#AppVersion}'';' + #13#10, False);
+end;
+
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssPostInstall then
+  begin
+    WriteCurrentVersion;
     ConfigureObs;
+  end;
 end;
 
 procedure CurPageChanged(CurPageID: Integer);

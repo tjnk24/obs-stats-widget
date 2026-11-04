@@ -26,7 +26,9 @@ if (testServer && !testPublicKey) {
     throw new Error('TEST_UPDATE_SERVER is set without TEST_UPDATE_PUBLIC_KEY');
 }
 
-const updaterArguments = testServer && testPublicKey ? [`/DUpdaterDir=${stageTestUpdater(testServer, testPublicKey)}`] : [];
+if (testServer && testPublicKey) {
+    stageTestUpdater(testServer, testPublicKey);
+}
 
 const result = spawnSync(findCompiler(), [
     '/Qp',
@@ -34,7 +36,6 @@ const result = spawnSync(findCompiler(), [
     `/DPackageDir=${PACKAGE_DIRECTORY}`,
     `/DMinisignPath=${minisign}`,
     `/DOutputDir=${RELEASE_DIRECTORY}`,
-    ...updaterArguments,
     path.join(ROOT_DIRECTORY, 'installer', 'streamoscope.iss'),
 ], {stdio: 'inherit'});
 

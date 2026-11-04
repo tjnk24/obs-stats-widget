@@ -81,7 +81,7 @@ The installer places files in `%LOCALAPPDATA%\Programs\streamoscope`, configures
 
 If OBS has never been launched on your PC, open it once, close it, then rerun the installer. You might need to enable its WebSocket server manually.
 
-🔄 **Updates:** the dock can check for new releases and offers signature-verified updates; it won't start an installation while OBS is streaming or recording.
+🔄 **Updates:** new versions download quietly in the background and start the next time you launch OBS. Nothing to click, nothing interrupts a stream. A small PowerShell script checks the minisign signature and unpacks the files next to the old version; it never runs a downloaded program. A new release reaches you automatically about two days after it's published, so a bad one can be pulled first. Prefer to stay in charge? Turn off **Update automatically** in the settings and use **Check for updates** there.
 
 🗑️ **Uninstall:** close OBS and remove **StreamoScope** via **Windows Settings → Apps**.
 
@@ -104,7 +104,7 @@ To update a manual installation, replace the files and refresh the dock with **C
 
 StreamoScope has two parts: the dock, which reads output statistics through OBS's built-in WebSocket server, and the **Lua bridge**, a small OBS script that supplies what WebSocket doesn't. It isn't tied to one particular multistream plugin or a preapproved list of destinations.
 
-The bridge tells the dock where plugin outputs are streaming, reads Windows hardware metrics and runs signed updates. The installer sets it up for you; the dock shows a notice whenever the bridge isn't loaded in the current scene collection. Missing metadata doesn't necessarily mean a stream isn't being monitored: some outputs may simply be labeled **Plugin**.
+The bridge tells the dock where plugin outputs are streaming, reads Windows hardware metrics and starts the background updates. The installer sets it up for you; the dock shows a notice whenever the bridge isn't loaded in the current scene collection. Missing metadata doesn't necessarily mean a stream isn't being monitored: some outputs may simply be labeled **Plugin**.
 
 🔒 For platform detection, the bridge uses protocol and hostname information, not stream keys or URL paths.
 
@@ -114,14 +114,14 @@ The bridge tells the dock where plugin outputs are streaming, reads Windows hard
 - **Output identity may be ambiguous.** If a plugin reports several streams using indistinguishable output identifiers, OBS might not provide separate statistics for each one. StreamoScope displays what can be reliably distinguished.
 - **Labels are best-effort.** Unrecognized services can appear as **Plugin** rather than a platform name.
 - **Without the bridge, only the basics.** Bitrate, dropped frames and OBS statistics still work, but plugin outputs lose their platform names, hardware readings (Windows only) disappear and updates have to be installed by hand.
-- **Manual installs update manually.** The ZIP doesn't include the updater: replace the files yourself.
+- **Manual installs update manually.** Automatic updates work only in the installed version: replace the files yourself.
 
 ## ⚙️ Settings, privacy and troubleshooting
 
-Use the dock's **gear icon** to change language, show or hide OBS statistics, try mock mode, check for updates or copy diagnostics.
+Use the dock's **gear icon** to change language, show or hide OBS statistics, try mock mode, check for updates, turn automatic updates off or copy diagnostics.
 
 - The OBS WebSocket connection normally uses `127.0.0.1`.
-- Release checks, when enabled, contact `api.github.com` on startup and roughly once per day; manual checks are also available.
+- Automatic updates, when enabled, contact `api.github.com` and download from GitHub on startup and roughly once per day; manual checks are also available.
 - The WebSocket password stays in the dock's local browser storage. Stream keys are not read.
 - Diagnostic exports exclude passwords, stream keys and server addresses.
 - No separate StreamoScope account or cloud service is needed.

@@ -8,7 +8,7 @@ import {
     COMPATIBILITY_FILE_NAME,
     CORS_HEADERS,
     DOWNLOAD_PATH_PATTERN,
-    SETUP_SIGNATURE_SUFFIX,
+    PACKAGE_SIGNATURE_SUFFIX,
     TEST_RELEASE_HOST,
     TEST_RELEASE_PORT,
     USAGE,
@@ -47,7 +47,7 @@ const server = http.createServer((request, response) => {
     }
 
     const [, , fileName] = DOWNLOAD_PATH_PATTERN.exec(pathname) ?? [];
-    const servedName = isSignatureBroken && fileName?.endsWith(SETUP_SIGNATURE_SUFFIX) ? `${COMPATIBILITY_FILE_NAME}.minisig` : fileName;
+    const servedName = isSignatureBroken && fileName?.endsWith(PACKAGE_SIGNATURE_SUFFIX) ? `${COMPATIBILITY_FILE_NAME}.minisig` : fileName;
     const filePath = servedName && path.join(releaseDirectory, servedName);
 
     if (!filePath || !fs.existsSync(filePath)) {
@@ -61,5 +61,5 @@ const server = http.createServer((request, response) => {
 });
 
 server.listen(TEST_RELEASE_PORT, TEST_RELEASE_HOST, () => {
-    console.log(`Test release ${isSignatureBroken ? 'with a broken setup signature ' : ''}at ${origin}`);
+    console.log(`Test release ${isSignatureBroken ? 'with a broken package signature ' : ''}at ${origin}`);
 });

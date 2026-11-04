@@ -1,4 +1,7 @@
 import {BaseStore} from '__reducers';
+import {BridgeUpdateStateDto} from '__types/update/bridge/BridgeUpdateStateDto';
+import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
+import {UpdateStatusDto} from '__types/update/bridge/UpdateStatusDto';
 import {ReleaseDto} from '__types/update/ReleaseDto';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
 
@@ -14,12 +17,21 @@ export const RELEASE: ReleaseDto = {
     compatibility: null,
 };
 
+export const RUNNING_STATUS: UpdateStatusDto = {
+    version: '0.2.0',
+    stage: UpdateStageEnum.Downloading,
+    percent: 42,
+    error: null,
+    updated: NOW / 1000,
+};
+
+export const BRIDGE: BridgeUpdateStateDto = {
+    isAvailable: true,
+    bridgeVersion: 4,
+    status: null,
+};
+
 export const STATE = {
-    update: {checkStatus: UpdateCheckStatusEnum.Available, latest: RELEASE, request: null, deferredVersion: null},
-    settings: {
-        lastUpdateCheckAt: NOW - 60_000,
-        isAutoUpdateCheckEnabled: true,
-        skippedUpdateVersion: null,
-        updateRemindAt: null,
-    },
+    update: {checkStatus: UpdateCheckStatusEnum.Available, latest: RELEASE, bridge: null, request: null},
+    settings: {lastUpdateCheckAt: NOW - 60_000, isAutoUpdateEnabled: true},
 } as unknown as BaseStore;

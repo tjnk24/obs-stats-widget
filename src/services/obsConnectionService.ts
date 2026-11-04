@@ -5,7 +5,6 @@ import {commonActions} from '__actions';
 import {connectionSelector} from '__selectors/connectionSelectors';
 import {settingsSelector} from '__selectors/settingsSelectors';
 import {statsSelector} from '__selectors/statsSelectors';
-import {updateSelector} from '__selectors/updateSelectors';
 import {getStore} from '__store';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
 import {PasswordChangeDto} from '__types/connection/PasswordChangeDto';
@@ -38,7 +37,6 @@ import {MockObsSimulator} from '__utils/mock/MockObsSimulator';
 import {buildRequests} from '__utils/requests/buildRequests';
 import {getObsVersion} from '__utils/requests/getObsVersion';
 import {getSceneCollection} from '__utils/requests/getSceneCollection';
-import {isObsBusy} from '__utils/requests/isObsBusy';
 import {isRequestOfType} from '__utils/requests/isRequestOfType';
 import {StatsTracker} from '__utils/stats/StatsTracker';
 import {discoverTargets} from '__utils/targets/discoverTargets';
@@ -354,12 +352,6 @@ class ObsConnectionService {
 
             commonActions.stats.setHardware(getHardware(pairs, sceneCollection));
             commonActions.update.setBridge(getBridgeUpdate(pairs, sceneCollection));
-        }
-
-        const isBusy = isObsBusy(pairs);
-
-        if (isBusy !== null && isBusy !== updateSelector(getStore()).isObsBusy) {
-            commonActions.update.setIsObsBusy(isBusy);
         }
 
         const obsVersion = getObsVersion(pairs);

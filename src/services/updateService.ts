@@ -6,12 +6,10 @@ import {settingsSelector} from '__selectors/settingsSelectors';
 import {updateSelector} from '__selectors/updateSelectors';
 import store, {getStore} from '__store';
 import {ObsRequestTypeEnum} from '__types/obs/requests/ObsRequestTypeEnum';
-import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
 import {CompatibilityResultDto} from '__types/update/compatibility/CompatibilityResultDto';
 import {GithubReleaseDto} from '__types/update/GithubReleaseDto';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
 import {UpdateInstallBlockerEnum} from '__types/update/UpdateInstallBlockerEnum';
-import {isRequestedStatus} from '__utils/bridge/isRequestedStatus';
 import {
     LATEST_RELEASE_URL,
     OPEN_URL_COMMAND_PARAMETER,
@@ -19,7 +17,6 @@ import {
     UPDATE_CHECK_PERIOD_MS,
     UPDATE_CHECK_TIMER_MS,
     UPDATE_COMMAND_PARAMETER,
-    UPDATE_REMIND_DELAY_MS,
 } from '__utils/consts';
 import {HTTP_NOT_FOUND} from '__utils/consts';
 import {checkCompatibility} from '__utils/update/checkCompatibility';
@@ -39,16 +36,12 @@ class UpdateService {
 
     private unsubscribe: Nullable<() => void> = null;
 
+    private hasUpdater = false;
+
     start = () => {
         this.stop();
 
-        const {isAutoUpdateCheckEnabled, lastSeenVersion} = settingsSelector(getStore());
-
-        if (lastSeenVersion === null || (compareVersions(lastSeenVersion, process.env.APP_VERSION) ?? 0) > 0) {
-            this.acknowledgeUpdate();
-        }
-
-        if (isAutoUpdateCheckEnabled) {
+        if (settingsSelector(getStore()).isAutoUpdateEnabled) {
             void this.checkForUpdates();
         }
 
@@ -61,6 +54,7 @@ class UpdateService {
         this.timer = null;
         this.unsubscribe?.();
         this.unsubscribe = null;
+        this.hasUpdater = false;
     };
 
     checkForUpdates = async (): Promise<UpdateCheckStatusEnum> => {
@@ -79,7 +73,7 @@ class UpdateService {
 
     getCompatibility = (): Nullable<CompatibilityResultDto> => {
         const state = getStore();
-        const {latest, bridge} = updateSelector(state);
+        const {latest} = updateSelector(state);
         const compatibility = latest?.compatibility;
 
         if (!compatibility) {
@@ -94,29 +88,26 @@ class UpdateService {
             rpcVersion: obsVersion?.rpcVersion ?? null,
             availableRequests: obsVersion?.availableRequests ?? null,
             chromiumVersion: getChromiumVersion(navigator.userAgent),
-            bridgeVersion: bridge?.bridgeVersion ?? null,
         });
     };
 
     getInstallBlocker = (): Nullable<UpdateInstallBlockerEnum> => {
-        const {latest, bridge, isObsBusy} = updateSelector(getStore());
+        const {latest, bridge} = updateSelector(getStore());
 
         return getInstallBlocker({
             release: latest,
             currentVersion: process.env.APP_VERSION,
             bridge,
             compatibility: this.getCompatibility(),
-            isObsBusy,
             now: Date.now(),
         });
     };
 
-    install = (): Nullable<UpdateInstallBlockerEnum> => {
-        const blocker = this.getInstallBlocker();
+    install = () => {
         const {latest: release} = updateSelector(getStore());
 
-        if (blocker || !release) {
-            return blocker ?? UpdateInstallBlockerEnum.NoRelease;
+        if (this.getInstallBlocker() || !release) {
+            return;
         }
 
         obsConnectionService.sendRequest({
@@ -124,19 +115,7 @@ class UpdateService {
             requestData: {...UPDATE_COMMAND_PARAMETER, parameterValue: `install:${release.version}`},
         });
 
-        commonActions.update.setDeferredVersion(null);
         commonActions.update.setRequest({version: release.version, requestedAt: Date.now()});
-
-        return null;
-    };
-
-    installWhenFree = () => {
-        const {latest} = updateSelector(getStore());
-
-        if (latest) {
-            commonActions.update.setRequest(null);
-            commonActions.update.setDeferredVersion(latest.version);
-        }
     };
 
     openReleasePage = (url: string) => {
@@ -155,34 +134,19 @@ class UpdateService {
         });
     };
 
-    cancelDeferredInstall = () => {
-        commonActions.update.setDeferredVersion(null);
-    };
-
-    dismissInstallResult = () => {
-        commonActions.update.setRequest(null);
-    };
-
-    skipVersion = (version: string) => {
-        commonActions.settings.setSkippedUpdateVersion(version);
-    };
-
-    remindLater = () => {
-        commonActions.settings.setUpdateRemindAt(Date.now() + UPDATE_REMIND_DELAY_MS);
-    };
-
-    acknowledgeUpdate = () => {
-        commonActions.settings.setLastSeenVersion(process.env.APP_VERSION);
-    };
-
-    showHiddenUpdate = () => {
-        commonActions.settings.setSkippedUpdateVersion(null);
-        commonActions.settings.setUpdateRemindAt(null);
-    };
-
-    setAutoCheckEnabled = (isEnabled: boolean) => {
-        commonActions.settings.setIsAutoUpdateCheckEnabled(isEnabled);
+    setAutoUpdateEnabled = (isEnabled: boolean) => {
+        commonActions.settings.setIsAutoUpdateEnabled(isEnabled);
+        this.sendAutoUpdate();
         isEnabled && this.checkIfDue();
+    };
+
+    private sendAutoUpdate = () => {
+        const {isAutoUpdateEnabled} = settingsSelector(getStore());
+
+        obsConnectionService.sendRequest({
+            requestType: SetProfileParameter,
+            requestData: {...UPDATE_COMMAND_PARAMETER, parameterValue: `auto:${isAutoUpdateEnabled ? 'on' : 'off'}`},
+        });
     };
 
     private fetchLatest = async (): Promise<UpdateCheckStatusEnum> => {
@@ -212,27 +176,20 @@ class UpdateService {
     };
 
     private checkIfDue = () => {
-        const {isAutoUpdateCheckEnabled, lastUpdateCheckAt} = settingsSelector(getStore());
+        const {isAutoUpdateEnabled, lastUpdateCheckAt} = settingsSelector(getStore());
 
-        if (isAutoUpdateCheckEnabled && (lastUpdateCheckAt === null || Date.now() - lastUpdateCheckAt >= UPDATE_CHECK_PERIOD_MS)) {
+        if (isAutoUpdateEnabled && (lastUpdateCheckAt === null || Date.now() - lastUpdateCheckAt >= UPDATE_CHECK_PERIOD_MS)) {
             void this.checkForUpdates();
         }
     };
 
     private onStoreChange = () => {
-        const {request, bridge, deferredVersion, isObsBusy} = updateSelector(getStore());
-        const status = bridge?.status ?? null;
+        const hadUpdater = this.hasUpdater;
 
-        if (status?.stage === UpdateStageEnum.Done && isRequestedStatus(status, request)) {
-            this.stop();
-            window.location.reload();
+        this.hasUpdater = updateSelector(getStore()).bridge?.isAvailable === true;
 
-            return;
-        }
-
-        if (deferredVersion && !isObsBusy) {
-            commonActions.update.setDeferredVersion(null);
-            this.install();
+        if (this.hasUpdater && !hadUpdater) {
+            this.sendAutoUpdate();
         }
     };
 }

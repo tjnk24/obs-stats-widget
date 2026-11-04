@@ -13,7 +13,6 @@ const {
     NoUpdater,
     Incompatible,
     InProgress,
-    ObsBusy,
 } = UpdateInstallBlockerEnum;
 
 export const getInstallBlocker = (context: UpdateInstallContextDto): Nullable<UpdateInstallBlockerEnum> => {
@@ -22,7 +21,6 @@ export const getInstallBlocker = (context: UpdateInstallContextDto): Nullable<Up
         currentVersion,
         bridge,
         compatibility,
-        isObsBusy,
         now,
     } = context;
 
@@ -46,10 +44,6 @@ export const getInstallBlocker = (context: UpdateInstallContextDto): Nullable<Up
 
     if (status && RUNNING_UPDATE_STAGES.includes(status.stage) && (now / 1000) - status.updated < UPDATE_STATUS_STALE_SEC) {
         return InProgress;
-    }
-
-    if (isObsBusy) {
-        return ObsBusy;
     }
 
     return null;

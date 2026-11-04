@@ -18,7 +18,6 @@ import {obsConnectionService} from '__services/obsConnectionService';
 import {routerManager} from '__services/routerManager';
 
 import BridgeNotice from '../bridge-notice';
-import UpdateBanner from '../update-banner';
 
 import {CONNECTION_BADGES} from './consts';
 import {useHeaderStageView} from './hooks/useHeaderStageView';
@@ -117,8 +116,6 @@ const MainLayout = () => {
                     showIcon
                 />
             )}
-
-            <UpdateBanner/>
 
             <BridgeNotice/>
 

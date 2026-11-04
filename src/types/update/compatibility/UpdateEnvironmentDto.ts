@@ -6,5 +6,4 @@ export type UpdateEnvironmentDto = {
     rpcVersion: Nullable<number>;
     availableRequests: Nullable<string[]>;
     chromiumVersion: Nullable<number>;
-    bridgeVersion: Nullable<number>;
 };

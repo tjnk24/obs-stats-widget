@@ -6,7 +6,9 @@ export const BROKEN_SIGNATURE_FLAG = '--broken-signature';
 
 export const COMPATIBILITY_FILE_NAME = 'compatibility.json';
 
-export const SETUP_SIGNATURE_SUFFIX = '.exe.minisig';
+export const PACKAGE_SIGNATURE_SUFFIX = '.zip.minisig';
+
+export const OLD_ENOUGH_PUBLISHED_AT = '2020-01-01T00:00:00Z';
 
 export const DOWNLOAD_PATH_PATTERN = /^\/download\/v(\d+\.\d+\.\d+)\/([\w.-]+)$/;
 

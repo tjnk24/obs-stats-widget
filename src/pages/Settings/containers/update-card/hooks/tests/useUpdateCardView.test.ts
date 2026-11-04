@@ -10,21 +10,25 @@ import {
 
 import {BaseStore} from '__reducers';
 import {updateService} from '__services/updateService';
+import {UpdateStageEnum} from '__types/update/bridge/UpdateStageEnum';
+import {CompatibilityProblemEnum} from '__types/update/compatibility/CompatibilityProblemEnum';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
 import {UpdateInstallBlockerEnum} from '__types/update/UpdateInstallBlockerEnum';
 
 import {useUpdateCardView} from '../useUpdateCardView';
 
 import {
+    BRIDGE,
     CURRENT_VERSION,
     NOW,
     RELEASE,
+    RUNNING_STATUS,
     STATE,
 } from './consts';
 
 vi.mock('react-redux', () => ({useSelector: vi.fn()}));
 
-vi.mock('__services/updateService', () => ({updateService: {getInstallBlocker: vi.fn(() => null)}}));
+vi.mock('__services/updateService', () => ({updateService: {getInstallBlocker: vi.fn(() => null), getCompatibility: vi.fn(() => null)}}));
 
 vi.mock('react-i18next', () => ({useTranslation: () => ({t: (key: string) => key, i18n: {language: 'en'}})}));
 
@@ -39,33 +43,135 @@ describe('useUpdateCardView', () => {
         vi.unstubAllEnvs();
     });
 
-    it('shows the result of a successful check', () => {
+    it('offers a newer version found by a check', () => {
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(STATE));
 
         expect(useUpdateCardView()).toEqual({
             lastCheckText: 'settings.lastCheck',
             checkText: 'settings.updateAvailable',
             isCheckFailed: false,
-            hiddenUpdateText: null,
+            statusText: null,
+            isStatusRunning: false,
+            errorText: null,
+            notes: [],
             isUpdateShown: true,
             isManual: false,
-            isAutoUpdateCheckEnabled: true,
+            updateText: 'update.install',
+            currentReleaseUrl: 'https://github.com/tjnk24/streamoscope/releases/tag/v0.1.0',
+            latestReleaseUrl: RELEASE.url,
+            isAutoUpdateEnabled: true,
         });
     });
 
-    it('offers a manual download when the update cannot be installed automatically', () => {
+    it('offers a manual download and says why when there is no updater', () => {
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(STATE));
         vi.mocked(updateService.getInstallBlocker).mockReturnValueOnce(UpdateInstallBlockerEnum.NoUpdater);
 
-        expect(useUpdateCardView()).toMatchObject({isUpdateShown: true, isManual: true});
+        expect(useUpdateCardView()).toMatchObject({isUpdateShown: true, isManual: true, notes: ['update.noUpdater']});
     });
 
-    it('hides the update button while an update is requested', () => {
-        const state = {...STATE, update: {...STATE.update, request: {version: RELEASE.version, requestedAt: NOW}}};
+    it('offers a manual download and says why when the release does not fit', () => {
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(STATE));
+        vi.mocked(updateService.getInstallBlocker).mockReturnValueOnce(UpdateInstallBlockerEnum.Incompatible);
+        vi.mocked(updateService.getCompatibility).mockReturnValueOnce({problems: [CompatibilityProblemEnum.ObsTooOld], warnings: []});
+
+        expect(useUpdateCardView()).toMatchObject({isManual: true, notes: ['update.problems.obsTooOld']});
+    });
+
+    it('says the update is being prepared right after the request', () => {
+        const state = {...STATE, update: {...STATE.update, request: {version: RELEASE.version, requestedAt: NOW - 1000}}};
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView().isUpdateShown).toBe(false);
+        expect(useUpdateCardView()).toMatchObject({statusText: 'update.stages.preparing', isStatusRunning: true, isUpdateShown: false});
+    });
+
+    it('reports when the bridge does not answer the request', () => {
+        const state = {...STATE, update: {...STATE.update, request: {version: RELEASE.version, requestedAt: NOW - 31_000}}};
+
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
+
+        expect(useUpdateCardView()).toMatchObject({
+            statusText: null,
+            errorText: 'update.errors.noResponse',
+            isUpdateShown: true,
+            updateText: 'update.retry',
+        });
+    });
+
+    it('shows the stage of a running update, even a background one', () => {
+        const state = {...STATE, update: {...STATE.update, bridge: {...BRIDGE, status: RUNNING_STATUS}}};
+
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
+
+        expect(useUpdateCardView()).toMatchObject({statusText: 'update.stages.downloading', isStatusRunning: true, isUpdateShown: false});
+    });
+
+    it('offers the update again when a running status stopped changing', () => {
+        const status = {...RUNNING_STATUS, updated: (NOW / 1000) - 600};
+        const state = {...STATE, update: {...STATE.update, bridge: {...BRIDGE, status}}};
+
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
+
+        expect(useUpdateCardView()).toMatchObject({statusText: null, isUpdateShown: true});
+    });
+
+    it('says a downloaded version starts with the next OBS launch and hides the button', () => {
+        const status = {...RUNNING_STATUS, stage: UpdateStageEnum.Done, percent: 100};
+        const state = {...STATE, update: {...STATE.update, bridge: {...BRIDGE, status}}};
+
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
+
+        expect(useUpdateCardView()).toMatchObject({
+            statusText: 'settings.updateStaged',
+            isStatusRunning: false,
+            checkText: null,
+            isUpdateShown: false,
+        });
+    });
+
+    it('reports a failed update and offers to retry', () => {
+        const status = {...RUNNING_STATUS, stage: UpdateStageEnum.Failed, error: 'signature'};
+        const state = {...STATE, update: {...STATE.update, bridge: {...BRIDGE, status}}};
+
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
+
+        expect(useUpdateCardView()).toMatchObject({
+            statusText: null,
+            errorText: 'update.errors.signature',
+            isUpdateShown: true,
+            updateText: 'update.retry',
+        });
+    });
+
+    it('falls back to a general text for an unknown error', () => {
+        const status = {...RUNNING_STATUS, stage: UpdateStageEnum.Failed, error: 'strange'};
+        const state = {...STATE, update: {...STATE.update, bridge: {...BRIDGE, status}}};
+
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
+
+        expect(useUpdateCardView().errorText).toBe('update.errors.unexpected');
+    });
+
+    it.each([
+        ['the running version', CURRENT_VERSION],
+        ['an older version', '0.0.9'],
+    ])('ignores a status left from %s', (_name, version) => {
+        const status = {...RUNNING_STATUS, version, stage: UpdateStageEnum.Failed, error: 'network'};
+        const state = {...STATE, update: {...STATE.update, bridge: {...BRIDGE, status}}};
+
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
+
+        expect(useUpdateCardView()).toMatchObject({statusText: null, errorText: null});
+    });
+
+    it('offers nothing when the running version is the latest', () => {
+        const latest = {...RELEASE, version: CURRENT_VERSION};
+        const state = {...STATE, update: {...STATE.update, checkStatus: UpdateCheckStatusEnum.UpToDate, latest}};
+
+        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
+
+        expect(useUpdateCardView()).toMatchObject({checkText: 'settings.upToDate', isUpdateShown: false});
     });
 
     it('says when updates were never checked', () => {
@@ -90,21 +196,5 @@ describe('useUpdateCardView', () => {
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
         expect(useUpdateCardView().checkText).toBeNull();
-    });
-
-    it('offers the skipped version back', () => {
-        const state = {...STATE, settings: {...STATE.settings, skippedUpdateVersion: RELEASE.version}};
-
-        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
-
-        expect(useUpdateCardView().hiddenUpdateText).toBe('settings.skippedVersion');
-    });
-
-    it('offers the postponed version back', () => {
-        const state = {...STATE, settings: {...STATE.settings, updateRemindAt: NOW + 60_000}};
-
-        vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
-
-        expect(useUpdateCardView().hiddenUpdateText).toBe('settings.postponedVersion');
     });
 });
