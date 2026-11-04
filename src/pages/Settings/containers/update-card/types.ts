@@ -1,4 +1,19 @@
+import type {ParseKeys} from 'i18next';
 import type {Nullable} from 'infrastructure/common';
+
+export type UpdateProgressDto = {
+    statusKey: Nullable<ParseKeys>;
+    errorKey: Nullable<ParseKeys>;
+    isRunning: boolean;
+    isStaged: boolean;
+    version: Nullable<string>;
+    percent: number;
+};
+
+export type UpdateNotesDto = {
+    isManual: boolean;
+    notes: string[];
+};
 
 export type UpdateCardViewDto = {
     lastCheckText: string;

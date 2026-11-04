@@ -7,6 +7,8 @@ import {CompatibilityProblemEnum} from '__types/update/compatibility/Compatibili
 import {CompatibilityWarningEnum} from '__types/update/compatibility/CompatibilityWarningEnum';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
 
+import {UpdateProgressDto} from './types';
+
 const {
     Idle,
     Checking,
@@ -15,13 +17,7 @@ const {
     Failed,
 } = UpdateCheckStatusEnum;
 
-const {
-    Preparing,
-    Downloading,
-    Verifying,
-    Installing,
-    Done,
-} = UpdateStageEnum;
+const {Preparing, Downloading, Verifying, Installing} = UpdateStageEnum;
 
 const {
     InvalidVersion,
@@ -50,13 +46,20 @@ export const UPDATE_STATUS_CLOCK_SLACK_MS = 2000;
 
 export const UPDATE_BRIDGE_RESPONSE_TIMEOUT_MS = 30 * 1000;
 
-export const UPDATE_STAGE_TEXTS: Record<UpdateStageEnum, ParseKeys> = {
+export const NO_UPDATE_PROGRESS: UpdateProgressDto = {
+    statusKey: null,
+    errorKey: null,
+    isRunning: false,
+    isStaged: false,
+    version: null,
+    percent: 0,
+};
+
+export const UPDATE_STAGE_TEXTS: Record<Exclude<UpdateStageEnum, UpdateStageEnum.Done | UpdateStageEnum.Failed>, ParseKeys> = {
     [Preparing]: 'update.stages.preparing',
     [Downloading]: 'update.stages.downloading',
     [Verifying]: 'update.stages.verifying',
     [Installing]: 'update.stages.installing',
-    [Done]: 'settings.updateStaged',
-    [UpdateStageEnum.Failed]: 'update.errors.unexpected',
 };
 
 export const UPDATE_ERROR_TEXTS: Record<UpdateErrorEnum, ParseKeys> = {
