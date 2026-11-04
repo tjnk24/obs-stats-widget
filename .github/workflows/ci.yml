@@ -43,3 +43,14 @@ jobs:
       - name: Test the OBS setup script
         shell: powershell
         run: ./installer/tests/run-tests.ps1
+
+      - uses: actions/cache@v6
+        with:
+          path: .test-stand/downloads
+          key: obs-archive-${{ hashFiles('scripts/testStand/consts.ts') }}
+
+      - run: node scripts/testStand/fetchLua.ts
+
+      - name: Test the bridge
+        shell: powershell
+        run: ./obs-script/tests/run-tests.ps1

@@ -33,6 +33,7 @@ export default [
         ignores: [
             'build',
             'release',
+            '.test-stand',
             'config',
             'eslint.config.mjs',
         ],

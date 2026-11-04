@@ -31,6 +31,9 @@ the installer asks to start OBS once (or to choose the OBS folder for a portable
 - A dock added while OBS is closed is not listed in the saved `DockState`. OBS sets no visibility for it on load,
   but it is still shown on the next start: checked on OBS 33.0.1, where the dock added by the installer appeared
   right away. DockState is never edited.
+- With no saved `DockState` at all (OBS has never been closed with these settings) OBS resets the layout and leaves
+  extra docks floating and hidden. The page still loads once, but the next start doesn't create the dock.
+  Seen on OBS 33.0.1. Asking to start OBS once before setup avoids this, and the test stand does the same.
 - Both files are UTF-8 with BOM and LF line endings.
 
 ### Which file to edit

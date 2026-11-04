@@ -51,6 +51,13 @@ jobs:
 
       - run: npm run test:installer
 
+      - uses: actions/cache@v6
+        with:
+          path: .test-stand/downloads
+          key: obs-archive-${{ hashFiles('scripts/testStand/consts.ts') }}
+
+      - run: npm run test:bridge
+
       - name: Install Inno Setup
         shell: powershell
         run: |

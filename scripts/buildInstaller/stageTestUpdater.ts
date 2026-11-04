@@ -7,11 +7,11 @@ import {
     UPDATER_ENTRY_PATH,
 } from './consts.ts';
 
-export const stageTestUpdater = (server: string, publicKey: string) => {
-    const source = fs.readFileSync(UPDATER_ENTRY_PATH, 'utf8');
+export const stageTestUpdater = (server: string, publicKey: string, entryPath = UPDATER_ENTRY_PATH) => {
+    const source = fs.readFileSync(entryPath, 'utf8');
 
     if (!RELEASE_BASE_URL_PATTERN.test(source) || !LATEST_RELEASE_URL_PATTERN.test(source) || !PUBLIC_KEY_PATTERN.test(source)) {
-        throw new Error(`${UPDATER_ENTRY_PATH} no longer has the defaults the test build replaces`);
+        throw new Error(`${entryPath} no longer has the defaults the test build replaces`);
     }
 
     const patched = source
@@ -19,5 +19,5 @@ export const stageTestUpdater = (server: string, publicKey: string) => {
         .replace(LATEST_RELEASE_URL_PATTERN, (_match, start: string, end: string) => `${start}${server}/latest${end}`)
         .replace(PUBLIC_KEY_PATTERN, (_match, start: string, end: string) => `${start}${publicKey}${end}`);
 
-    fs.writeFileSync(UPDATER_ENTRY_PATH, patched);
+    fs.writeFileSync(entryPath, patched);
 };

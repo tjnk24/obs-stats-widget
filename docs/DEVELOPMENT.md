@@ -23,13 +23,16 @@ The development server uses `http://localhost:3062` by default. Set `PORT` in `.
 | `npm run package:installer` | Build the Windows installer; needs Inno Setup 6 (`ISCC_PATH` may point to `ISCC.exe`) |
 | `npm run serve:test-release -- <folder>` | Host a local test release at `127.0.0.1:3063`; supports `--broken-signature` |
 | `npm run test:installer` | Run Windows installer/updater checks with Pester 5 |
+| `npm run test:bridge` | Run the Lua bridge and its rollback on the real LuaJIT from an OBS archive, with Pester 5 |
+| `npm run test:stand` | Run the dock, a stream, updates and a rollback in a real portable OBS, see below |
+| `npm run stand -- <command>` | Drive that OBS by hand; without a command it lists them |
 | `npm run lint` | TypeScript, ESLint, Stylelint and Knip checks |
 | `npm run test:unit` | Run Vitest |
 | `npm test` | Lint and unit tests |
 
 The development server clears `build/`. Re-run `npm run build:prod` before using that folder in OBS.
 
-The project uses React 19, antd 6, Redux Toolkit, React Router 8, i18next, CSS modules, webpack and swc. Development conventions are in [`CLAUDE.md`](../CLAUDE.md) (in Russian).
+The project uses React 19, antd 6, Redux Toolkit, React Router 8, i18next, CSS modules, webpack and swc. Development conventions are in [`CLAUDE.md`](../CLAUDE.md), `.claude/rules` and `docs/internals` (in Russian).
 
 ## Releases and signed updates
 
@@ -56,9 +59,17 @@ Version numbers follow [Semantic Versioning](https://semver.org/). During the `0
 
 CI runs checks and build tests on pushes to `main` and on pull requests. Manual workflow runs test the release process without publishing. A Husky pre-commit hook lints changed files and checks types.
 
-## Testing the updater without publishing a release
+## Testing in a real OBS
 
-This flow uses a **separate test signing key and local update server**. Never commit the private key.
+`npm run test:stand` downloads a portable OBS and a local RTMP server (MediaMTX) into `.test-stand`, checks both against pinned SHA-256 hashes, and needs no OBS of your own. It leaves your OBS, scenes and stream keys alone: the portable copy keeps its settings in its own folder and streams only to `127.0.0.1`.
+
+It installs the current code with the real `configure-obs.ps1` into a folder with Cyrillic in its path, then checks in OBS: the login, the health report, a stream with its bitrate in the dock, the **Update** button, a rollback from a broken dock and the background update. It takes about five minutes, opens an OBS window, and stops everything at the end. Windows may ask about the firewall for this OBS; you can decline, since everything goes through `127.0.0.1`.
+
+It reads the dock through the Chromium debugging port, so `npm run stand -- status`, `evaluate` and `screenshot` need neither the mouse nor the screen. The stand takes releases from a local test server: it doesn't replace a look at the real GitHub release or at the real installer.
+
+## Testing the installer and the updater without publishing a release
+
+`npm run test:stand` covers the updater. Use this flow for the installer itself. It uses a **separate test signing key and local update server**. Never commit the private key.
 
 1. Generate a throwaway signing key outside the repository:
 

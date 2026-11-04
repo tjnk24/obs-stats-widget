@@ -2,3 +2,5 @@ build/
 node_modules/
 .env
 release/
+.test-stand/
+.claude/settings.local.json

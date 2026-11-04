@@ -14,6 +14,10 @@ export const FONT_LICENSE_SOURCE = path.join(ROOT_DIRECTORY, 'node_modules', '@f
 
 export const FONT_LICENSE_TARGET = path.join(PACKAGE_DIRECTORY, 'dock', 'fonts', 'Inter-LICENSE.txt');
 
+export const BRIDGE_SOURCE_DIRECTORY = path.join(ROOT_DIRECTORY, 'obs-script');
+
+export const BRIDGE_TESTS_DIRECTORY = path.join(BRIDGE_SOURCE_DIRECTORY, 'tests');
+
 export const README_TEMPLATE_PATH = path.join(import.meta.dirname, 'README.template.txt');
 
 export const UPDATER_SOURCE_DIRECTORY = path.join(ROOT_DIRECTORY, 'installer', 'updater');
