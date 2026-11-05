@@ -13,9 +13,11 @@ import {
 } from 'react';
 
 import EnhancedButton from '__components/EnhancedButton';
+import {journalService} from '__services/journal/journalService';
 import {reportService} from '__services/reportService';
 import {updateService} from '__services/updateService';
 import {CopyResultEnum} from '__types/CopyResultEnum';
+import {JournalLevelEnum} from '__types/journal';
 
 import {Props, State} from './types';
 
@@ -38,6 +40,7 @@ class ErrorBoundary extends Component<Props, State> {
 
     public override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         updateService.reportRenderError();
+        journalService.log(JournalLevelEnum.Error, 'panel', `render error ${error.stack ?? error.message}`);
         this.setState({report: reportService.buildErrorReport(error, errorInfo.componentStack)});
     }
 

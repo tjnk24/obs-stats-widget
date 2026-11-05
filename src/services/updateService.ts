@@ -5,6 +5,7 @@ import {connectionSelector} from '__selectors/connectionSelectors';
 import {settingsSelector} from '__selectors/settingsSelectors';
 import {updateSelector} from '__selectors/updateSelectors';
 import store, {getStore} from '__store';
+import {JournalLevelEnum} from '__types/journal';
 import {ObsRequestTypeEnum} from '__types/obs/ObsRequestTypeEnum';
 import {CompatibilityResultDto} from '__types/update/compatibility';
 import {UpdateInstallBlockerEnum} from '__types/update/install';
@@ -26,6 +27,7 @@ import {getChromiumVersion} from '__utils/update/getChromiumVersion';
 import {getInstallBlocker} from '__utils/update/getInstallBlocker';
 import {parseRelease} from '__utils/update/parseRelease';
 
+import {journalService} from './journal/journalService';
 import {obsConnectionService} from './obsConnectionService';
 
 const {Checking, UpToDate, Available, Failed} = UpdateCheckStatusEnum;
@@ -115,6 +117,8 @@ class UpdateService {
         if (this.getInstallBlocker() || !release) {
             return;
         }
+
+        journalService.log(JournalLevelEnum.Info, 'user', `clicked update version=${release.version}`);
 
         obsConnectionService.sendRequest({
             requestType: SetProfileParameter,

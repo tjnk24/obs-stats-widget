@@ -14,6 +14,7 @@ import {
 
 import {copyProject} from './copyProject.ts';
 import {packageTestRelease} from './packageTestRelease.ts';
+import {removeProjectCopy} from './removeProjectCopy.ts';
 
 export const buildNewerRelease = async (version: string, isDockBroken: boolean) => {
     copyProject(version);
@@ -37,6 +38,7 @@ export const buildNewerRelease = async (version: string, isDockBroken: boolean) 
     }
 
     fs.copyFileSync(path.join(packageDirectory, COMPATIBILITY_FILE_NAME), compatibilityPath);
+    removeProjectCopy();
 
     const minisign = await ensureMinisign();
 

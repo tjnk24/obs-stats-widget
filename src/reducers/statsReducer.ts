@@ -8,6 +8,7 @@ export type StatsReducer = {
     targets: StreamTargetDto[];
     view: StatsViewDto;
     hardware: HardwareDto;
+    isRecording: boolean;
 };
 
 const initialState: StatsReducer = {
@@ -21,6 +22,7 @@ const initialState: StatsReducer = {
         gpu: null,
         systemMemory: null,
     },
+    isRecording: false,
 };
 
 const slice = createSlice({
@@ -35,6 +37,9 @@ const slice = createSlice({
         },
         setHardware: (state, {payload}: PayloadAction<HardwareDto>) => {
             state.hardware = payload;
+        },
+        setIsRecording: (state, {payload}: PayloadAction<boolean>) => {
+            state.isRecording = payload;
         },
         reset: () => initialState,
     },

@@ -17,6 +17,7 @@ obslua = {
     OBS_FRONTEND_EVENT_PROFILE_CHANGED = 2,
     OBS_FRONTEND_EVENT_SCRIPTING_SHUTDOWN = 3,
     OBS_FRONTEND_EVENT_SCENE_COLLECTION_CHANGED = 4,
+    OBS_FRONTEND_EVENT_STREAMING_STARTED = 5,
     OBS_FRONTEND_EVENT_FINISHED_LOADING = 99,
     obs_get_locale = function() return 'en-US' end,
     obs_frontend_get_profile_config = function() return store end,

@@ -2,6 +2,7 @@ local obs = obslua
 
 local consts = require('streamoscope-bridge.consts')
 local Gpu = require('streamoscope-bridge.hardware.gpu')
+local Journal = require('streamoscope-bridge.journal')
 local StreamOutputs = require('streamoscope-bridge.outputs.stream_outputs')
 local publisher = require('streamoscope-bridge.publisher')
 local release_links = require('streamoscope-bridge.update.release_links')
@@ -16,10 +17,13 @@ local function create_safely(Source, ...)
 end
 
 local function open_sources()
+    local journal = create_safely(Journal)
+
     sources = {
+        journal = journal,
         gpu = create_safely(Gpu),
         stream_outputs = create_safely(StreamOutputs),
-        updater = create_safely(Updater),
+        updater = create_safely(Updater, journal),
     }
 end
 
@@ -37,6 +41,11 @@ local function handle_commands()
         pcall(sources.updater.handle_schedule, sources.updater)
     end
 
+    if sources.journal ~= nil then
+        pcall(sources.journal.handle_command, sources.journal)
+        pcall(sources.journal.handle_schedule, sources.journal)
+    end
+
     pcall(release_links.handle_command)
 end
 
@@ -45,6 +54,10 @@ local function publish()
 end
 
 local function on_event(event)
+    if sources.journal ~= nil then
+        pcall(sources.journal.handle_frontend_event, sources.journal, event)
+    end
+
     if event == obs.OBS_FRONTEND_EVENT_PROFILE_CHANGING then
         publisher.clear()
     elseif event == obs.OBS_FRONTEND_EVENT_PROFILE_CHANGED or event == obs.OBS_FRONTEND_EVENT_SCENE_COLLECTION_CHANGED then
@@ -69,6 +82,7 @@ end
 
 function script_load(_settings)
     open_sources()
+    pcall(release_links.discard_stale_command)
 
     obs.obs_frontend_add_event_callback(on_event)
     obs.timer_add(publish, consts.PUBLISH_INTERVAL_MS)

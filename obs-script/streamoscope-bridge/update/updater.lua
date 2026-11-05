@@ -11,7 +11,13 @@ Updater.__index = Updater
 local function start_updater(self, arguments)
     local command_line = string.format(consts.UPDATE_COMMAND_LINE, self.script_path, arguments)
 
-    return process.start_hidden(command_line, environment.get('TEMP'))
+    local is_started = process.start_hidden(command_line, environment.get('TEMP'))
+
+    if self.journal ~= nil then
+        self.journal:log(is_started and 'INFO' or 'ERROR', string.format('start %s started=%s', arguments, tostring(is_started)), 'updater')
+    end
+
+    return is_started
 end
 
 local function save_auto_update(self, value)
@@ -32,7 +38,7 @@ local function confirm_version(self, version)
     end
 end
 
-function Updater.new()
+function Updater.new(journal)
     local local_app_data = environment.get('LOCALAPPDATA')
     local data_directory = local_app_data ~= nil and (local_app_data .. '\\' .. consts.UPDATE_DATA_DIRECTORY) or nil
 
@@ -47,6 +53,7 @@ function Updater.new()
         status_path = data_directory ~= nil and (data_directory .. '\\' .. consts.UPDATE_STATUS_FILE) or nil,
         auto_update_path = data_directory ~= nil and (data_directory .. '\\' .. consts.AUTO_UPDATE_FILE) or nil,
         next_check_at = os.time() + consts.AUTO_UPDATE_START_DELAY_SEC,
+        journal = journal,
     }, Updater)
 end
 

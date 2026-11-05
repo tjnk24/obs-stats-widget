@@ -3,6 +3,7 @@ import {TsconfigPathsPlugin} from 'tsconfig-paths-webpack-plugin';
 import type {Configuration} from 'webpack';
 
 import {
+    CACHE_DIRECTORY,
     CACHE_NAME,
     IS_DEVELOPMENT,
     RESOLVE_EXTENSIONS,
@@ -15,6 +16,7 @@ export const initBaseConfig = ({context}: InitBaseConfigOptions) => (webpackConf
     cache: {
         type: 'filesystem',
         name: CACHE_NAME,
+        ...(CACHE_DIRECTORY && {cacheDirectory: CACHE_DIRECTORY}),
     },
     module: {
         rules: [],

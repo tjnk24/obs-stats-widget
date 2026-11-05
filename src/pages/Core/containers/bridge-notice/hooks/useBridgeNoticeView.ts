@@ -3,8 +3,8 @@ import {useSelector} from 'react-redux';
 import {connectionSelector} from '__selectors/connectionSelectors';
 import {updateSelector} from '__selectors/updateSelectors';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
+import {BRIDGE_MISSING_CHECKS} from '__utils/consts';
 
-import {BRIDGE_MISSING_CHECKS} from '../../../consts';
 import {BridgeNoticeViewDto} from '../types';
 import {getBridgeScriptPath} from '../utils/getBridgeScriptPath';
 

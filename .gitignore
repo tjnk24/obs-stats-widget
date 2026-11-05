@@ -3,4 +3,5 @@ node_modules/
 .env
 release/
 .test-stand/
+.dev-journal/
 .claude/settings.local.json

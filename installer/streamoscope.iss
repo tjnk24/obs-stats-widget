@@ -68,6 +68,8 @@ Type: files; Name: "{localappdata}\streamoscope\update-status.json"
 Type: files; Name: "{localappdata}\streamoscope\update-check.stamp"
 
 [UninstallDelete]
+Type: filesandordirs; Name: "{localappdata}\streamoscope\logs"
+Type: files; Name: "{localappdata}\streamoscope\journal.txt"
 Type: filesandordirs; Name: "{app}\versions"
 Type: files; Name: "{app}\current-version.js"
 Type: files; Name: "{app}\update-trial.txt"

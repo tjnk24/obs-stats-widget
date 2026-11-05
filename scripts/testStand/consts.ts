@@ -105,6 +105,14 @@ export const DATA_DIRECTORY = path.join(LOCAL_APP_DATA_DIRECTORY, 'streamoscope'
 
 export const INSTALL_DIRECTORY = path.join(LOCAL_APP_DATA_DIRECTORY, 'Programs', 'streamoscope');
 
+export const JOURNAL_PATH = path.join(DATA_DIRECTORY, 'logs', 'streamoscope.log');
+
+export const JOURNAL_FORBIDDEN_TEXTS = ['rtmp://', '127.0.0.1:1935', 'Users\\', 'file:///'];
+
+export const JOURNAL_SILENCE_MS = 3000;
+
+export const JOURNAL_STATS_PATTERN = /STAT\s+\S+\s+kbps_avg=\d+/;
+
 const UPDATE_STATUS_PATH = path.join(DATA_DIRECTORY, 'update-status.json');
 
 export const UPDATE_CHECK_STAMP_PATH = path.join(DATA_DIRECTORY, 'update-check.stamp');
@@ -127,7 +135,11 @@ export const TEST_PUBLIC_KEY_PATH = path.join(TEST_KEY_DIRECTORY, 'test.pub');
 
 export const SERVED_DIRECTORY = path.join(STAND_DIRECTORY, 'served');
 
-export const PROJECT_COPY_DIRECTORY = path.join(STAND_DIRECTORY, 'project-copy');
+const TEST_BUILDS_DIRECTORY = path.join(path.dirname(ROOT_DIRECTORY), 'streamoscope-test-builds');
+
+export const TEST_BUILDS_CACHE_DIRECTORY = path.join(TEST_BUILDS_DIRECTORY, 'webpack-cache');
+
+export const PROJECT_COPY_DIRECTORY = path.join(TEST_BUILDS_DIRECTORY, 'project-copy');
 
 export const PROJECT_COPY_SKIPPED_NAMES = ['build', 'node_modules', 'release'];
 

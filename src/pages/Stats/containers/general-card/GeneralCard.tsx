@@ -3,7 +3,9 @@ import {Card, Flex} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import EnhancedButton from '__components/EnhancedButton';
+import {journalService} from '__services/journal/journalService';
 import {obsConnectionService} from '__services/obsConnectionService';
+import {JournalLevelEnum} from '__types/journal';
 
 import StatList from '../../components/stat-list';
 
@@ -16,6 +18,12 @@ const GeneralCard = () => {
     const {t} = useTranslation();
 
     const items = useItems();
+
+    const onReset = () => {
+        journalService.log(JournalLevelEnum.Info, 'user', 'reset the stats');
+
+        obsConnectionService.resetStats();
+    };
 
     return (
         <Card
@@ -35,7 +43,7 @@ const GeneralCard = () => {
                     buttonProps={{
                         size: 'small',
                         icon: <ReloadOutlined/>,
-                        onClick: obsConnectionService.resetStats,
+                        onClick: onReset,
                     }}
                     withSpinner={false}
                 >

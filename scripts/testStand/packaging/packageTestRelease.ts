@@ -7,6 +7,7 @@ import {TEST_RELEASE_HOST, TEST_RELEASE_PORT} from '../../serveTestRelease/const
 import {
     REGISTRY_KEY_PATTERN,
     STAND_REGISTRY_KEY_LINE,
+    TEST_BUILDS_CACHE_DIRECTORY,
     TEST_PUBLIC_KEY_PATH,
 } from '../consts.ts';
 
@@ -15,7 +16,12 @@ export const packageTestRelease = (projectDirectory: string, version: string) =>
     const [, publicKey] = fs.readFileSync(TEST_PUBLIC_KEY_PATH, 'utf8').split(/\r?\n/);
     const packaging = spawnSync('npm run package:release', {
         cwd: projectDirectory,
-        env: {...process.env, TEST_UPDATE_SERVER: server, TEST_UPDATE_PUBLIC_KEY: publicKey},
+        env: {
+            ...process.env,
+            TEST_UPDATE_SERVER: server,
+            TEST_UPDATE_PUBLIC_KEY: publicKey,
+            WEBPACK_CACHE_DIRECTORY: TEST_BUILDS_CACHE_DIRECTORY,
+        },
         shell: true,
         stdio: ['ignore', 'ignore', 'inherit'],
     });

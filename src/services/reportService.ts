@@ -2,10 +2,14 @@ import i18n from 'i18next';
 import type {Nullable} from 'infrastructure/common';
 
 import {connectionSelector} from '__selectors/connectionSelectors';
+import {settingsSelector} from '__selectors/settingsSelectors';
 import {statsSelector} from '__selectors/statsSelectors';
 import {getStore} from '__store';
 import {OutputOriginEnum, StreamTargetDto} from '__types/targets';
-import {BYTES_IN_GIGABYTE} from '__utils/consts';
+import {BYTES_IN_GIGABYTE, JOURNAL_OTHER_TARGET_LABEL} from '__utils/consts';
+import {removePrivateText} from '__utils/journal/lines/removePrivateText';
+
+import {journalService} from './journal/journalService';
 
 class ReportService {
     buildDiagnostics = () => {
@@ -22,6 +26,10 @@ class ReportService {
             '',
             'Outputs:',
             ...(targets.length ? targets.map(this.describeTarget) : ['- none']),
+            '',
+            `Journal: ${settingsSelector(getStore()).isJournalEnabled ? 'on' : 'off'}`,
+            'Recent journal events:',
+            ...journalService.getRecentLines(),
         ].join('\n');
     };
 
@@ -30,10 +38,10 @@ class ReportService {
         `Page: ${window.location.hash || '#/'}`,
         `Time: ${new Date().toISOString()}`,
         '',
-        error.stack ?? `${error.name}: ${error.message}`,
+        removePrivateText(error.stack ?? `${error.name}: ${error.message}`, false),
         '',
         'Component stack:',
-        componentStack?.trim() ?? '',
+        removePrivateText(componentStack?.trim() ?? '', false),
     ].join('\n');
 
     copy = async (text: string) => {
@@ -61,11 +69,13 @@ class ReportService {
     };
 
     private describeTarget = ({origin, outputName, pluginName, platform}: StreamTargetDto) => {
+        const title = platform.isKnown ? platform.title : JOURNAL_OTHER_TARGET_LABEL;
+
         if (origin === OutputOriginEnum.Main) {
-            return `- ${platform.title}: main output`;
+            return `- ${title}: main output`;
         }
 
-        return `- ${platform.title}: plugin output "${outputName}"${pluginName ? ` (${pluginName})` : ''}`;
+        return `- ${title}: plugin output "${outputName}"${pluginName ? ` (${pluginName})` : ''}`;
     };
 }
 

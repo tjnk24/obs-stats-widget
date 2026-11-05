@@ -87,6 +87,33 @@ Describe 'Bridge installed with versions' {
     }
 }
 
+Describe 'Opening a release page' {
+    BeforeAll {
+        $installRoot = Join-Path $script:WorkDirectory 'links'
+        $dataDirectory = Join-Path $script:WorkDirectory 'links-data'
+
+        New-Item -ItemType Directory -Path $dataDirectory -Force | Out-Null
+        Copy-BridgeFiles -TargetDirectory $installRoot
+
+        $env:LOCALAPPDATA = $dataDirectory
+
+        $result = Invoke-LuaSource -Source (Get-BridgeSource -InstallRoot $installRoot -ScenarioFileName 'release_links.lua')
+
+        $result.IsFailed | Should -BeFalse -Because $result.Text
+
+        $script:LinkResults = ConvertTo-BridgeResults -Text $result.Text
+    }
+
+    It 'does not open a page left in the profile file by the previous launch' {
+        $script:LinkResults.staleCommandLeft | Should -Be 'false'
+        $script:LinkResults.staleCommandOpened | Should -Be '0'
+    }
+
+    It 'opens a page asked for after the load' {
+        $script:LinkResults.freshCommandOpened | Should -Be '1'
+    }
+}
+
 Describe 'Bridge copied by hand into one folder' {
     BeforeAll {
         $installRoot = Join-Path $script:WorkDirectory 'flat'

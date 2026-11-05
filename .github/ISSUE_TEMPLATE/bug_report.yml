@@ -48,4 +48,4 @@ body:
     id: extra
     attributes:
       label: Anything else
-      description: Screenshots, the installer log (%LOCALAPPDATA%\streamoscope\configure-obs.log), other plugins you use.
+      description: Screenshots, the journal (Settings → Diagnostics → Open journal folder, or %LOCALAPPDATA%\streamoscope\logs), the installer log (%LOCALAPPDATA%\streamoscope\configure-obs.log), other plugins you use.

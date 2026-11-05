@@ -16,6 +16,7 @@ import {obsConnectionService} from '__services/obsConnectionService';
 import {LanguageEnum} from '__types/i18n/language';
 
 import {LANGUAGE_OPTIONS} from './consts';
+import {getDockAddress} from './utils/getDockAddress';
 
 import style from './style.module.scss';
 
@@ -81,6 +82,29 @@ const DisplayCard = () => {
                         checked={isMockEnabled}
                         onChange={obsConnectionService.setMockEnabled}
                     />
+                </Flex>
+
+                <Flex
+                    gap={14}
+                    vertical
+                >
+                    <Flex vertical>
+                        <Typography.Text>
+                            {t('settings.dockAddress')}
+                        </Typography.Text>
+
+                        <Typography.Text type="secondary">
+                            {t('settings.dockAddressHint')}
+                        </Typography.Text>
+                    </Flex>
+
+                    <Typography.Text
+                        className={style.address}
+                        code
+                        copyable
+                    >
+                        {getDockAddress(window.location.href)}
+                    </Typography.Text>
                 </Flex>
             </Flex>
         </Card>

@@ -4,6 +4,8 @@ import {
     DOCK_CONNECTED_TEXT,
     DOCK_OFFLINE_TEXT,
     HEALTHY_VERSION_PATH,
+    JOURNAL_PATH,
+    JOURNAL_STATS_PATTERN,
     LIVE_BITRATE_PATTERN,
     MEDIAMTX_PATHS_URL,
     STREAM_WAIT_MS,
@@ -38,6 +40,9 @@ export const checkDockAndStream = async () => {
 
     await waitFor('the live bitrate in the dock', async () => LIVE_BITRATE_PATTERN.test(await getDockText()), STREAM_WAIT_MS);
     console.log('ok   the dock shows the live bitrate');
+
+    await waitFor('the stream statistics in the journal', () => JOURNAL_STATS_PATTERN.test(readStandFile(JOURNAL_PATH) ?? ''), STREAM_WAIT_MS);
+    console.log('ok   the bridge writes the statistics from the dock to the journal');
 
     await sendObsRequest('StopStream');
 

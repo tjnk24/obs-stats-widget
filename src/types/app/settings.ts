@@ -11,6 +11,7 @@ export type SettingsDto = {
     language: Nullable<LanguageEnum>;
     isMockEnabled: boolean;
     isAutoUpdateEnabled: boolean;
+    isJournalEnabled: boolean;
     lastUpdateCheckAt: Nullable<number>;
 };
 

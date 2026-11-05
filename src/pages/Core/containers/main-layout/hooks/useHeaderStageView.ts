@@ -4,8 +4,8 @@ import {connectionSelector} from '__selectors/connectionSelectors';
 import {statsTargetsSelector} from '__selectors/statsSelectors';
 import {updateSelector} from '__selectors/updateSelectors';
 import {ConnectionStatusEnum} from '__types/connection/ConnectionStatusEnum';
+import {BRIDGE_MISSING_CHECKS} from '__utils/consts';
 
-import {BRIDGE_MISSING_CHECKS} from '../../../consts';
 import {HeaderStageViewDto} from '../types';
 
 export const useHeaderStageView = (): HeaderStageViewDto => {

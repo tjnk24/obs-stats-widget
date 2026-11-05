@@ -19,6 +19,10 @@ local function is_allowed(url)
     return false
 end
 
+function release_links.discard_stale_command()
+    profile_parameter.take(consts.OPEN_URL_COMMAND_NAME)
+end
+
 function release_links.handle_command()
     local url = profile_parameter.take(consts.OPEN_URL_COMMAND_NAME)
     local system_root = environment.get('SystemRoot')

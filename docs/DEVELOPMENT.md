@@ -59,6 +59,10 @@ Version numbers follow [Semantic Versioning](https://semver.org/). During the `0
 
 CI runs checks and build tests on pushes to `main` and on pull requests. Manual workflow runs test the release process without publishing. A Husky pre-commit hook lints changed files and checks types.
 
+## The journal
+
+The bridge writes `%LOCALAPPDATA%\streamoscope\logs\streamoscope.log`. At 5 MB the file becomes `streamoscope.old.log`, replacing the previous one, so the journal never takes more than 10 MB. The dock sends its lines to the bridge in batches every 10 seconds, errors at once, because each batch makes obs-websocket save the OBS profile file, and keeps its recent events, without statistics and up to 50 KB, for **Copy diagnostics**. The bridge writes its own events too, so the file still tells the story when the dock is broken. An installed dock in mock mode or opened in a regular browser writes nothing, so a second copy of the dock cannot double the lines. The development server writes only with mocks on, to `.dev-journal/streamoscope.log` in the project (ignored by git, cleared every time `npm run start:dev` starts); that file has no bridge lines, and **Open journal folder** opens its folder. Reading a report: each line is `time level source message`, `time` is local and the `loaded` line gives the UTC offset.
+
 ## Testing in a real OBS
 
 `npm run test:stand` downloads a portable OBS and a local RTMP server (MediaMTX) into `.test-stand`, checks both against pinned SHA-256 hashes, and needs no OBS of your own. It leaves your OBS, scenes and stream keys alone: the portable copy keeps its settings in its own folder and streams only to `127.0.0.1`.
@@ -66,6 +70,8 @@ CI runs checks and build tests on pushes to `main` and on pull requests. Manual 
 It installs the current code with the real `configure-obs.ps1` into a folder with Cyrillic in its path, then checks in OBS: the login, the health report, a stream with its bitrate in the dock, the **Update** button, a rollback from a broken dock and the background update. It takes about three minutes, opens an OBS window, and stops everything at the end. Windows may ask about the firewall for this OBS; you can decline, since everything goes through `127.0.0.1`.
 
 It reads the dock through the Chromium debugging port, so `npm run stand -- status`, `evaluate` and `screenshot` need neither the mouse nor the screen. The stand takes releases from a local test server: it doesn't replace a look at the real GitHub release or at the real installer.
+
+The stand builds its test releases outside the project, in the neighbouring `streamoscope-test-builds` folder, with their own webpack cache, so they never touch `npm run start:dev` or `npm run build:prod`. You can delete that folder whenever the stand is not running.
 
 ## Testing the installer and the updater without publishing a release
 
@@ -123,6 +129,6 @@ A new bridge can meet an old dock: switching the scene collection reloads the sc
 
 The installer puts application files in `%LOCALAPPDATA%\Programs\streamoscope` in the layout above, adds the OBS dock and Lua bridge, and attempts to configure the local WebSocket server. It keeps backups under `%LOCALAPPDATA%\streamoscope\backups` and writes `%LOCALAPPDATA%\streamoscope\configure-obs.log`.
 
-Close OBS before installation or removal. Uninstallation leaves OBS WebSocket enabled because another application might rely on it.
+Close OBS before installation or removal. Uninstallation leaves OBS WebSocket enabled because another application might rely on it. It removes the journal (`%LOCALAPPDATA%\streamoscope\logs`) and its setting; installing or updating leaves them in place.
 
 The Windows executable does **not** currently have an Authenticode signature. Release assets are protected separately with minisign signatures, and the README explains how to verify manual downloads.

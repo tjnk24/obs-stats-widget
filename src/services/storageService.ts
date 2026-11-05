@@ -3,6 +3,7 @@ import type {Nullable} from 'infrastructure/common';
 import {SettingsDto} from '__types/app/settings';
 import {
     DISCARDED_SETTINGS_STORAGE_KEY,
+    JOURNAL_STORAGE_KEY,
     PASSWORD_STORAGE_KEY,
     SETTINGS_STORAGE_KEY,
 } from '__utils/consts';
@@ -41,6 +42,10 @@ class StorageService {
     };
 
     saveSettings = (settings: SettingsDto) => this.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+
+    loadJournal = () => this.getItem(JOURNAL_STORAGE_KEY)?.split('\n') ?? [];
+
+    saveJournal = (lines: string[]) => this.setItem(JOURNAL_STORAGE_KEY, lines.join('\n'));
 
     private getItem = (key: string): Nullable<string> => {
         try {

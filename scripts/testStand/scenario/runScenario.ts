@@ -9,6 +9,7 @@ import {setupStand} from '../setup/setupStand.ts';
 
 import {checkBackgroundUpdate} from './checks/checkBackgroundUpdate.ts';
 import {checkDockAndStream} from './checks/checkDockAndStream.ts';
+import {checkJournal} from './checks/checkJournal.ts';
 import {checkRollback} from './checks/checkRollback.ts';
 import {checkUpdateButton} from './checks/checkUpdateButton.ts';
 
@@ -24,6 +25,9 @@ export const runScenario = async () => {
         console.log(`--- the installed version ${VERSION} in OBS`);
         await startStand();
         await checkDockAndStream();
+
+        console.log('--- the journal');
+        await checkJournal();
 
         console.log(`--- the Update button, version ${button}`);
         await buildNewerRelease(button, false);

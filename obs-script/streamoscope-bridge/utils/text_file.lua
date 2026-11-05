@@ -16,6 +16,7 @@ pcall(ffi.cdef, 'int WriteFile(void *file, const void *buffer, uint32_t bytesToW
 pcall(ffi.cdef, 'int CreateDirectoryW(const uint16_t *path, void *security);')
 pcall(ffi.cdef, 'int DeleteFileW(const uint16_t *path);')
 pcall(ffi.cdef, 'int MoveFileExW(const uint16_t *source, const uint16_t *target, uint32_t flags);')
+pcall(ffi.cdef, 'int GetFileSizeEx(void *file, int64_t *size);')
 
 function text_file.exists(path)
     local attributes = ffi.C.GetFileAttributesW(wide_string.from_text(path))
@@ -56,6 +57,40 @@ function text_file.write(path, text)
     ffi.C.CloseHandle(file)
 
     return succeeded ~= 0
+end
+
+function text_file.append(path, text)
+    local file = ffi.C.CreateFileW(wide_string.from_text(path), consts.FILE_APPEND_DATA, consts.FILE_SHARE_READ_WRITE_DELETE, nil, consts.OPEN_ALWAYS, 0, nil)
+
+    if file == consts.INVALID_HANDLE_VALUE then
+        return false
+    end
+
+    local bytes_written = ffi.new('uint32_t[1]')
+    local succeeded = ffi.C.WriteFile(file, text, #text, bytes_written, nil)
+
+    ffi.C.CloseHandle(file)
+
+    return succeeded ~= 0
+end
+
+function text_file.size(path)
+    local file = ffi.C.CreateFileW(wide_string.from_text(path), consts.GENERIC_READ, consts.FILE_SHARE_READ_WRITE_DELETE, nil, consts.OPEN_EXISTING, 0, nil)
+
+    if file == consts.INVALID_HANDLE_VALUE then
+        return 0
+    end
+
+    local size = ffi.new('int64_t[1]')
+    local succeeded = ffi.C.GetFileSizeEx(file, size)
+
+    ffi.C.CloseHandle(file)
+
+    return succeeded ~= 0 and tonumber(size[0]) or 0
+end
+
+function text_file.move(source, target)
+    return ffi.C.MoveFileExW(wide_string.from_text(source), wide_string.from_text(target), consts.MOVEFILE_REPLACE_EXISTING) ~= 0
 end
 
 function text_file.replace(path, text)

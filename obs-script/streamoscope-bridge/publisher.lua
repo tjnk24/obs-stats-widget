@@ -36,8 +36,14 @@ end
 function publisher.publish(sources)
     local config = obs.obs_frontend_get_profile_config()
 
+    local payload = build_payload(sources)
+
+    if sources.journal ~= nil then
+        sample_safely(sources.journal.track_update, sources.journal, payload.update)
+    end
+
     if config ~= nil then
-        obs.config_set_string(config, consts.PARAMETER_SECTION, consts.PARAMETER_NAME, json.encode(build_payload(sources)))
+        obs.config_set_string(config, consts.PARAMETER_SECTION, consts.PARAMETER_NAME, json.encode(payload))
     end
 end
 

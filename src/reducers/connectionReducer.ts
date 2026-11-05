@@ -10,6 +10,7 @@ export type ConnectionReducer = {
     sceneCollection: Nullable<string>;
     isSwitchingCollection: boolean;
     reconnectAt: Nullable<number>;
+    lastCloseCode: Nullable<number>;
 };
 
 const initialState: ConnectionReducer = {
@@ -18,6 +19,7 @@ const initialState: ConnectionReducer = {
     sceneCollection: null,
     isSwitchingCollection: false,
     reconnectAt: null,
+    lastCloseCode: null,
 };
 
 const slice = createSlice({
@@ -35,6 +37,9 @@ const slice = createSlice({
         },
         setIsSwitchingCollection: (state, {payload}: PayloadAction<boolean>) => {
             state.isSwitchingCollection = payload;
+        },
+        setLastCloseCode: (state, {payload}: PayloadAction<number>) => {
+            state.lastCloseCode = payload;
         },
         setReconnectAt: (state, {payload}: PayloadAction<Nullable<number>>) => {
             state.reconnectAt = payload;

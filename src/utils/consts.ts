@@ -31,10 +31,13 @@ export const BYTES_IN_GIGABYTE = 1024 ** 3;
 export const BAD_DROP_SHARE = 0.01;
 
 export const DEV_OBS_CONNECTION_URL = '/dev/obs-connection';
+export const DEV_JOURNAL_URL = '/dev/journal';
+export const DEV_JOURNAL_FOLDER_URL = '/dev/journal/open-folder';
 
 export const PASSWORD_STORAGE_KEY = 'streamoscope.password';
 export const SETTINGS_STORAGE_KEY = 'streamoscope.settings';
 export const DISCARDED_SETTINGS_STORAGE_KEY = 'streamoscope.settings.discarded';
+export const JOURNAL_STORAGE_KEY = 'streamoscope.journal';
 export const SETTINGS_VERSION = 2;
 
 export const DEFAULT_SETTINGS: SettingsDto = {
@@ -43,6 +46,7 @@ export const DEFAULT_SETTINGS: SettingsDto = {
     isShowGeneralCard: true,
     language: null,
     isAutoUpdateEnabled: true,
+    isJournalEnabled: true,
     lastUpdateCheckAt: null,
     isMockEnabled: false,
 };
@@ -66,6 +70,7 @@ export const BRIDGE_PARAMETER: ProfileParameterKeyDto = {
     parameterName: 'PluginOutputs',
 };
 export const BRIDGE_STALE_SEC = 8;
+export const BRIDGE_MISSING_CHECKS = 2;
 export const CONFIG_EVENT_SUBSCRIPTION = 1 << 1;
 export const COLLECTION_SWITCH_TIMEOUT_MS = 15_000;
 
@@ -78,6 +83,30 @@ export const OPEN_URL_COMMAND_PARAMETER: ProfileParameterKeyDto = {
     parameterName: 'OpenUrlCommand',
 };
 export const OPEN_URL_MIN_BRIDGE_VERSION = 2;
+
+export const JOURNAL_LINES_PARAMETER: ProfileParameterKeyDto = {
+    parameterCategory: 'StreamoScope',
+    parameterName: 'JournalLines',
+};
+export const JOURNAL_COMMAND_PARAMETER: ProfileParameterKeyDto = {
+    parameterCategory: 'StreamoScope',
+    parameterName: 'JournalCommand',
+};
+export const JOURNAL_MIN_BRIDGE_VERSION = 5;
+export const JOURNAL_LINE_SEPARATOR = '\u001f';
+export const JOURNAL_FLUSH_INTERVAL_MS = 10_000;
+export const JOURNAL_STATS_INTERVAL_MS = 10_000;
+export const JOURNAL_BATCH_MAX_LINES = 200;
+export const JOURNAL_PENDING_MAX_LINES = 2000;
+export const JOURNAL_RECENT_MAX_CHARS = 50_000;
+export const JOURNAL_LEVEL_WIDTH = 5;
+export const JOURNAL_SOURCE_WIDTH = 8;
+export const JOURNAL_OTHER_TARGET_LABEL = 'Other';
+export const JOURNAL_MAIN_TARGET_LABEL = 'Main';
+export const FILE_URL_FOLDERS_PATTERN = /file:\/\/\/[^\s)'"]*\//g;
+export const WINDOWS_FOLDERS_PATTERN = /(?<![A-Za-z])[A-Za-z]:[\\/](?:[^\s\\/'"]+[\\/])*/g;
+export const STREAM_URL_PATTERN = /\brtmps?:\/\/[^\s'"]+/gi;
+export const LINE_BREAKS_PATTERN = /\s*[\r\n]+\s*/g;
 export const UPDATE_STATUS_STALE_SEC = 120;
 export const RELEASES_PAGE_URL = 'https://github.com/tjnk24/streamoscope/releases';
 const GITHUB_LATEST_RELEASE_URL = 'https://api.github.com/repos/tjnk24/streamoscope/releases/latest';

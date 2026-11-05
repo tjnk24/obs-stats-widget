@@ -27,6 +27,9 @@ const slice = createSlice({
         setIsAutoUpdateEnabled: (state, {payload}: PayloadAction<boolean>) => {
             state.isAutoUpdateEnabled = payload;
         },
+        setIsJournalEnabled: (state, {payload}: PayloadAction<boolean>) => {
+            state.isJournalEnabled = payload;
+        },
         setLastUpdateCheckAt: (state, {payload}: PayloadAction<number>) => {
             state.lastUpdateCheckAt = payload;
         },

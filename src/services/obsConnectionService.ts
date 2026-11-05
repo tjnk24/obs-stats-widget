@@ -38,6 +38,7 @@ import {
 import {fetchDevObsConnection} from '__utils/dev/fetchDevObsConnection';
 import {MockObsSimulator} from '__utils/mock/MockObsSimulator';
 import {buildRequests} from '__utils/requests/buildRequests';
+import {getIsRecording} from '__utils/requests/getIsRecording';
 import {getObsVersion} from '__utils/requests/getObsVersion';
 import {getSceneCollection} from '__utils/requests/getSceneCollection';
 import {isRequestOfType} from '__utils/requests/isRequestOfType';
@@ -215,6 +216,8 @@ class ObsConnectionService {
         this.socket = null;
         this.onDisconnected();
 
+        commonActions.connection.setLastCloseCode(code);
+
         if (code === AUTHENTICATION_FAILED_CLOSE_CODE && this.passwordChange) {
             this.finishPasswordChange(Rejected);
             this.connect();
@@ -361,6 +364,12 @@ class ObsConnectionService {
 
         if (obsVersion && !isEqual(obsVersion, connectionSelector(getStore()).obsVersion)) {
             commonActions.connection.setObsVersion(obsVersion);
+        }
+
+        const isRecording = getIsRecording(pairs);
+
+        if (isRecording !== null && isRecording !== statsSelector(getStore()).isRecording) {
+            commonActions.stats.setIsRecording(isRecording);
         }
 
         commonActions.stats.setView(this.tracker.ingest(statsSelector(getStore()).targets, pairs, performance.now()));
