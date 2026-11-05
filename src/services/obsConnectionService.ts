@@ -206,6 +206,7 @@ class ObsConnectionService {
 
         this.collectionSwitchStartedAt = null;
         this.isCollectionSwitchFinished = false;
+        this.pendingRequests = [];
     };
 
     private onClose = (socket: WebSocket, code: number) => {
