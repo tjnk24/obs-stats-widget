@@ -188,6 +188,8 @@ export const LIVE_BITRATE_PATTERN = /Live\s+[1-9]\d*\s+kbps/;
 
 export const OPEN_SETTINGS_EXPRESSION = 'location.hash = "#/settings"';
 
+export const OPEN_UPDATES_GROUP_EXPRESSION = '[...document.querySelectorAll(".ant-collapse-header")].find(header => header.innerText.includes("Updates"))?.click()';
+
 export const POLL_INTERVAL_MS = 500;
 
 export const DOCK_WAIT_MS = 60000;

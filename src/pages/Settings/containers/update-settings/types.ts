@@ -15,7 +15,7 @@ export type UpdateNotesDto = {
     notes: string[];
 };
 
-export type UpdateCardViewDto = {
+export type UpdateSettingsViewDto = {
     lastCheckText: string;
     checkText: Nullable<string>;
     isCheckFailed: boolean;

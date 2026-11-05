@@ -40,10 +40,9 @@ export const ru: TranslationDto = {
         range: 'Порт - число от {{min}} до {{max}}',
     },
     settings: {
-        portTitle: 'Порт',
+        connectionTitle: 'Подключение',
         portHint: '$t(obs.tools) → $t(obs.webSocketSettings) → $t(obs.serverPort)',
         saveAndReconnect: 'Сохранить и переподключиться',
-        passwordTitle: 'Пароль',
         passwordLabel: 'Пароль obs-websocket',
         passwordHint: '$t(obs.tools) → $t(obs.webSocketSettings) → $t(obs.serverPassword)',
         passwordRequired: 'Введите пароль',

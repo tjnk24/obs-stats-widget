@@ -40,10 +40,9 @@ export const ptBr: TranslationDto = {
         range: 'A porta é um número de {{min}} a {{max}}',
     },
     settings: {
-        portTitle: 'Porta',
+        connectionTitle: 'Conexão',
         portHint: '$t(obs.tools) → $t(obs.webSocketSettings) → $t(obs.serverPort)',
         saveAndReconnect: 'Salvar e reconectar',
-        passwordTitle: 'Senha',
         passwordLabel: 'Senha do obs-websocket',
         passwordHint: '$t(obs.tools) → $t(obs.webSocketSettings) → $t(obs.serverPassword)',
         passwordRequired: 'Digite a senha',

@@ -1,26 +1,70 @@
-import {Flex} from 'antd';
+import {Collapse, Flex} from 'antd';
+import {useTranslation} from 'react-i18next';
 
-import DiagnosticsCard from '../diagnostics-card';
-import DisplayCard from '../display-card';
-import PasswordCard from '../password-card';
-import PortCard from '../port-card';
-import UpdateCard from '../update-card';
+import DiagnosticsSettings from '../diagnostics-settings';
+import DisplaySettings from '../display-settings';
+import PasswordSettings from '../password-settings';
+import PortSettings from '../port-settings';
+import UpdateSettings from '../update-settings';
 
-const Page = () => (
-    <Flex
-        gap="small"
-        vertical
-    >
-        <PortCard/>
+import {SettingsGroupEnum} from './consts';
+import {useOpenGroups} from './hooks/useOpenGroups';
 
-        <PasswordCard/>
+const {Display, Updates, Diagnostics, Connection} = SettingsGroupEnum;
 
-        <DisplayCard/>
+const Page = () => {
+    const {t} = useTranslation();
 
-        <UpdateCard/>
+    const {openGroups, toggleGroup} = useOpenGroups();
 
-        <DiagnosticsCard/>
-    </Flex>
-);
+    const groups = [
+        {
+            key: Display,
+            label: t('settings.displayTitle'),
+            children: <DisplaySettings/>,
+        },
+        {
+            key: Updates,
+            label: t('settings.updatesTitle'),
+            children: <UpdateSettings/>,
+        },
+        {
+            key: Diagnostics,
+            label: t('settings.diagnosticsTitle'),
+            children: <DiagnosticsSettings/>,
+        },
+        {
+            key: Connection,
+            label: t('settings.connectionTitle'),
+            children: (
+                <Flex
+                    gap={14}
+                    vertical
+                >
+                    <PortSettings/>
+
+                    <PasswordSettings/>
+                </Flex>
+            ),
+        },
+    ];
+
+    return (
+        <Flex
+            gap="small"
+            vertical
+        >
+            {groups.map(group => (
+                <Collapse
+                    key={group.key}
+                    activeKey={openGroups}
+                    onChange={() => toggleGroup(group.key)}
+                    size="small"
+                    items={[{...group, forceRender: true}]}
+                />
+            ))}
+        </Flex>
+    );
+};
 
 export default Page;

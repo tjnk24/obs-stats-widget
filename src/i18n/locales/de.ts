@@ -40,10 +40,9 @@ export const de: TranslationDto = {
         range: 'Der Port ist eine Zahl von {{min}} bis {{max}}',
     },
     settings: {
-        portTitle: 'Port',
+        connectionTitle: 'Verbindung',
         portHint: '$t(obs.tools) → $t(obs.webSocketSettings) → $t(obs.serverPort)',
         saveAndReconnect: 'Speichern und neu verbinden',
-        passwordTitle: 'Passwort',
         passwordLabel: 'obs-websocket-Passwort',
         passwordHint: '$t(obs.tools) → $t(obs.webSocketSettings) → $t(obs.serverPassword)',
         passwordRequired: 'Passwort eingeben',

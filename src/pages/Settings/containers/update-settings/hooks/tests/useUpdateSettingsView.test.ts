@@ -15,7 +15,7 @@ import {CompatibilityProblemEnum} from '__types/update/compatibility';
 import {UpdateInstallBlockerEnum} from '__types/update/install';
 import {UpdateCheckStatusEnum} from '__types/update/UpdateCheckStatusEnum';
 
-import {useUpdateCardView} from '../useUpdateCardView';
+import {useUpdateSettingsView} from '../useUpdateSettingsView';
 
 import {
     BRIDGE,
@@ -32,7 +32,7 @@ vi.mock('__services/updateService', () => ({updateService: {getInstallBlocker: v
 
 vi.mock('react-i18next', () => ({useTranslation: () => ({t: (key: string) => key, i18n: {language: 'en'}})}));
 
-describe('useUpdateCardView', () => {
+describe('useUpdateSettingsView', () => {
     beforeAll(() => {
         vi.setSystemTime(NOW);
         vi.stubEnv('APP_VERSION', CURRENT_VERSION);
@@ -46,7 +46,7 @@ describe('useUpdateCardView', () => {
     it('offers a newer version found by a check', () => {
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(STATE));
 
-        expect(useUpdateCardView()).toEqual({
+        expect(useUpdateSettingsView()).toEqual({
             lastCheckText: 'settings.lastCheck',
             checkText: 'settings.updateAvailable',
             isCheckFailed: false,
@@ -67,7 +67,7 @@ describe('useUpdateCardView', () => {
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(STATE));
         vi.mocked(updateService.getInstallBlocker).mockReturnValueOnce(UpdateInstallBlockerEnum.NoUpdater);
 
-        expect(useUpdateCardView()).toMatchObject({isUpdateShown: true, isManual: true, notes: ['update.noUpdater']});
+        expect(useUpdateSettingsView()).toMatchObject({isUpdateShown: true, isManual: true, notes: ['update.noUpdater']});
     });
 
     it('offers a manual download and says why when the release does not fit', () => {
@@ -75,7 +75,7 @@ describe('useUpdateCardView', () => {
         vi.mocked(updateService.getInstallBlocker).mockReturnValueOnce(UpdateInstallBlockerEnum.Incompatible);
         vi.mocked(updateService.getCompatibility).mockReturnValueOnce({problems: [CompatibilityProblemEnum.ObsTooOld], warnings: []});
 
-        expect(useUpdateCardView()).toMatchObject({isManual: true, notes: ['update.problems.obsTooOld']});
+        expect(useUpdateSettingsView()).toMatchObject({isManual: true, notes: ['update.problems.obsTooOld']});
     });
 
     it('says the update is being prepared right after the request', () => {
@@ -83,7 +83,7 @@ describe('useUpdateCardView', () => {
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView()).toMatchObject({statusText: 'update.stages.preparing', isStatusRunning: true, isUpdateShown: false});
+        expect(useUpdateSettingsView()).toMatchObject({statusText: 'update.stages.preparing', isStatusRunning: true, isUpdateShown: false});
     });
 
     it('reports when the bridge does not answer the request', () => {
@@ -91,7 +91,7 @@ describe('useUpdateCardView', () => {
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView()).toMatchObject({
+        expect(useUpdateSettingsView()).toMatchObject({
             statusText: null,
             errorText: 'update.errors.noResponse',
             isUpdateShown: true,
@@ -104,7 +104,7 @@ describe('useUpdateCardView', () => {
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView()).toMatchObject({statusText: 'update.stages.downloading', isStatusRunning: true, isUpdateShown: false});
+        expect(useUpdateSettingsView()).toMatchObject({statusText: 'update.stages.downloading', isStatusRunning: true, isUpdateShown: false});
     });
 
     it('offers the update again when a running status stopped changing', () => {
@@ -113,7 +113,7 @@ describe('useUpdateCardView', () => {
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView()).toMatchObject({statusText: null, isUpdateShown: true});
+        expect(useUpdateSettingsView()).toMatchObject({statusText: null, isUpdateShown: true});
     });
 
     it('says a downloaded version starts with the next OBS launch and hides the button', () => {
@@ -122,7 +122,7 @@ describe('useUpdateCardView', () => {
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView()).toMatchObject({
+        expect(useUpdateSettingsView()).toMatchObject({
             statusText: 'settings.updateStaged',
             isStatusRunning: false,
             checkText: null,
@@ -136,7 +136,7 @@ describe('useUpdateCardView', () => {
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView()).toMatchObject({
+        expect(useUpdateSettingsView()).toMatchObject({
             statusText: null,
             errorText: 'update.errors.signature',
             isUpdateShown: true,
@@ -150,7 +150,7 @@ describe('useUpdateCardView', () => {
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView()).toMatchObject({
+        expect(useUpdateSettingsView()).toMatchObject({
             statusText: null,
             errorText: 'update.errors.rolledBack',
             isUpdateShown: true,
@@ -164,7 +164,7 @@ describe('useUpdateCardView', () => {
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView()).toMatchObject({statusText: 'update.stages.downloading', errorText: null});
+        expect(useUpdateSettingsView()).toMatchObject({statusText: 'update.stages.downloading', errorText: null});
     });
 
     it('ignores a rollback of a version that is not newer than the running one', () => {
@@ -172,7 +172,7 @@ describe('useUpdateCardView', () => {
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView().errorText).toBeNull();
+        expect(useUpdateSettingsView().errorText).toBeNull();
     });
 
     it('falls back to a general text for an unknown error', () => {
@@ -181,7 +181,7 @@ describe('useUpdateCardView', () => {
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView().errorText).toBe('update.errors.unexpected');
+        expect(useUpdateSettingsView().errorText).toBe('update.errors.unexpected');
     });
 
     it.each([
@@ -193,7 +193,7 @@ describe('useUpdateCardView', () => {
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView()).toMatchObject({statusText: null, errorText: null});
+        expect(useUpdateSettingsView()).toMatchObject({statusText: null, errorText: null});
     });
 
     it('offers nothing when the running version is the latest', () => {
@@ -202,7 +202,7 @@ describe('useUpdateCardView', () => {
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView()).toMatchObject({checkText: 'settings.upToDate', isUpdateShown: false});
+        expect(useUpdateSettingsView()).toMatchObject({checkText: 'settings.upToDate', isUpdateShown: false});
     });
 
     it('says when updates were never checked', () => {
@@ -210,7 +210,7 @@ describe('useUpdateCardView', () => {
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView().lastCheckText).toBe('settings.neverChecked');
+        expect(useUpdateSettingsView().lastCheckText).toBe('settings.neverChecked');
     });
 
     it('marks a failed check', () => {
@@ -218,7 +218,7 @@ describe('useUpdateCardView', () => {
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView()).toMatchObject({checkText: 'settings.checkFailed', isCheckFailed: true});
+        expect(useUpdateSettingsView()).toMatchObject({checkText: 'settings.checkFailed', isCheckFailed: true});
     });
 
     it('shows no result before the first check', () => {
@@ -226,6 +226,6 @@ describe('useUpdateCardView', () => {
 
         vi.mocked(useSelector).mockImplementation((selector: (state: BaseStore) => unknown) => selector(state));
 
-        expect(useUpdateCardView().checkText).toBeNull();
+        expect(useUpdateSettingsView().checkText).toBeNull();
     });
 });

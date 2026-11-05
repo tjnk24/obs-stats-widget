@@ -8,14 +8,14 @@ import {BRIDGE_SCRIPT_NAME, RELEASES_PAGE_URL} from '__utils/consts';
 import {compareVersions} from '__utils/update/compareVersions';
 
 import {LAST_CHECK_FORMAT, UPDATE_CHECK_TEXTS} from '../consts';
-import {UpdateCardViewDto} from '../types';
+import {UpdateSettingsViewDto} from '../types';
 
 import {useUpdateNotes} from './useUpdateNotes';
 import {useUpdateProgress} from './useUpdateProgress';
 
 const {Available, Failed} = UpdateCheckStatusEnum;
 
-export const useUpdateCardView = (): UpdateCardViewDto => {
+export const useUpdateSettingsView = (): UpdateSettingsViewDto => {
     const {checkStatus, latest} = useSelector(updateSelector);
     const {lastUpdateCheckAt, isAutoUpdateEnabled} = useSelector(settingsSelector);
 

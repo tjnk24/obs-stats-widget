@@ -38,10 +38,9 @@ export const en = {
         range: 'The port is a number from {{min}} to {{max}}',
     },
     settings: {
-        portTitle: 'Port',
+        connectionTitle: 'Connection',
         portHint: '$t(obs.tools) → $t(obs.webSocketSettings) → $t(obs.serverPort)',
         saveAndReconnect: 'Save and reconnect',
-        passwordTitle: 'Password',
         passwordLabel: 'obs-websocket password',
         passwordHint: '$t(obs.tools) → $t(obs.webSocketSettings) → $t(obs.serverPassword)',
         passwordRequired: 'Enter the password',
