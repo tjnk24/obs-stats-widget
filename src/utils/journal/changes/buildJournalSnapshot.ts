@@ -13,7 +13,7 @@ import {getJournalTargetLabel} from '../getJournalTargetLabel';
 export const buildJournalSnapshot = (state: BaseStore): JournalSnapshotDto => {
     const {status, lastCloseCode, obsVersion, isSwitchingCollection} = connectionSelector(state);
 
-    const {targets, view, isRecording} = statsSelector(state);
+    const {targets, view} = statsSelector(state);
     const {bridge, bridgeMissingChecks, checkStatus} = updateSelector(state);
 
     const {port, language, isShowGeneralCard, isAutoUpdateEnabled} = settingsSelector(state);
@@ -30,8 +30,7 @@ export const buildJournalSnapshot = (state: BaseStore): JournalSnapshotDto => {
         updateVersion: bridge?.status?.version ?? null,
         updateError: bridge?.status?.error ?? null,
         rolledBackVersion: bridge?.rolledBackVersion ?? null,
-        isRecording,
-        targetsDescription: targets.map(target => `${getJournalTargetLabel(target)}(${target.origin})`).join(', '),
+        targetsDescription: targets.map(target => `${getJournalTargetLabel(target)}(${target.outputName ?? target.origin})`).join(', '),
         outputs: targets.map(target => {
             const output = view.outputs[target.key];
 

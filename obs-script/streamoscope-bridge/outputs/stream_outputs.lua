@@ -15,6 +15,12 @@ local function define_types()
         void *obs_service_get_settings(const void *service);
         const char *obs_data_get_string(void *data, const char *name);
         void obs_data_release(void *data);
+        bool obs_output_active(const void *output);
+        uint64_t obs_output_get_total_bytes(const void *output);
+        int obs_output_get_frames_dropped(const void *output);
+        int obs_output_get_total_frames(const void *output);
+        float obs_output_get_congestion(void *output);
+        bool obs_output_reconnecting(const void *output);
     ]])
 end
 
@@ -49,7 +55,16 @@ local function visit_output(self, output)
     local name = self.libobs.obs_output_get_name(output)
 
     if name ~= nil then
-        self.found[#self.found + 1] = {name = ffi.string(name), server = read_service_server(self, service)}
+        self.found[#self.found + 1] = {
+            name = ffi.string(name),
+            server = read_service_server(self, service),
+            is_active = self.libobs.obs_output_active(output),
+            total_bytes = tonumber(self.libobs.obs_output_get_total_bytes(output)),
+            dropped = self.libobs.obs_output_get_frames_dropped(output),
+            total_frames = self.libobs.obs_output_get_total_frames(output),
+            congestion = self.libobs.obs_output_get_congestion(output),
+            is_reconnecting = self.libobs.obs_output_reconnecting(output),
+        }
     end
 end
 

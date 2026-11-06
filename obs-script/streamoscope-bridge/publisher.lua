@@ -39,7 +39,7 @@ function publisher.publish(sources)
     local payload = build_payload(sources)
 
     if sources.journal ~= nil then
-        sample_safely(sources.journal.track_update, sources.journal, payload.update)
+        sample_safely(sources.journal.track_payload, sources.journal, payload)
     end
 
     if config ~= nil then

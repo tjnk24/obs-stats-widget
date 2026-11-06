@@ -42,7 +42,7 @@ export const checkDockAndStream = async () => {
     console.log('ok   the dock shows the live bitrate');
 
     await waitFor('the stream statistics in the journal', () => JOURNAL_STATS_PATTERN.test(readStandFile(JOURNAL_PATH) ?? ''), STREAM_WAIT_MS);
-    console.log('ok   the bridge writes the statistics from the dock to the journal');
+    console.log('ok   the bridge writes the stream statistics to the journal');
 
     await sendObsRequest('StopStream');
 

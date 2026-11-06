@@ -9,22 +9,21 @@ import {
     JOURNAL_FLUSH_INTERVAL_MS,
     JOURNAL_PENDING_MAX_LINES,
     JOURNAL_RECENT_MAX_CHARS,
-    JOURNAL_STATS_INTERVAL_MS,
 } from '__utils/consts';
 import {isInsideObs} from '__utils/isInsideObs';
 import {buildJournalSnapshot} from '__utils/journal/changes/buildJournalSnapshot';
 import {describeJournalChanges} from '__utils/journal/changes/describeJournalChanges';
+import {isJournalKept} from '__utils/journal/isJournalKept';
 import {isJournalWritten} from '__utils/journal/isJournalWritten';
 import {formatJournalLine} from '__utils/journal/lines/formatJournalLine';
 import {trimJournalLines} from '__utils/journal/lines/trimJournalLines';
-import {buildJournalStats} from '__utils/journal/stats/buildJournalStats';
 
 import {storageService} from '../storageService';
 
 import {bridgeJournalTransport} from './bridgeJournalTransport';
 import {devJournalTransport} from './devJournalTransport';
 
-const {Info, Error, Stat} = JournalLevelEnum;
+const {Info, Error} = JournalLevelEnum;
 
 const transport = process.env.IS_DEV_SERVER ? devJournalTransport : bridgeJournalTransport;
 
@@ -32,8 +31,6 @@ class JournalService {
     private unsubscribe: Nullable<() => void> = null;
 
     private flushTimer: Nullable<number> = null;
-
-    private statsTimer: Nullable<number> = null;
 
     private snapshot: Nullable<JournalSnapshotDto> = null;
 
@@ -53,7 +50,6 @@ class JournalService {
 
         this.unsubscribe = store.subscribe(this.onStoreChange);
         this.flushTimer = window.setInterval(this.flush, JOURNAL_FLUSH_INTERVAL_MS);
-        this.statsTimer = window.setInterval(this.writeStats, JOURNAL_STATS_INTERVAL_MS);
 
         window.addEventListener('error', this.onWindowError);
         window.addEventListener('unhandledrejection', this.onUnhandledRejection);
@@ -67,9 +63,6 @@ class JournalService {
         this.flushTimer !== null && window.clearInterval(this.flushTimer);
         this.flushTimer = null;
 
-        this.statsTimer !== null && window.clearInterval(this.statsTimer);
-        this.statsTimer = null;
-
         this.wasTransportReady = false;
 
         window.removeEventListener('error', this.onWindowError);
@@ -78,18 +71,22 @@ class JournalService {
     };
 
     log = (level: JournalLevelEnum, source: string, message: string) => {
-        if (!this.isWritten() || !settingsSelector(getStore()).isJournalEnabled) {
+        const {isMockEnabled, isJournalEnabled} = settingsSelector(getStore());
+
+        if (!isJournalKept(Boolean(process.env.IS_DEV_SERVER), isMockEnabled) || !isJournalEnabled) {
             return;
         }
 
         const line = formatJournalLine({level, source, message}, new Date());
 
-        this.pendingLines = [...this.pendingLines, line].slice(-JOURNAL_PENDING_MAX_LINES);
+        this.recentLines = trimJournalLines([...this.recentLines, line], JOURNAL_RECENT_MAX_CHARS);
+        storageService.saveJournal(this.recentLines);
 
-        if (level !== Stat) {
-            this.recentLines = trimJournalLines([...this.recentLines, line], JOURNAL_RECENT_MAX_CHARS);
-            storageService.saveJournal(this.recentLines);
+        if (!this.isWritten()) {
+            return;
         }
+
+        this.pendingLines = [...this.pendingLines, line].slice(-JOURNAL_PENDING_MAX_LINES);
 
         level === Error && this.flush();
     };
@@ -127,10 +124,6 @@ class JournalService {
         transport.send(this.pendingLines.slice(0, JOURNAL_BATCH_MAX_LINES));
 
         this.pendingLines = this.pendingLines.slice(JOURNAL_BATCH_MAX_LINES);
-    };
-
-    private writeStats = () => {
-        buildJournalStats(getStore(), JOURNAL_STATS_INTERVAL_MS).forEach(({level, source, message}) => this.log(level, source, message));
     };
 
     private onStoreChange = () => {

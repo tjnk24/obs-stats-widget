@@ -23,7 +23,6 @@ export const SNAPSHOT: JournalSnapshotDto = {
     updateVersion: null,
     updateError: null,
     rolledBackVersion: null,
-    isRecording: false,
     targetsDescription: 'Twitch(plugin)',
     outputs: [OUTPUT],
     port: 4455,

@@ -1,6 +1,7 @@
 local obs = obslua
 
 local consts = require('streamoscope-bridge.consts')
+local JournalStats = require('streamoscope-bridge.journal.journal_stats')
 local environment = require('streamoscope-bridge.utils.environment')
 local process = require('streamoscope-bridge.utils.process')
 local profile_parameter = require('streamoscope-bridge.utils.profile_parameter')
@@ -109,6 +110,8 @@ function Journal.new()
         is_enabled = false,
         size = 0,
         next_heartbeat_at = os.time() + consts.JOURNAL_HEARTBEAT_SEC,
+        next_stats_at = os.time() + consts.JOURNAL_STATS_INTERVAL_SEC,
+        stats = JournalStats.new(),
     }, Journal)
 
     if local_app_data == nil then
@@ -146,12 +149,20 @@ function Journal:handle_command()
     handle_setting(self)
 end
 
-function Journal:handle_schedule()
+function Journal:handle_schedule(sources)
     local now = os.time()
 
     if now >= self.next_heartbeat_at then
         self.next_heartbeat_at = now + consts.JOURNAL_HEARTBEAT_SEC
         self:log('INFO', 'alive')
+    end
+
+    if now >= self.next_stats_at then
+        self.next_stats_at = now + consts.JOURNAL_STATS_INTERVAL_SEC
+
+        for _index, line in ipairs(self.stats:read(sources, self.gpu, now)) do
+            self:log('STAT', line.message, line.source)
+        end
     end
 end
 
@@ -165,7 +176,11 @@ function Journal:handle_frontend_event(event)
     end
 end
 
-function Journal:track_update(update)
+function Journal:track_payload(payload)
+    self.gpu = payload.gpu
+
+    local update = payload.update
+
     if update == nil then
         return
     end
@@ -191,6 +206,7 @@ function Journal:track_update(update)
 end
 
 function Journal:close()
+    self.stats:close()
     self:log('INFO', 'unloaded')
 end
 

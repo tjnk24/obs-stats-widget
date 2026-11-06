@@ -48,10 +48,6 @@ export type ObsOutputListDto = {
     outputs: ObsOutputListItemDto[];
 };
 
-export type ObsRecordStatusDto = {
-    outputActive: boolean;
-};
-
 export type ObsOutputStatusDto = {
     outputActive: boolean;
     outputReconnecting: boolean;

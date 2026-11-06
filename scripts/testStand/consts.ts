@@ -111,7 +111,9 @@ export const JOURNAL_FORBIDDEN_TEXTS = ['rtmp://', '127.0.0.1:1935', 'Users\\', 
 
 export const JOURNAL_SILENCE_MS = 3000;
 
-export const JOURNAL_STATS_PATTERN = /STAT\s+\S+\s+kbps_avg=\d+/;
+export const JOURNAL_STATS_PATTERN = /STAT\s+\S+\s+kbps_avg=[1-9]\d*/;
+
+export const JOURNAL_OBS_STATS_PATTERN = /STAT\s+OBS\s+fps=\d+\.\d frame_ms=\d+\.\d render_lag=\d+ encoder_lag=\d+ cpu=\d+\.\d% memory_mb=[1-9]/;
 
 const UPDATE_STATUS_PATH = path.join(DATA_DIRECTORY, 'update-status.json');
 

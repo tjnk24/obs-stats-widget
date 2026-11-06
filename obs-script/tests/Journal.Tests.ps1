@@ -54,6 +54,21 @@ Describe 'Journal of the bridge' {
         $script:Results.aliveInTime | Should -Be 'true'
     }
 
+    It 'writes the statistics of active outputs without the panel' {
+        $script:Results.outputStats | Should -Be 'true'
+        $script:Results.sameNameOutput | Should -Be 'true'
+        $script:Results.unsafeNameCleaned | Should -Be 'true'
+        $script:Results.inactiveSkipped | Should -Be 'true'
+    }
+
+    It 'keeps the server address out of the statistics' {
+        $script:Results.serverHidden | Should -Be 'true'
+    }
+
+    It 'writes no statistics when nothing is streaming' {
+        $script:Results.silentWithoutStream | Should -Be 'true'
+    }
+
     It 'writes an update failure once' {
         $script:Results.updateFailure | Should -Be 'true'
         $script:Results.updateLoggedOnce | Should -Be 'true'

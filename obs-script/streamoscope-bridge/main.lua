@@ -2,7 +2,7 @@ local obs = obslua
 
 local consts = require('streamoscope-bridge.consts')
 local Gpu = require('streamoscope-bridge.hardware.gpu')
-local Journal = require('streamoscope-bridge.journal')
+local Journal = require('streamoscope-bridge.journal.journal')
 local StreamOutputs = require('streamoscope-bridge.outputs.stream_outputs')
 local publisher = require('streamoscope-bridge.publisher')
 local release_links = require('streamoscope-bridge.update.release_links')
@@ -43,7 +43,7 @@ local function handle_commands()
 
     if sources.journal ~= nil then
         pcall(sources.journal.handle_command, sources.journal)
-        pcall(sources.journal.handle_schedule, sources.journal)
+        pcall(sources.journal.handle_schedule, sources.journal, sources)
     end
 
     pcall(release_links.handle_command)

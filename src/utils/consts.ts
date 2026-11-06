@@ -95,7 +95,6 @@ export const JOURNAL_COMMAND_PARAMETER: ProfileParameterKeyDto = {
 export const JOURNAL_MIN_BRIDGE_VERSION = 5;
 export const JOURNAL_LINE_SEPARATOR = '\u001f';
 export const JOURNAL_FLUSH_INTERVAL_MS = 10_000;
-export const JOURNAL_STATS_INTERVAL_MS = 10_000;
 export const JOURNAL_BATCH_MAX_LINES = 200;
 export const JOURNAL_PENDING_MAX_LINES = 2000;
 export const JOURNAL_RECENT_MAX_CHARS = 50_000;

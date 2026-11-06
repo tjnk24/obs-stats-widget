@@ -10,7 +10,6 @@ export enum JournalLevelEnum {
     Info = 'INFO',
     Warn = 'WARN',
     Error = 'ERROR',
-    Stat = 'STAT',
 }
 
 export type JournalTransportDto = {
@@ -46,7 +45,6 @@ export type JournalSnapshotDto = {
     updateVersion: Nullable<string>;
     updateError: Nullable<string>;
     rolledBackVersion: Nullable<string>;
-    isRecording: boolean;
     targetsDescription: string;
     outputs: JournalOutputSnapshotDto[];
     port: number;

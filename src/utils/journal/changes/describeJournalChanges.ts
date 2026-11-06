@@ -58,10 +58,6 @@ export const describeJournalChanges = (previous: JournalSnapshotDto, current: Jo
         entries.push({level: Warn, source: 'panel', message: `rolled back version=${current.rolledBackVersion}`});
     }
 
-    if (previous.isRecording !== current.isRecording) {
-        entries.push({level: Info, source: 'obs', message: current.isRecording ? 'recording started' : 'recording stopped'});
-    }
-
     if (previous.targetsDescription !== current.targetsDescription) {
         entries.push({level: Info, source: 'panel', message: `outputs ${current.targetsDescription || 'none'}`});
     }
