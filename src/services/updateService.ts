@@ -21,6 +21,7 @@ import {
     UPDATE_CHECK_TIMER_MS,
     UPDATE_COMMAND_PARAMETER,
 } from '__utils/consts';
+import {isInsideObs} from '__utils/isInsideObs';
 import {checkCompatibility} from '__utils/update/checkCompatibility';
 import {compareVersions} from '__utils/update/compareVersions';
 import {getChromiumVersion} from '__utils/update/getChromiumVersion';
@@ -163,7 +164,7 @@ class UpdateService {
     private scheduleHealthReport = () => {
         this.cancelHealthReport();
 
-        if (this.hasRenderError || process.env.IS_DEV_SERVER) {
+        if (this.hasRenderError || process.env.IS_DEV_SERVER || !isInsideObs()) {
             return;
         }
 

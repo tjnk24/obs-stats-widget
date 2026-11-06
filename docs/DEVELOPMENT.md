@@ -117,11 +117,11 @@ The switch **Update automatically** is stored by the bridge in `%LOCALAPPDATA%\s
 A freshly switched version is on trial, and `update-trial.txt` names it and the previous version. Only the bridge loader judges it, because it's the one piece of code that doesn't change with the version.
 
 - The bridge fails to load: back to the previous version at once, in the same session.
-- The dock is healthy: a second after it finds the bridge, a dock that hasn't hit a render error sends `healthy:X.Y.Z`. The bridge records it in `healthy-version.txt` and ends the trial.
+- The dock is healthy: a second after it finds the bridge, a dock inside OBS that hasn't hit a render error sends `healthy:X.Y.Z`. The bridge records it in `healthy-version.txt`, notes the OBS process in `healthy-process.txt` and ends the trial.
 - No report 5 seconds after OBS says it finished loading (`OBS_FRONTEND_EVENT_FINISHED_LOADING`): back to the previous version right there, so the next launch is already fine. A dock that was merely slow can still report later, and that undoes the rollback.
 - OBS crashes or keeps being closed before any of this: the third launch rolls back before the bridge even loads. Scene collection switches reload the script but don't count, because a launch is one OBS process.
 
-If the previous version never reported health, for example because the dock has never connected, silence proves nothing, so the trial doesn't watch the dock (`panel=0`). The rolled back version goes to `rolled-back-version.txt`: the background check skips it and anything older, and the settings card says what happened and offers to try it again with the button. A successful update clears the file.
+If the previous version didn't report health in the OBS launch that downloaded the update, silence proves nothing, so the trial doesn't watch the dock (`panel=0`). The dock may have never connected, or it may be unticked in the **Docks** menu: OBS then doesn't start its page at all, while closing it with the X only lasts until the next launch. The rolled back version goes to `rolled-back-version.txt`: the background check skips it and anything older, and the settings card says what happened and offers to try it again with the button. A successful update clears the file.
 
 A new bridge can meet an old dock: switching the scene collection reloads the scripts, while the open dock stays on its version. Bridge data therefore only gains fields.
 

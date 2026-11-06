@@ -96,6 +96,7 @@ Describe 'Bridge loader rollback' {
         Get-CurrentVersion -InstallRoot $app | Should -Be $script:NewVersion
         Join-Path $app 'update-trial.txt' | Should -Not -Exist
         [System.IO.File]::ReadAllText((Join-Path $app 'healthy-version.txt')) | Should -Be $script:NewVersion
+        [System.IO.File]::ReadAllText((Join-Path $app 'healthy-process.txt')) | Should -Match '^\d+$'
         Join-Path $app 'rolled-back-version.txt' | Should -Not -Exist
 
         foreach ($launchNumber in 1..3) {

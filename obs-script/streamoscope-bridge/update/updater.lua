@@ -27,6 +27,7 @@ end
 
 local function confirm_version(self, version)
     text_file.write(self.healthy_version_path, version)
+    text_file.write(self.healthy_process_path, tostring(process.current_id()))
 
     if string.match(text_file.read(self.trial_path) or '', consts.TRIAL_VERSION_PATTERN) == version then
         text_file.remove(self.trial_path)
@@ -47,6 +48,7 @@ function Updater.new(journal)
         signature_tool_path = string.gsub(script_path() .. '/' .. consts.UPDATE_SIGNATURE_TOOL_PATH, '/', '\\'),
         trial_path = string.gsub(script_path() .. '/' .. consts.TRIAL_FILE_PATH, '/', '\\'),
         healthy_version_path = string.gsub(script_path() .. '/' .. consts.HEALTHY_VERSION_FILE_PATH, '/', '\\'),
+        healthy_process_path = string.gsub(script_path() .. '/' .. consts.HEALTHY_PROCESS_FILE_PATH, '/', '\\'),
         rolled_back_version_path = string.gsub(script_path() .. '/' .. consts.ROLLED_BACK_VERSION_FILE_PATH, '/', '\\'),
         current_version_path = string.gsub(script_path() .. '/' .. consts.CURRENT_VERSION_FILE_PATH, '/', '\\'),
         data_directory = data_directory,
@@ -59,6 +61,10 @@ end
 
 function Updater:is_available()
     return self.status_path ~= nil and text_file.exists(self.script_path) and text_file.exists(self.signature_tool_path)
+end
+
+function Updater:discard_stale_command()
+    profile_parameter.take(consts.UPDATE_COMMAND_NAME)
 end
 
 function Updater:handle_command()

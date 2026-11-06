@@ -74,6 +74,7 @@ Type: filesandordirs; Name: "{app}\versions"
 Type: files; Name: "{app}\current-version.js"
 Type: files; Name: "{app}\update-trial.txt"
 Type: files; Name: "{app}\healthy-version.txt"
+Type: files; Name: "{app}\healthy-process.txt"
 Type: files; Name: "{app}\rolled-back-version.txt"
 
 [Files]

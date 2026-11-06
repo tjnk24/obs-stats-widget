@@ -15,6 +15,7 @@ return {
     TRIAL_FILE_PATH = '../../update-trial.txt',
     TRIAL_VERSION_PATTERN = 'version=(%d+%.%d+%.%d+)',
     HEALTHY_VERSION_FILE_PATH = '../../healthy-version.txt',
+    HEALTHY_PROCESS_FILE_PATH = '../../healthy-process.txt',
     ROLLED_BACK_VERSION_FILE_PATH = '../../rolled-back-version.txt',
     ROLLED_BACK_VERSION_PATTERN = '%d+%.%d+%.%d+',
     CURRENT_VERSION_FILE_PATH = '../../current-version.js',

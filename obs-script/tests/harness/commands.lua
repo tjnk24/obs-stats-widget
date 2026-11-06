@@ -47,6 +47,11 @@ local function wait_marker()
 end
 
 if marker ~= nil and marker ~= '' then
+    store['StreamoScope/UpdateCommand'] = 'install:9.9.9'
+    script_unload()
+    script_load({})
+    record('staleCommandLeftAfterLoad', store['StreamoScope/UpdateCommand'] ~= nil)
+
     timers[250]()
     record('tickBeforeDelay', take_marker() or 'nothing')
 

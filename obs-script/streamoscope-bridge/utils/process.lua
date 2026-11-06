@@ -28,6 +28,11 @@ pcall(ffi.cdef, [[
 ]])
 
 pcall(ffi.cdef, 'int CloseHandle(void *handle);')
+pcall(ffi.cdef, 'uint32_t GetCurrentProcessId(void);')
+
+function process.current_id()
+    return tonumber(ffi.C.GetCurrentProcessId())
+end
 
 function process.start_hidden(command_line, directory)
     local startup_info = ffi.new('StatsBridgeStartupInfo')

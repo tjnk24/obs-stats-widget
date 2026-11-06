@@ -194,17 +194,36 @@ Describe 'Invoke-UpdateWidget' {
         Get-InstalledVersion -InstallDirectory $release.Install | Should -Be '0.1.0'
     }
 
-    It 'checks the panel of the new version only if the panel of the old one reported health' {
+    It 'checks the panel of the new version only if the panel of the old one reported health in this launch of OBS' {
         $release = New-TestRelease
         Set-Content -LiteralPath (Join-Path $release.Install 'healthy-version.txt') -Value '0.1.0'
+        Set-Content -LiteralPath (Join-Path $release.Install 'healthy-process.txt') -Value '123'
 
         Invoke-TestUpdate -Release $release | Should -Be 'done'
         Get-Content -LiteralPath (Join-Path $release.Install 'update-trial.txt') | Should -Contain 'panel=1'
     }
 
+    It 'does not check the panel when it reported in an earlier launch of OBS' {
+        $release = New-TestRelease
+        Set-Content -LiteralPath (Join-Path $release.Install 'healthy-version.txt') -Value '0.1.0'
+        Set-Content -LiteralPath (Join-Path $release.Install 'healthy-process.txt') -Value '456'
+
+        Invoke-TestUpdate -Release $release | Should -Be 'done'
+        Get-Content -LiteralPath (Join-Path $release.Install 'update-trial.txt') | Should -Contain 'panel=0'
+    }
+
+    It 'does not check the panel when no launch of OBS is recorded' {
+        $release = New-TestRelease
+        Set-Content -LiteralPath (Join-Path $release.Install 'healthy-version.txt') -Value '0.1.0'
+
+        Invoke-TestUpdate -Release $release | Should -Be 'done'
+        Get-Content -LiteralPath (Join-Path $release.Install 'update-trial.txt') | Should -Contain 'panel=0'
+    }
+
     It 'does not check the panel when the health report is about another version' {
         $release = New-TestRelease
         Set-Content -LiteralPath (Join-Path $release.Install 'healthy-version.txt') -Value '0.0.9'
+        Set-Content -LiteralPath (Join-Path $release.Install 'healthy-process.txt') -Value '123'
 
         Invoke-TestUpdate -Release $release | Should -Be 'done'
         Get-Content -LiteralPath (Join-Path $release.Install 'update-trial.txt') | Should -Contain 'panel=0'

@@ -18,8 +18,11 @@ import {readStandFile} from '../readStandFile.ts';
 import {checkStep} from './checkStep.ts';
 
 export const checkUpdateButton = async (version: string) => {
-    await evaluateInDock(OPEN_SETTINGS_EXPRESSION);
-    await waitFor('the updates group', async () => (await getDockText()).includes('Updates'), CONNECTION_WAIT_MS);
+    await waitFor('the updates group', async () => {
+        await evaluateInDock(OPEN_SETTINGS_EXPRESSION);
+
+        return (await getDockText()).includes('Updates');
+    }, CONNECTION_WAIT_MS);
     await evaluateInDock(OPEN_UPDATES_GROUP_EXPRESSION);
     await waitFor('the button to check for updates', async () => (await getDockText()).includes('Check for updates'), CONNECTION_WAIT_MS);
     await clickDockButton('Check for updates');

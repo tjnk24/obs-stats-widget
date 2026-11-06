@@ -84,6 +84,10 @@ function script_load(_settings)
     open_sources()
     pcall(release_links.discard_stale_command)
 
+    if sources.updater ~= nil then
+        pcall(sources.updater.discard_stale_command, sources.updater)
+    end
+
     obs.obs_frontend_add_event_callback(on_event)
     obs.timer_add(publish, consts.PUBLISH_INTERVAL_MS)
     obs.timer_add(handle_commands, consts.COMMAND_INTERVAL_MS)

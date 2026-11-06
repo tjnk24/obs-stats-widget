@@ -10,6 +10,7 @@ $script:TrialFileName = 'update-trial.txt'
 $script:TrialFileTemplate = "version={0}`r`nprevious={1}`r`npanel={2}`r`nprocess={3}`r`nlaunches=0`r`n"
 $script:ObsProcessName = 'obs64'
 $script:HealthyVersionFileName = 'healthy-version.txt'
+$script:HealthyProcessFileName = 'healthy-process.txt'
 $script:RolledBackVersionFileName = 'rolled-back-version.txt'
 $script:RequiredPackageFiles = @('dock\index.html', 'streamoscope-bridge\main.lua', 'updater\Update-Widget.ps1', 'compatibility.json')
 $script:UninstallRegistryKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{6D39D358-2386-4437-8FE3-CF5511816FD1}_is1'

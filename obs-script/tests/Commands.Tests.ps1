@@ -59,6 +59,10 @@ Describe 'Bridge installed with versions' {
         $script:Results.update | Should -Match '"available":true'
     }
 
+    It 'erases an update command left in the profile file by the previous launch' {
+        $script:Results.staleCommandLeftAfterLoad | Should -Be 'false'
+    }
+
     It 'runs nothing before the start delay' {
         $script:Results.tickBeforeDelay | Should -Be 'nothing'
     }

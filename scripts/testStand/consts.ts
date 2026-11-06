@@ -125,9 +125,18 @@ export const TRIAL_PATH = path.join(INSTALL_DIRECTORY, 'update-trial.txt');
 
 export const HEALTHY_VERSION_PATH = path.join(INSTALL_DIRECTORY, 'healthy-version.txt');
 
+export const HEALTHY_PROCESS_PATH = path.join(INSTALL_DIRECTORY, 'healthy-process.txt');
+
 export const ROLLED_BACK_VERSION_PATH = path.join(INSTALL_DIRECTORY, 'rolled-back-version.txt');
 
-export const INSTALL_STATE_FILES = [CURRENT_VERSION_PATH, TRIAL_PATH, HEALTHY_VERSION_PATH, ROLLED_BACK_VERSION_PATH, UPDATE_STATUS_PATH];
+export const INSTALL_STATE_FILES = [
+    CURRENT_VERSION_PATH,
+    TRIAL_PATH,
+    HEALTHY_VERSION_PATH,
+    HEALTHY_PROCESS_PATH,
+    ROLLED_BACK_VERSION_PATH,
+    UPDATE_STATUS_PATH,
+];
 
 export const TEST_KEY_DIRECTORY = path.join(STAND_DIRECTORY, 'test-key');
 
